@@ -5,14 +5,14 @@
     <name>GPodder Sync</name>
     <summary>replicate basic GPodder.net API</summary>
     <description><![CDATA[Expose GPodder API to sync podcast consumer apps like AntennaPod]]></description>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <licence>agpl</licence>
     <author mail="thrillfall@disroot.org">Thrillfall</author>
     <namespace>GPodderSync</namespace>
     <category>integration</category>
     <bugs>https://github.com/thrillfall/nextcloud-gpodder/issues</bugs>
     <dependencies>
-        <nextcloud min-version="15" max-version="21"/>
+        <nextcloud min-version="19" max-version="21"/>
     </dependencies>
     <navigations>
         <navigation>
