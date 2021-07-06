@@ -13,8 +13,8 @@ class Version0002Date20210524131313 extends \OCP\Migration\SimpleMigrationStep {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
-		if (!$schema->hasTable('gpoddersync_subscriptions')) {
-			$table = $schema->createTable('gpoddersync_subscriptions');
+		if (!$schema->hasTable('gpodder_subscriptions')) {
+			$table = $schema->createTable('gpodder_subscriptions');
 			$table->addColumn('id', 'integer', [
 				'autoincrement' => true,
 				'notnull' => true,

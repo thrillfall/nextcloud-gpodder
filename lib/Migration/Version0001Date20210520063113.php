@@ -14,8 +14,8 @@ class Version0001Date20210520063113 extends \OCP\Migration\SimpleMigrationStep {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
-		if (!$schema->hasTable('gpoddersync_episode_action')) {
-			$table = $schema->createTable('gpoddersync_episode_action');
+		if (!$schema->hasTable('gpodder_episode_action')) {
+			$table = $schema->createTable('gpodder_episode_action');
 			$table->addColumn('id', 'integer', [
 				'autoincrement' => true,
 				'notnull' => true,
@@ -52,7 +52,7 @@ class Version0001Date20210520063113 extends \OCP\Migration\SimpleMigrationStep {
 			]);
 
 			$table->setPrimaryKey(['id']);
-			$table->addUniqueIndex(['episode', 'user_id'], 'gpoddersync_episode_user_id');
+			$table->addUniqueIndex(['episode', 'user_id'], 'gpodder_episode_user_id');
 		}
 		return $schema;
 	}
