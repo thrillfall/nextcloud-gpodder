@@ -10,7 +10,7 @@ use OCP\IDBConnection;
 
 class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper {
 	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'gpoddersync_episode_action', EpisodeActionEntity::class);
+		parent::__construct($db, 'gpodder_episode_action', EpisodeActionEntity::class);
 	}
 
 	public function findAll(\DateTime $sinceTimestamp, string $userId): array {

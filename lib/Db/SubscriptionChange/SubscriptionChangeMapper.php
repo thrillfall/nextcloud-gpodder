@@ -10,7 +10,7 @@ use OCP\IDBConnection;
 
 class SubscriptionChangeMapper extends \OCP\AppFramework\Db\QBMapper {
 	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'gpoddersync_subscriptions', SubscriptionChangeEntity::class);
+		parent::__construct($db, 'gpodder_subscriptions', SubscriptionChangeEntity::class);
 	}
 
 	public function findAll(string $userId): array {
