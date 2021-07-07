@@ -15,9 +15,5 @@
         <nextcloud min-version="19" max-version="21"/>
     </dependencies>
     <navigations>
-        <navigation>
-            <name>GPodder Sync</name>
-            <route>gpoddersync.page.index</route>
-        </navigation>
     </navigations>
 </info>
