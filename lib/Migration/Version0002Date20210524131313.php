@@ -25,7 +25,7 @@ class Version0002Date20210524131313 extends \OCP\Migration\SimpleMigrationStep {
 			]);
 
 			$table->addColumn('subscribed', Types::BOOLEAN, [
-				'notnull' => true,
+				'notnull' => false,
 			]);
 
 			$table->addColumn('updated', Types::DATETIME_MUTABLE, [
