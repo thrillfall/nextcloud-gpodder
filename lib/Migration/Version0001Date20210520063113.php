@@ -27,7 +27,6 @@ class Version0001Date20210520063113 extends \OCP\Migration\SimpleMigrationStep {
 			$table->addColumn('episode', 'string', [
 				'notnull' => true,
 				'length' => 500,
-				'unique' => true,
 			]);
 			$table->addColumn('action', 'string', [
 				'notnull' => true,
