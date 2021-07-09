@@ -13,6 +13,6 @@
     <bugs>https://github.com/thrillfall/nextcloud-gpodder/issues</bugs>
     <dependencies>
 		<php min-version="7.4"/>
-		<nextcloud min-version="19" max-version="22"/>
+		<nextcloud min-version="20" max-version="22"/>
     </dependencies>
 </info>
