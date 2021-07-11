@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace OCA\GPodderSync\Controller;
 
 use DateTime;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use GuzzleHttp\Psr7\Response;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionReader;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
@@ -12,6 +11,7 @@ use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionWriter;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\DB\Exception;
 use OCP\IRequest;
 
 class EpisodeActionController extends Controller {
@@ -66,10 +66,12 @@ class EpisodeActionController extends Controller {
 
 		try {
 			return $this->episodeActionWriter->save($episodeActionEntity);
-		} catch (UniqueConstraintViolationException $ex) {
-			$IdEpisodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisode($episodeAction->getEpisode(), $this->userId)->getId();
-			$episodeActionEntity->setId($IdEpisodeActionEntityToUpdate);
-			return $this->episodeActionWriter->update($episodeActionEntity);
+		} catch (\Exception $exception) {
+			if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+				$idEpisodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisode($episodeAction->getEpisode(), $this->userId)->getId();
+				$episodeActionEntity->setId($idEpisodeActionEntityToUpdate);
+				return $this->episodeActionWriter->update($episodeActionEntity);
+			}
 		}
 	}
 
@@ -81,7 +83,7 @@ class EpisodeActionController extends Controller {
 	 * @param int $since
 	 * @return JSONResponse
 	 */
-	public function list(int $since): JSONResponse  {
+	public function list(int $since): JSONResponse {
 		$sinceDatetime = $this->createDateTimeFromTimestamp($since);
 		return new JSONResponse([
 			"actions" => $this->episodeActionRepository->findAll($sinceDatetime, $this->userId),

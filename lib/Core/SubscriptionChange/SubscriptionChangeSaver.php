@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Core\SubscriptionChange;
 
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use OCA\GPodderSync\Db\SubscriptionChange\SubscriptionChangeEntity;
 use OCA\GPodderSync\Db\SubscriptionChange\SubscriptionChangeRepository;
 use OCA\GPodderSync\Db\SubscriptionChange\SubscriptionChangeWriter;
+use OCP\DB\Exception;
 
 class SubscriptionChangeSaver {
 
@@ -37,7 +37,7 @@ class SubscriptionChangeSaver {
 		$this->subscriptionChangeRequestParser = $subscriptionChangeRequestParser;
 	}
 
-	public function saveSubscriptionChanges(string $urlsSubscribed, string $urlsUnsubscribed, string $userId) : void {
+	public function saveSubscriptionChanges(string $urlsSubscribed, string $urlsUnsubscribed, string $userId): void {
 		$subscriptionChanges = $this->subscriptionChangeRequestParser->createSubscriptionChangeList($urlsSubscribed, $urlsUnsubscribed);
 		foreach ($subscriptionChanges as $urlChangedSubscriptionStatus) {
 			$subscriptionChangeEntity = new SubscriptionChangeEntity();
@@ -48,10 +48,12 @@ class SubscriptionChangeSaver {
 
 			try {
 				$this->subscriptionChangeWriter->create($subscriptionChangeEntity);
-			} catch (UniqueConstraintViolationException $ex) {
-				$idEpisodeActionEntityToUpdate = $this->subscriptionChangeRepository->findByUrl($subscriptionChangeEntity->getUrl(), $userId)->getId();
-				$subscriptionChangeEntity->setId($idEpisodeActionEntityToUpdate);
-				$this->subscriptionChangeWriter->update($subscriptionChangeEntity);
+			} catch (\Exception $exception) {
+				if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+					$idEpisodeActionEntityToUpdate = $this->subscriptionChangeRepository->findByUrl($subscriptionChangeEntity->getUrl(), $userId)->getId();
+					$subscriptionChangeEntity->setId($idEpisodeActionEntityToUpdate);
+					$this->subscriptionChangeWriter->update($subscriptionChangeEntity);
+				}
 			}
 		}
 	}
