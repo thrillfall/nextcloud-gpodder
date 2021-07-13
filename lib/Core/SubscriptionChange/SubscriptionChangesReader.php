@@ -7,10 +7,10 @@ class SubscriptionChangesReader {
 
 	/**
 	 * @param string $raw
-	 *
+	 * @param bool $subscribed
 	 * @return array|SubscriptionChange[]
 	 */
-	public function fromString(string $raw, bool $subscribed):? array {
+	public function fromString(string $raw, bool $subscribed): array {
 		$urls = str_replace(["[", "]", " "], "", $raw);
 		$urlList = explode(",", $urls);
 
@@ -25,4 +25,16 @@ class SubscriptionChangesReader {
 		return $subscriptionChanges;
 	}
 
+	/**
+	 * @param array $raw
+	 * @param bool $subscribed
+	 * @return array|SubscriptionChange[]
+	 */
+	public function fromArray(array $raw, bool $subscribed): array {
+		$subscriptionChanges = [];
+		foreach ($raw as $url) {
+			$subscriptionChanges[] = $this->fromString($url, $subscribed)[0];
+		}
+		return $subscriptionChanges;
+	}
 }
