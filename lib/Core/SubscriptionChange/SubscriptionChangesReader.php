@@ -6,19 +6,14 @@ namespace OCA\GPodderSync\Core\SubscriptionChange;
 class SubscriptionChangesReader {
 
 	/**
-	 * @param string $raw
+	 * @param array $urls
+	 * @param bool $subscribed
 	 *
-	 * @return array|SubscriptionChange[]
+	 * @return SubscriptionChange[]
 	 */
-	public function fromString(string $raw, bool $subscribed):? array {
-		$urls = str_replace(["[", "]", " "], "", $raw);
-		$urlList = explode(",", $urls);
-
-		if ($urlList[0] === "") {
-			return [];
-		}
+	public static function mapToSubscriptionsChanges(array $urls, bool $subscribed): array {
 		$subscriptionChanges = [];
-		foreach ($urlList as $url) {
+		foreach ($urls as $url) {
 			$subscriptionChanges[] = new SubscriptionChange($url, $subscribed);
 		}
 

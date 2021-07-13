@@ -37,7 +37,7 @@ class SubscriptionChangeSaver {
 		$this->subscriptionChangeRequestParser = $subscriptionChangeRequestParser;
 	}
 
-	public function saveSubscriptionChanges(string $urlsSubscribed, string $urlsUnsubscribed, string $userId): void {
+	public function saveSubscriptionChanges(array $urlsSubscribed, array $urlsUnsubscribed, string $userId): void {
 		$subscriptionChanges = $this->subscriptionChangeRequestParser->createSubscriptionChangeList($urlsSubscribed, $urlsUnsubscribed);
 		foreach ($subscriptionChanges as $urlChangedSubscriptionStatus) {
 			$subscriptionChangeEntity = new SubscriptionChangeEntity();

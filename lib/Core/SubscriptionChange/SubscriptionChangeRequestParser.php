@@ -15,14 +15,14 @@ class SubscriptionChangeRequestParser {
 	}
 
 	/**
-	 * @param string $urlsSubscribed
-	 * @param string $urlsUnsubscribed
+	 * @param array $urlsSubscribed
+	 * @param array $urlsUnsubscribed
 	 *
 	 * @return SubscriptionChange[]
 	 */
-	public function createSubscriptionChangeList(string $urlsSubscribed, string $urlsUnsubscribed): array {
-		$urlsToSubscribe = $this->subscriptionChangeReader->fromString($urlsSubscribed, true);
-		$urlsToDelete = $this->subscriptionChangeReader->fromString($urlsUnsubscribed, false);
+	public function createSubscriptionChangeList(array $urlsSubscribed, array $urlsUnsubscribed): array {
+		$urlsToSubscribe = $this->subscriptionChangeReader->mapToSubscriptionsChanges($urlsSubscribed, true);
+		$urlsToDelete = $this->subscriptionChangeReader->mapToSubscriptionsChanges($urlsUnsubscribed, false);
 
 		/** @var \OCA\GPodderSync\Core\SubscriptionChange\SubscriptionChange[] $subscriptionChanges */
 		return array_merge($urlsToSubscribe, $urlsToDelete);

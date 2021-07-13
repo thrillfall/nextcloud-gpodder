@@ -13,20 +13,13 @@ class SubscriptionChangeRequestParserTest extends TestCase {
 			new SubscriptionChangesReader(),
 		);
 
-		$subscriptionChanges = $subscriptionChangesParser->createSubscriptionChangeList('[https://feeds.simplecast.com/54nAGcIl]','[]');
-		$this->assertCount(1, $subscriptionChanges);
-		$this->assertSame('https://feeds.simplecast.com/54nAGcIl', $subscriptionChanges[0]->getUrl());
+		$subscriptionChanges = $subscriptionChangesParser->createSubscriptionChangeList(["https://feeds.simplecast.com/54nAGcIl", "https://feeds.simplecast.com/another"],["https://i.am-removed/GcIl"]);
+		$this->assertCount(3, $subscriptionChanges);
+		$this->assertSame("https://feeds.simplecast.com/54nAGcIl", $subscriptionChanges[0]->getUrl());
+		$this->assertSame("https://feeds.simplecast.com/another", $subscriptionChanges[1]->getUrl());
+		$this->assertSame("https://i.am-removed/GcIl", $subscriptionChanges[2]->getUrl());
 		$this->assertTrue($subscriptionChanges[0]->isSubscribed());
+		$this->assertFalse($subscriptionChanges[2]->isSubscribed());
 	}
 
-	public function testSubscriptionRequestWithMultipleChangesConvertsToSubscriptionChangeList() {
-		$subscriptionChangesParser = new SubscriptionChangeRequestParser(
-			new SubscriptionChangesReader(),
-		);
-
-		$subscriptionChanges = $subscriptionChangesParser->createSubscriptionChangeList(
-			'[https://podcastfeeds.nbcnews.com/dateline-nbc,https://feeds.megaphone.fm/ADL9840290619]',
-			'[]');
-		$this->assertCount(2, $subscriptionChanges);
-	}
 }
