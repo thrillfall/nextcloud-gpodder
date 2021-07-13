@@ -5,9 +5,9 @@ namespace OCA\GPodderSync\Tests\Unit\Core\SubscriptionChange;
 
 use OCA\GPodderSync\Core\SubscriptionChange\SubscriptionChangeRequestParser;
 use OCA\GPodderSync\Core\SubscriptionChange\SubscriptionChangesReader;
-use PHPUnit_Framework_TestCase;
+use Test\TestCase;
 
-class SubscriptionChangeRequestParserTest extends PHPUnit_Framework_TestCase {
+class SubscriptionChangeRequestParserTest extends TestCase {
 	public function testSubscriptionRequestConvertsToSubscriptionChangeList() {
 		$subscriptionChangesParser = new SubscriptionChangeRequestParser(
 			new SubscriptionChangesReader(),
