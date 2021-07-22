@@ -61,7 +61,7 @@ class EpisodeActionController extends Controller {
 		$episodeActionEntity->setPosition($episodeAction->getPosition());
 		$episodeActionEntity->setStarted($episodeAction->getStarted());
 		$episodeActionEntity->setTotal($episodeAction->getTotal());
-		$episodeActionEntity->setTimestamp($episodeAction->getTimestamp());
+		$episodeActionEntity->setTimestamp($this->convertTimestampToDbDateTimeString($episodeAction->getTimestamp()));
 		$episodeActionEntity->setUserId($this->userId);
 
 		try {
@@ -100,5 +100,16 @@ class EpisodeActionController extends Controller {
 		return ($since)
 			? (new \DateTime)->setTimestamp($since)
 			: (new \DateTime('-1 week'));
+	}
+
+	/**
+	 * @param string $episodeAction
+	 *
+	 * @return string
+	 */
+	private function convertTimestampToDbDateTimeString(string $timestamp)
+	{
+		return \DateTime::createFromFormat('D F d H:i:s T Y', $timestamp)
+			->format("Y-m-d\TH:i:s");
 	}
 }
