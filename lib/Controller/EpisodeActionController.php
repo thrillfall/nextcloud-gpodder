@@ -112,6 +112,6 @@ class EpisodeActionController extends Controller {
 	{
 		return \DateTime::createFromFormat('D F d H:i:s T Y', $timestamp)
 			->setTimezone(new DateTimeZone('UTC'))
-			->format("Y-m-d H:i:s");
+			->format("Y-m-d\TH:i:s");
 	}
 }
