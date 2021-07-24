@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace OCA\GPodderSync\Controller;
 
 use DateTime;
+use DateTimeZone;
 use GuzzleHttp\Psr7\Response;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionReader;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
@@ -110,6 +111,7 @@ class EpisodeActionController extends Controller {
 	private function convertTimestampToDbDateTimeString(string $timestamp)
 	{
 		return \DateTime::createFromFormat('D F d H:i:s T Y', $timestamp)
-			->format("Y-m-d\TH:i:s");
+			->setTimezone(new DateTimeZone('UTC'))
+			->format("Y-m-d H:i:s");
 	}
 }
