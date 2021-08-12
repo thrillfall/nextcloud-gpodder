@@ -73,7 +73,7 @@ class SubscriptionChangeController extends Controller {
 	 * @return DateTime
 	 */
 	private function createDateTimeFromTimestamp(?int $since): DateTime {
-		return ($since)
+		return ($since !== null)
 			? (new \DateTime)->setTimestamp($since)
 			: (new \DateTime('-1 week'));
 	}
