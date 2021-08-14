@@ -86,7 +86,7 @@ appstore:
 	--exclude=.tx \
 	--exclude=tests \
 	--exclude=vendor \
-	--exclude=release \
+	--exclude=releases \
 	--exclude=webpack.*.js \
 	$(project_dir)/  $(sign_dir)/$(app_name)
 	@if [ -f $(cert_dir)/$(app_name).key ]; then \
