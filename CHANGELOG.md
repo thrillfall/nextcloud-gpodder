@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.10 - 2021-08-14
+### Fixed
+- return all subscriptions and episode changes for parameter since=0
+
+
 ## 1.0.9 - 2021-07-27
 ### Changed
 - save episode action timestamps as UTC (thanks @JohnOfUs)
