@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.11 - 2021-08-16
+### Fixed
+-  stop creating unnecessary log file in nextcloud root folder
+
 ## 1.0.10 - 2021-08-14
 ### Fixed
 - return all subscriptions and episode changes for parameter since=0
