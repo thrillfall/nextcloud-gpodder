@@ -13,7 +13,6 @@ use OCP\IRequest;
 
 class SubscriptionChangeController extends Controller {
 
-	private string $AppName;
 	/**
 	 * @var SubscriptionChangeSaver
 	 */
@@ -46,7 +45,7 @@ class SubscriptionChangeController extends Controller {
 	 * @return void
 	 */
 	public function create($add, $remove) {
-		return $this->subscriptionChangeSaver->saveSubscriptionChanges($add, $remove, $this->userId);
+		$this->subscriptionChangeSaver->saveSubscriptionChanges($add, $remove, $this->userId);
 	}
 
 	/**
