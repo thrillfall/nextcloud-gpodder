@@ -5,6 +5,7 @@ namespace OCA\GPodderSync\Controller;
 
 use DateTime;
 use DateTimeZone;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use GuzzleHttp\Psr7\Response;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionReader;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
@@ -67,11 +68,11 @@ class EpisodeActionController extends Controller {
 
 		try {
 			return $this->episodeActionWriter->save($episodeActionEntity);
+		} catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
+			return $this->updateEpisodeAction($episodeAction, $episodeActionEntity);
 		} catch (\Exception $exception) {
 			if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-				$idEpisodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisode($episodeAction->getEpisode(), $this->userId)->getId();
-				$episodeActionEntity->setId($idEpisodeActionEntityToUpdate);
-				return $this->episodeActionWriter->update($episodeActionEntity);
+				return $this->updateEpisodeAction($episodeAction, $episodeActionEntity);
 			}
 		}
 	}
@@ -113,5 +114,18 @@ class EpisodeActionController extends Controller {
 		return \DateTime::createFromFormat('D F d H:i:s T Y', $timestamp)
 			->setTimezone(new DateTimeZone('UTC'))
 			->format("Y-m-d\TH:i:s");
+	}
+
+	/**
+	 * @param \OCA\GPodderSync\Core\EpisodeAction\EpisodeAction $episodeAction
+	 * @param EpisodeActionEntity $episodeActionEntity
+	 *
+	 * @return EpisodeActionEntity
+	 */
+	private function updateEpisodeAction(\OCA\GPodderSync\Core\EpisodeAction\EpisodeAction $episodeAction, EpisodeActionEntity $episodeActionEntity): EpisodeActionEntity
+	{
+		$idEpisodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisode($episodeAction->getEpisode(), $this->userId)->getId();
+		$episodeActionEntity->setId($idEpisodeActionEntityToUpdate);
+		return $this->episodeActionWriter->update($episodeActionEntity);
 	}
 }
