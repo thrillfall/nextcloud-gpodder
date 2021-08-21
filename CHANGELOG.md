@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.12 - 2021-08-21
+### Fixed
+-  handle UniqueConstraintViolationException thrown by nc < v22.0
+
+
 ## 1.0.11 - 2021-08-16
 ### Fixed
 -  stop creating unnecessary log file in nextcloud root folder
