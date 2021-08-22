@@ -70,7 +70,7 @@ class EpisodeActionController extends Controller {
 			return $this->episodeActionWriter->save($episodeActionEntity);
 		} catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
 			return $this->updateEpisodeAction($episodeAction, $episodeActionEntity);
-		} catch (\Exception $exception) {
+		} catch (Exception $exception) {
 			if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
 				return $this->updateEpisodeAction($episodeAction, $episodeActionEntity);
 			}
