@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.13 - 2021-08-22
+### Fixed
+- increase table column episode_action.action length limit to fit episode actions like DOWNLOAD
+### Changed
+- narrow catch to nextcloud dbal exceptions
+
 ## 1.0.12 - 2021-08-21
 ### Fixed
 -  handle UniqueConstraintViolationException thrown by nc < v22.0
