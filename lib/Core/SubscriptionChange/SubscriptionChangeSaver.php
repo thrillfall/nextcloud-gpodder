@@ -11,22 +11,8 @@ use OCP\DB\Exception;
 
 class SubscriptionChangeSaver
 {
-
-	/**
-	 * @var SubscriptionChangesReader
-	 */
-	private SubscriptionChangesReader $subscriptionChangeReader;
-	/**
-	 * @var SubscriptionChangeRepository
-	 */
 	private SubscriptionChangeRepository $subscriptionChangeRepository;
-	/**
-	 * @var SubscriptionChangeWriter
-	 */
 	private SubscriptionChangeWriter $subscriptionChangeWriter;
-	/**
-	 * @var SubscriptionChangeRequestParser
-	 */
 	private SubscriptionChangeRequestParser $subscriptionChangeRequestParser;
 
 	public function __construct(
