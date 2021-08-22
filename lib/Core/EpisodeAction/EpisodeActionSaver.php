@@ -31,30 +31,36 @@ class EpisodeActionSaver
 	/**
 	 * @param $data
 	 *
-	 * @return EpisodeActionEntity
+	 * @return array
 	 */
-	public function saveEpisodeAction($data, string $userId): EpisodeActionEntity
+	public function saveEpisodeAction($data, string $userId): array
 	{
-		$episodeAction = $this->episodeActionReader->fromString($data);
-		$episodeActionEntity = new EpisodeActionEntity();
-		$episodeActionEntity->setPodcast($episodeAction->getPodcast());
-		$episodeActionEntity->setEpisode($episodeAction->getEpisode());
-		$episodeActionEntity->setAction($episodeAction->getAction());
-		$episodeActionEntity->setPosition($episodeAction->getPosition());
-		$episodeActionEntity->setStarted($episodeAction->getStarted());
-		$episodeActionEntity->setTotal($episodeAction->getTotal());
-		$episodeActionEntity->setTimestamp($this->convertTimestampToDbDateTimeString($episodeAction->getTimestamp()));
-		$episodeActionEntity->setUserId($userId);
+		$response = array();
 
-		try {
-			return $this->episodeActionWriter->save($episodeActionEntity);
-		} catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
-			return $this->updateEpisodeAction($episodeAction, $episodeActionEntity, $userId);
-		} catch (Exception $exception) {
-			if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-				return $this->updateEpisodeAction($episodeAction, $episodeActionEntity, $userId);
-			}
-		}
+		$episodeActions = $this->episodeActionReader->fromString($data);
+
+        foreach ($episodeActions as $episodeAction) {
+            $episodeActionEntity = new EpisodeActionEntity();
+            $episodeActionEntity->setPodcast($episodeAction->getPodcast());
+            $episodeActionEntity->setEpisode($episodeAction->getEpisode());
+            $episodeActionEntity->setAction($episodeAction->getAction());
+            $episodeActionEntity->setPosition($episodeAction->getPosition());
+            $episodeActionEntity->setStarted($episodeAction->getStarted());
+            $episodeActionEntity->setTotal($episodeAction->getTotal());
+            $episodeActionEntity->setTimestamp($this->convertTimestampToDbDateTimeString($episodeAction->getTimestamp()));
+            $episodeActionEntity->setUserId($userId);
+
+            try {
+                array_push($response, $this->episodeActionWriter->save($episodeActionEntity));
+            } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
+                array_push($response, $this->updateEpisodeAction($episodeAction, $episodeActionEntity, $userId));
+            } catch (Exception $exception) {
+                if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+                    array_push($response, $this->updateEpisodeAction($episodeAction, $episodeActionEntity, $userId));
+                }
+            }
+        }
+		return $response;
 	}
 
 	/**
