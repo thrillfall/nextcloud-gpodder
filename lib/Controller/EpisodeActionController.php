@@ -4,16 +4,11 @@ declare(strict_types=1);
 namespace OCA\GPodderSync\Controller;
 
 use DateTime;
-use DateTimeZone;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use GuzzleHttp\Psr7\Response;
-use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionReader;
-use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
+use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionSaver;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
-use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionWriter;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\DB\Exception;
 use OCP\IRequest;
 
 class EpisodeActionController extends Controller {
@@ -22,29 +17,21 @@ class EpisodeActionController extends Controller {
 	 * @var EpisodeActionRepository
 	 */
 	private EpisodeActionRepository $episodeActionRepository;
-	/**
-	 * @var EpisodeActionWriter
-	 */
-	private EpisodeActionWriter $episodeActionWriter;
-	/**
-	 * @var EpisodeActionReader
-	 */
-	private EpisodeActionReader $episodeActionReader;
+
 	private $userId;
+	private EpisodeActionSaver $episodeActionSaver;
 
 	public function __construct(
 		string $AppName,
 		IRequest $request,
 		$UserId,
 		EpisodeActionRepository $episodeActionRepository,
-		EpisodeActionWriter $episodeActionWriter,
-		EpisodeActionReader $episodeActionReader
+		EpisodeActionSaver $episodeActionSaver
 	) {
 		parent::__construct($AppName, $request);
 		$this->episodeActionRepository = $episodeActionRepository;
-		$this->episodeActionWriter = $episodeActionWriter;
-		$this->episodeActionReader = $episodeActionReader;
 		$this->userId = $UserId;
+		$this->episodeActionSaver = $episodeActionSaver;
 	}
 
 	/**
@@ -55,26 +42,7 @@ class EpisodeActionController extends Controller {
 	 * @return Response
 	 */
 	public function create($data) {
-		$episodeAction = $this->episodeActionReader->fromString($data);
-		$episodeActionEntity = new EpisodeActionEntity();
-		$episodeActionEntity->setPodcast($episodeAction->getPodcast());
-		$episodeActionEntity->setEpisode($episodeAction->getEpisode());
-		$episodeActionEntity->setAction($episodeAction->getAction());
-		$episodeActionEntity->setPosition($episodeAction->getPosition());
-		$episodeActionEntity->setStarted($episodeAction->getStarted());
-		$episodeActionEntity->setTotal($episodeAction->getTotal());
-		$episodeActionEntity->setTimestamp($this->convertTimestampToDbDateTimeString($episodeAction->getTimestamp()));
-		$episodeActionEntity->setUserId($this->userId);
-
-		try {
-			return $this->episodeActionWriter->save($episodeActionEntity);
-		} catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
-			return $this->updateEpisodeAction($episodeAction, $episodeActionEntity);
-		} catch (Exception $exception) {
-			if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-				return $this->updateEpisodeAction($episodeAction, $episodeActionEntity);
-			}
-		}
+		return $this->episodeActionSaver->saveEpisodeAction($data, $this->userId);
 	}
 
 	/**
@@ -104,28 +72,5 @@ class EpisodeActionController extends Controller {
 			: (new \DateTime('-1 week'));
 	}
 
-	/**
-	 * @param string $episodeAction
-	 *
-	 * @return string
-	 */
-	private function convertTimestampToDbDateTimeString(string $timestamp)
-	{
-		return \DateTime::createFromFormat('D F d H:i:s T Y', $timestamp)
-			->setTimezone(new DateTimeZone('UTC'))
-			->format("Y-m-d\TH:i:s");
-	}
 
-	/**
-	 * @param \OCA\GPodderSync\Core\EpisodeAction\EpisodeAction $episodeAction
-	 * @param EpisodeActionEntity $episodeActionEntity
-	 *
-	 * @return EpisodeActionEntity
-	 */
-	private function updateEpisodeAction(\OCA\GPodderSync\Core\EpisodeAction\EpisodeAction $episodeAction, EpisodeActionEntity $episodeActionEntity): EpisodeActionEntity
-	{
-		$idEpisodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisode($episodeAction->getEpisode(), $this->userId)->getId();
-		$episodeActionEntity->setId($idEpisodeActionEntityToUpdate);
-		return $this->episodeActionWriter->update($episodeActionEntity);
-	}
 }
