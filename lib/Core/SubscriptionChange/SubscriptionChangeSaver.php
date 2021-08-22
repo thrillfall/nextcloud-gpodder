@@ -40,7 +40,7 @@ class SubscriptionChangeSaver
 				$this->subscriptionChangeWriter->create($subscriptionChangeEntity);
 			} catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
 				$this->updateSubscription($subscriptionChangeEntity, $userId);
-			} catch (\Exception $exception) {
+			} catch (Exception $exception) {
 				if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
 					$this->updateSubscription($subscriptionChangeEntity, $userId);
 				}
