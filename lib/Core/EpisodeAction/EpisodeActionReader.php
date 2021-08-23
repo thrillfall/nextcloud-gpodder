@@ -4,33 +4,28 @@ declare(strict_types=1);
 namespace OCA\GPodderSync\Core\EpisodeAction;
 
 class EpisodeActionReader {
+
+    const EPISODEACTION_IDENTIFIER = 'EpisodeAction{';
+
 	/**
-	 * Reads and parses an EpisodeActions string and returns an EpisodeAction array
-	 *
 	 * @param string $episodeActionString
-	 * @return array
+	 * @return EpisodeAction[]
 	 */
 	public function fromString(string $episodeActionString): array {
 		
-		$episodeActions = array();
+		$episodeActions = [];
 
-		$seek = 0;
+        $episodeActionStrings = explode(self::EPISODEACTION_IDENTIFIER, $episodeActionString);
 
-        while (strpos($episodeActionString, 'EpisodeAction{', $seek) >= $seek) {
-            if (($seek = strpos($episodeActionString, 'EpisodeAction{', $seek)) === false) {
-                continue;
-            }
+        for($i = 1; $i < count($episodeActionStrings); $i++) {
 
             preg_match(
                 '/EpisodeAction{(podcast=\')(?<podcast>.*?)(\', episode=\')(?<episode>.*?)(\', action=)(?<action>.*?)(, timestamp=)(?<timestamp>.*?)(, started=)(?<started>.*?)(, position=)(?<position>.*?)(, total=)(?<total>.*?)}]*/',
-                substr($episodeActionString, $seek),
+                self::EPISODEACTION_IDENTIFIER . $episodeActionStrings[$i],
                 $matches
             );
 
-            // change for next iteration
-            $seek++;
-
-            array_push($episodeActions, new EpisodeAction(
+            $episodeActions[] = new EpisodeAction(
                 $matches["podcast"],
                 $matches["episode"],
                 $matches["action"],
@@ -38,7 +33,7 @@ class EpisodeActionReader {
                 (int)$matches["started"],
                 (int)$matches["position"],
                 (int)$matches["total"],
-            ));
+            );
         }
 
 		return $episodeActions;
