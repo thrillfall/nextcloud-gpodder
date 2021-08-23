@@ -15,7 +15,7 @@ class AppTest extends TestCase {
 
     private $container;
 
-    public function setUp() : void {
+    public function setUp(): void {
         parent::setUp();
         $app = new App('gpoddersync');
         $this->container = $app->getContainer();
