@@ -29,13 +29,13 @@ class EpisodeActionSaver
 	}
 
 	/**
-	 * @param $data
+	 * @param string $data
 	 *
-	 * @return array
+	 * @return EpisodeActionEntity[]
 	 */
 	public function saveEpisodeAction($data, string $userId): array
 	{
-		$response = array();
+		$episodeActionEntities = [];
 
 		$episodeActions = $this->episodeActionReader->fromString($data);
 
@@ -51,16 +51,16 @@ class EpisodeActionSaver
             $episodeActionEntity->setUserId($userId);
 
             try {
-                array_push($response, $this->episodeActionWriter->save($episodeActionEntity));
+                $episodeActionEntities[] = $this->episodeActionWriter->save($episodeActionEntity);
             } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
-                array_push($response, $this->updateEpisodeAction($episodeAction, $episodeActionEntity, $userId));
+                $episodeActionEntities[] = $this->updateEpisodeAction($episodeAction, $episodeActionEntity, $userId);
             } catch (Exception $exception) {
                 if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-                    array_push($response, $this->updateEpisodeAction($episodeAction, $episodeActionEntity, $userId));
+                    $episodeActionEntities[] = $this->updateEpisodeAction($episodeAction, $episodeActionEntity, $userId);
                 }
             }
         }
-		return $response;
+		return $episodeActionEntities;
 	}
 
 	/**
