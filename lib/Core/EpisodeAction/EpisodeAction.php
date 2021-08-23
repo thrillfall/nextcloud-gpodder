@@ -11,6 +11,7 @@ class EpisodeAction {
 	private int $started;
 	private int $position;
 	private int $total;
+	private ?string $guid;
 
 	public function __construct(
 		string $podcast,
@@ -19,7 +20,8 @@ class EpisodeAction {
 		string $timestamp,
 		int $started,
 		int $position,
-		int $total
+		int $total,
+		?string $guid
 	) {
 		$this->podcast = $podcast;
 		$this->episode = $episode;
@@ -28,6 +30,7 @@ class EpisodeAction {
 		$this->started = $started;
 		$this->position = $position;
 		$this->total = $total;
+		$this->guid = $guid;
 	}
 
 	/**
@@ -75,8 +78,14 @@ class EpisodeAction {
 	/**
 	 * @return int
 	 */
-	public function getTotal(): int {
+	public function getTotal(): int
+	{
 		return $this->total;
+	}
+
+	public function getGuid() : ?string
+	{
+		return $this->guid;
 	}
 
 
