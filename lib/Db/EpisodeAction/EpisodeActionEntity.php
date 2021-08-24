@@ -15,6 +15,7 @@ class EpisodeActionEntity extends Entity implements JsonSerializable {
 	protected $started;
 	protected $total;
 	protected $timestamp;
+	protected $guid;
 	protected $userId;
 
 	public function __construct() {
@@ -26,6 +27,7 @@ class EpisodeActionEntity extends Entity implements JsonSerializable {
 			'id' => $this->id,
 			'podcast' => $this->podcast,
 			'episode' => $this->episode,
+			'guid' => $this->guid,
 			'action' => $this->action,
 			'position' => $this->position,
 			'started' => $this->started,
