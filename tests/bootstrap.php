@@ -5,7 +5,7 @@ if (!defined('PHPUNIT_RUN')) {
 }
 
 require_once __DIR__ . '/../../../lib/base.php';
-
+require_once __DIR__ . '/Helper/DatabaseTransaction.php';
 // Fix for "Autoload path not allowed: .../tests/lib/testcase.php"
 OC::$loader->addValidRoot(OC::$SERVERROOT . '/tests');
 
