@@ -8,20 +8,21 @@ class EpisodeActionReader {
     const EPISODEACTION_IDENTIFIER = 'EpisodeAction{';
 
 	/**
-	 * @param string $episodeActionString
+	 * @param string $episodeActionsString
 	 * @return EpisodeAction[]
 	 */
-	public function fromString(string $episodeActionString): array {
+	public function fromString(string $episodeActionsString): array {
 		
 		$episodeActions = [];
 
-        $episodeActionStrings = explode(self::EPISODEACTION_IDENTIFIER, $episodeActionString);
-
-        for($i = 1; $i < count($episodeActionStrings); $i++) {
+        $episodeActionStrings = explode(self::EPISODEACTION_IDENTIFIER, $episodeActionsString);
+        array_shift($episodeActionStrings);
+        
+        foreach($episodeActionStrings as $episodeActionString) {
 
             preg_match(
                 '/EpisodeAction{(podcast=\')(?<podcast>.*?)(\', episode=\')(?<episode>.*?)(\', action=)(?<action>.*?)(, timestamp=)(?<timestamp>.*?)(, started=)(?<started>.*?)(, position=)(?<position>.*?)(, total=)(?<total>.*?)}]*/',
-                self::EPISODEACTION_IDENTIFIER . $episodeActionStrings[$i],
+                self::EPISODEACTION_IDENTIFIER . $episodeActionString,
                 $matches
             );
 
