@@ -33,7 +33,7 @@ class EpisodeActionSaver
 	 *
 	 * @return EpisodeActionEntity[]
 	 */
-	public function saveEpisodeAction($data, string $userId): array
+	public function saveEpisodeAction(string $data, string $userId): array
 	{
 		$episodeActionEntities = [];
 
@@ -77,7 +77,7 @@ class EpisodeActionSaver
 		string $userId
 	): EpisodeActionEntity
 	{
-		$idEpisodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisode(
+		$idEpisodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisodeIdentifier(
 			$episodeActionEntity->getEpisode(),
 			$userId
 		)->getId();

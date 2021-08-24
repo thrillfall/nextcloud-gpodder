@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Db\EpisodeAction;
 
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-
 class EpisodeActionWriter {
 
 	/**

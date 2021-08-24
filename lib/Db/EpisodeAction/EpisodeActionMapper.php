@@ -8,12 +8,15 @@ use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
-class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper {
-	public function __construct(IDBConnection $db) {
+class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper
+{
+	public function __construct(IDBConnection $db)
+	{
 		parent::__construct($db, 'gpodder_episode_action', EpisodeActionEntity::class);
 	}
 
-	public function findAll(\DateTime $sinceTimestamp, string $userId): array {
+	public function findAll(\DateTime $sinceTimestamp, string $userId): array
+	{
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -21,28 +24,34 @@ class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper {
 			->where(
 				$qb->expr()->gt('timestamp', $qb->createNamedParameter($sinceTimestamp, IQueryBuilder::PARAM_DATE))
 			)
-		->andWhere(
-			$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
+			->andWhere(
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
 
-		);
+			);
 
 		return $this->findEntities($qb);
 	}
 
-	public function findByEpisode(string $episode,  string $userId) {
+	public function findByEpisodeIdentifier(string $episodeIdentifier, string $userId) : EpisodeActionEntity
+	{
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->eq('episode', $qb->createNamedParameter($episode))
+				$qb->expr()->orX(
+					$qb->expr()->eq('episode', $qb->createNamedParameter($episodeIdentifier)),
+					$qb->expr()->eq('guid', $qb->createNamedParameter($episodeIdentifier)))
 			)
-		->andWhere(
-			$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
-		);
+			->andWhere(
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
+			);
 
 		try {
-			return $this->findEntity($qb);
+			/** @var EpisodeActionEntity $episodeActionEntity*/
+			$episodeActionEntity = $this->findEntity($qb);
+
+			return $episodeActionEntity;
 		} catch (DoesNotExistException $e) {
 		} catch (MultipleObjectsReturnedException $e) {
 		}
