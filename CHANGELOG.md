@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.14 - 2021-08-24
+### Fixed
+- enable processing of multiple EpisodeActions (thanks https://github.com/JonOfUs)
+
 ## 1.0.13 - 2021-08-22
 ### Fixed
 - increase table column episode_action.action length limit to fit episode actions like DOWNLOAD
