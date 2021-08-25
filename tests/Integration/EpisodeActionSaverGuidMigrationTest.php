@@ -13,7 +13,7 @@ use Test\TestCase;
 class EpisodeActionSaverGuidMigrationTest extends TestCase
 {
 
-	private const USER_ID_0 = "user0@127.0.0.1";
+	private const USER_ID_0 = "testuser0";
 
 	private \OCP\AppFramework\IAppContainer $container;
 
@@ -28,8 +28,8 @@ class EpisodeActionSaverGuidMigrationTest extends TestCase
 		/** @var EpisodeActionSaver $episodeActionSaver */
 		$episodeActionSaver = $this->container->get(EpisodeActionSaver::class);
 
-		$episodeUrl = uniqid("https://dts.podtrac.com/redirect.mp3/chrt.fm/track");
-		$guid = uniqid("gid://art19-episode-locator/V0/Ktd");
+		$episodeUrl = uniqid("test_https://dts.podtrac.com/redirect.mp3/chrt.fm/track");
+		$guid = uniqid("test_gid://art19-episode-locator/V0/Ktd");
 
 		$savedEpisodeActionEntityWithoutGuid = $episodeActionSaver->saveEpisodeActions(
 			"[EpisodeAction{podcast='https://rss.art19.com/dr-death-s3-miracle-man', episode='{$episodeUrl}', action=PLAY, timestamp=Mon Aug 23 01:58:56 GMT+02:00 2021, started=47, position=54, total=2252}]",
@@ -49,8 +49,8 @@ class EpisodeActionSaverGuidMigrationTest extends TestCase
 		/** @var EpisodeActionSaver $episodeActionSaver */
 		$episodeActionSaver = $this->container->get(EpisodeActionSaver::class);
 
-		$episodeUrl = uniqid("https://dts.podtrac.com/redirect.mp3/chrt.fm/track");
-		$guid = uniqid("gid://art19-episode-locator/V0/Ktd");
+		$episodeUrl = uniqid("test_https://dts.podtrac.com/redirect.mp3/chrt.fm/track");
+		$guid = uniqid("test_gid://art19-episode-locator/V0/Ktd");
 
 		$savedEpisodeActionEntity = $episodeActionSaver->saveEpisodeActions(
 			"[EpisodeAction{podcast='https://rss.art19.com/dr-death-s3-miracle-man', episode='{$episodeUrl}', guid='{$guid}', action=PLAY, timestamp=Mon Aug 23 01:58:56 GMT+02:00 2021, started=47, position=54, total=2252}]",
