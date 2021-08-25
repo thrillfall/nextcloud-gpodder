@@ -32,7 +32,7 @@ class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper
 		return $this->findEntities($qb);
 	}
 
-	public function findByEpisodeIdentifier(string $episodeIdentifier, string $userId) : EpisodeActionEntity
+	public function findByEpisodeIdentifier(string $episodeIdentifier, string $userId) : ?EpisodeActionEntity
 	{
 		$qb = $this->db->getQueryBuilder();
 
@@ -55,5 +55,7 @@ class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper
 		} catch (DoesNotExistException $e) {
 		} catch (MultipleObjectsReturnedException $e) {
 		}
+
+		return null;
 	}
 }

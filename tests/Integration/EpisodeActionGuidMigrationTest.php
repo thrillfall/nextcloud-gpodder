@@ -5,6 +5,7 @@ namespace tests\Integration;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionReader;
+use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionSaver;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionWriter;
@@ -28,11 +29,17 @@ class EpisodeActionGuidMigrationTest extends TestCase
 	 */
 	private $episodeActionWriter;
 
+	/**
+	 * @var EpisodeActionRepository
+	 */
+	private $episodeActionRepository;
+
 	public function setUp(): void {
 		parent::setUp();
 		$app = new App('gpoddersync');
 		$this->container = $app->getContainer();
 		$this->episodeActionWriter = $this->container->get(EpisodeActionWriter::class);
+		$this->episodeActionRepository = $this->container->get(EpisodeActionRepository::class);
 	}
 
 	/**
@@ -63,6 +70,10 @@ class EpisodeActionGuidMigrationTest extends TestCase
 
 	}
 
+	/**
+	 *
+	 * @group findme
+	 */
 	public function testFindEpisodeActionByEpisodeUrlAndThenGuid()
 	{
 		$episodeActionEntity = new EpisodeActionEntity();
@@ -76,12 +87,9 @@ class EpisodeActionGuidMigrationTest extends TestCase
 		$episodeActionEntity->setUserId(self::USER_ID_0);
 		$savedEpisodeActionEntity = $this->episodeActionWriter->save($episodeActionEntity);
 
-		/** @var EpisodeActionRepository $episodeActionRepository */
-		$episodeActionRepository = $this->container->get(EpisodeActionRepository::class);
-
 		self::assertSame(
 			$savedEpisodeActionEntity->getId(),
-			$episodeActionRepository->findByEpisodeIdentifier($episodeActionEntity->getEpisode(), self::USER_ID_0)->getId()
+			$this->episodeActionRepository->findByEpisodeIdentifier($episodeActionEntity->getEpisode(), self::USER_ID_0)->getId()
 		);
 
 		//update same episode action again this time with guid
@@ -92,12 +100,12 @@ class EpisodeActionGuidMigrationTest extends TestCase
 
 		self::assertSame(
 			$savedEpisodeActionEntityWithGuid->getId(),
-			$episodeActionRepository->findByEpisodeIdentifier($episodeActionEntityWithGuid->getEpisode(), self::USER_ID_0)->getId()
+			$this->episodeActionRepository->findByEpisodeIdentifier($episodeActionEntityWithGuid->getEpisode(), self::USER_ID_0)->getId()
 		);
 
 		self::assertSame(
 			$savedEpisodeActionEntityWithGuid->getId(),
-			$episodeActionRepository->findByEpisodeIdentifier($episodeActionEntityWithGuid->getGuid(), self::USER_ID_0)->getId()
+			$this->episodeActionRepository->findByEpisodeIdentifier($episodeActionEntityWithGuid->getGuid(), self::USER_ID_0)->getId()
 		);
 
 	}

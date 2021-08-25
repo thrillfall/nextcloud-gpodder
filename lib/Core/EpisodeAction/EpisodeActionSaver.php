@@ -33,7 +33,7 @@ class EpisodeActionSaver
 	 *
 	 * @return EpisodeActionEntity[]
 	 */
-	public function saveEpisodeAction(string $data, string $userId): array
+	public function saveEpisodeActions(string $data, string $userId): array
 	{
 		$episodeActionEntities = [];
 
@@ -77,10 +77,19 @@ class EpisodeActionSaver
 		string $userId
 	): EpisodeActionEntity
 	{
-		$idEpisodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisodeIdentifier(
-			$episodeActionEntity->getEpisode(),
+		$identifier = $episodeActionEntity->getGuid() ?? $episodeActionEntity->getEpisode();
+		$episodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisodeIdentifier(
+			$identifier,
 			$userId
-		)->getId();
+		);
+
+		if ($episodeActionEntityToUpdate === null && $episodeActionEntity->getGuid() !== null) {
+			$episodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisodeIdentifier(
+				$episodeActionEntity->getEpisode(),
+				$userId
+			);
+		}
+		$idEpisodeActionEntityToUpdate = $episodeActionEntityToUpdate->getId();
 		$episodeActionEntity->setId($idEpisodeActionEntityToUpdate);
 
 		return $this->episodeActionWriter->update($episodeActionEntity);
@@ -97,6 +106,7 @@ class EpisodeActionSaver
 		$episodeActionEntity = new EpisodeActionEntity();
 		$episodeActionEntity->setPodcast($episodeAction->getPodcast());
 		$episodeActionEntity->setEpisode($episodeAction->getEpisode());
+		$episodeActionEntity->setGuid($episodeAction->getGuid());
 		$episodeActionEntity->setAction($episodeAction->getAction());
 		$episodeActionEntity->setPosition($episodeAction->getPosition());
 		$episodeActionEntity->setStarted($episodeAction->getStarted());

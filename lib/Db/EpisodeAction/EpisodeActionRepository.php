@@ -17,7 +17,7 @@ class EpisodeActionRepository {
 		return $this->episodeActionMapper->findAll($sinceTimestamp, $userId);
 	}
 
-	public function findByEpisodeIdentifier(string $identifier, string $userId): EpisodeActionEntity {
+	public function findByEpisodeIdentifier(string $identifier, string $userId): ?EpisodeActionEntity {
 		return $this->episodeActionMapper->findByEpisodeIdentifier($identifier, $userId);
 	}
 
