@@ -84,12 +84,12 @@ class EpisodeActionSaver
 		);
 
 		if ($episodeActionEntityToUpdate === null && $episodeActionEntity->getGuid() !== null) {
-			$episodeActionEntityToUpdate = $this->getOldEpisodeActionByEpisodeUrl(
-				$episodeActionEntity->getEpisode(), $userId
-			);
+			$episodeActionEntityToUpdate = $this->getOldEpisodeActionByEpisodeUrl($episodeActionEntity->getEpisode(), $userId);
 		}
 
 		$episodeActionEntity->setId($episodeActionEntityToUpdate->getId());
+
+		$this->assertGuidDoesNotGetNulledWithOldData($episodeActionEntityToUpdate, $episodeActionEntity);
 
 		return $this->episodeActionWriter->update($episodeActionEntity);
 	}
@@ -106,6 +106,14 @@ class EpisodeActionSaver
 			$episodeUrl,
 			$userId
 		);
+	}
+
+	private function assertGuidDoesNotGetNulledWithOldData(EpisodeActionEntity $episodeActionEntityToUpdate, EpisodeActionEntity $episodeActionEntity): void
+	{
+		$existingGuid = $episodeActionEntityToUpdate->getGuid();
+		if ($existingGuid !== null && $episodeActionEntity->getGuid() == null) {
+			$episodeActionEntity->setGuid($existingGuid);
+		}
 	}
 
 	/**
