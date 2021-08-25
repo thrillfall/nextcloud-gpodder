@@ -84,15 +84,28 @@ class EpisodeActionSaver
 		);
 
 		if ($episodeActionEntityToUpdate === null && $episodeActionEntity->getGuid() !== null) {
-			$episodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisodeIdentifier(
-				$episodeActionEntity->getEpisode(),
-				$userId
+			$episodeActionEntityToUpdate = $this->getOldEpisodeActionByEpisodeUrl(
+				$episodeActionEntity->getEpisode(), $userId
 			);
 		}
-		$idEpisodeActionEntityToUpdate = $episodeActionEntityToUpdate->getId();
-		$episodeActionEntity->setId($idEpisodeActionEntityToUpdate);
+
+		$episodeActionEntity->setId($episodeActionEntityToUpdate->getId());
 
 		return $this->episodeActionWriter->update($episodeActionEntity);
+	}
+
+	/**
+	 * @param string $episodeUrl
+	 * @param string $userId
+	 *
+	 * @return EpisodeActionEntity|null
+	 */
+	private function getOldEpisodeActionByEpisodeUrl(string $episodeUrl, string $userId): ?EpisodeActionEntity
+	{
+		return $this->episodeActionRepository->findByEpisodeIdentifier(
+			$episodeUrl,
+			$userId
+		);
 	}
 
 	/**
