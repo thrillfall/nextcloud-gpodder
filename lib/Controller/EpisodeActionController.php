@@ -42,7 +42,7 @@ class EpisodeActionController extends Controller {
 	 * @return Response
 	 */
 	public function create($data) {
-		return $this->episodeActionSaver->saveEpisodeAction($data, $this->userId);
+		return $this->episodeActionSaver->saveEpisodeActions($data, $this->userId);
 	}
 
 	/**
