@@ -43,4 +43,25 @@ class EpisodeActionSaverGuidMigrationTest extends TestCase
 
 		self::assertSame($savedEpisodeActionEntityWithoutGuid->getId(), $savedEpisodeActionEntityWithGuid->getId());
 	}
+
+	public function testCreateEpisodeActionWithGuidThenCreateAgainWithGuidButDifferentEpisodeUrl() : void
+	{
+		/** @var EpisodeActionSaver $episodeActionSaver */
+		$episodeActionSaver = $this->container->get(EpisodeActionSaver::class);
+
+		$episodeUrl = uniqid("https://dts.podtrac.com/redirect.mp3/chrt.fm/track");
+		$guid = uniqid("gid://art19-episode-locator/V0/Ktd");
+
+		$savedEpisodeActionEntity = $episodeActionSaver->saveEpisodeActions(
+			"[EpisodeAction{podcast='https://rss.art19.com/dr-death-s3-miracle-man', episode='{$episodeUrl}', guid='{$guid}', action=PLAY, timestamp=Mon Aug 23 01:58:56 GMT+02:00 2021, started=47, position=54, total=2252}]",
+			self::USER_ID_0
+		)[0];
+
+		$savedEpisodeActionEntityWithDifferentEpisodeUrl = $episodeActionSaver->saveEpisodeActions(
+			"[EpisodeAction{podcast='https://rss.art19.com/dr-death-s3-miracle-man', episode='{$episodeUrl}_different', guid='{$guid}', action=PLAY, timestamp=Mon Aug 23 01:58:56 GMT+02:00 2021, started=47, position=54, total=2252}]",
+			self::USER_ID_0
+		)[0];
+
+		self::assertSame($savedEpisodeActionEntity->getId(), $savedEpisodeActionEntityWithDifferentEpisodeUrl->getId());
+	}
 }
