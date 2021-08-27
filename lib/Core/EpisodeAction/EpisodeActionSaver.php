@@ -40,23 +40,15 @@ class EpisodeActionSaver
 		$episodeActions = $this->episodeActionReader->fromString($data);
 
         foreach ($episodeActions as $episodeAction) {
-            $episodeActionEntity = new EpisodeActionEntity();
-            $episodeActionEntity->setPodcast($episodeAction->getPodcast());
-            $episodeActionEntity->setEpisode($episodeAction->getEpisode());
-            $episodeActionEntity->setAction($episodeAction->getAction());
-            $episodeActionEntity->setPosition($episodeAction->getPosition());
-            $episodeActionEntity->setStarted($episodeAction->getStarted());
-            $episodeActionEntity->setTotal($episodeAction->getTotal());
-            $episodeActionEntity->setTimestamp($this->convertTimestampToDbDateTimeString($episodeAction->getTimestamp()));
-            $episodeActionEntity->setUserId($userId);
+			$episodeActionEntity = $this->hydrateEpisodeActionEntity($episodeAction, $userId);
 
-            try {
+			try {
                 $episodeActionEntities[] = $this->episodeActionWriter->save($episodeActionEntity);
             } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
-                $episodeActionEntities[] = $this->updateEpisodeAction($episodeAction, $episodeActionEntity, $userId);
+                $episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
             } catch (Exception $exception) {
                 if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-                    $episodeActionEntities[] = $this->updateEpisodeAction($episodeAction, $episodeActionEntity, $userId);
+                    $episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
                 }
             }
         }
@@ -76,23 +68,42 @@ class EpisodeActionSaver
 	}
 
 	/**
-	 * @param EpisodeAction $episodeAction
 	 * @param EpisodeActionEntity $episodeActionEntity
 	 *
 	 * @return EpisodeActionEntity
 	 */
 	private function updateEpisodeAction(
-		EpisodeAction $episodeAction,
 		EpisodeActionEntity $episodeActionEntity,
 		string $userId
 	): EpisodeActionEntity
 	{
 		$idEpisodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisode(
-			$episodeAction->getEpisode(),
+			$episodeActionEntity->getEpisode(),
 			$userId
 		)->getId();
 		$episodeActionEntity->setId($idEpisodeActionEntityToUpdate);
 
 		return $this->episodeActionWriter->update($episodeActionEntity);
+	}
+
+	/**
+	 * @param EpisodeAction $episodeAction
+	 * @param string $userId
+	 *
+	 * @return EpisodeActionEntity
+	 */
+	private function hydrateEpisodeActionEntity(EpisodeAction $episodeAction, string $userId): EpisodeActionEntity
+	{
+		$episodeActionEntity = new EpisodeActionEntity();
+		$episodeActionEntity->setPodcast($episodeAction->getPodcast());
+		$episodeActionEntity->setEpisode($episodeAction->getEpisode());
+		$episodeActionEntity->setAction($episodeAction->getAction());
+		$episodeActionEntity->setPosition($episodeAction->getPosition());
+		$episodeActionEntity->setStarted($episodeAction->getStarted());
+		$episodeActionEntity->setTotal($episodeAction->getTotal());
+		$episodeActionEntity->setTimestamp($this->convertTimestampToDbDateTimeString($episodeAction->getTimestamp()));
+		$episodeActionEntity->setUserId($userId);
+
+		return $episodeActionEntity;
 	}
 }
