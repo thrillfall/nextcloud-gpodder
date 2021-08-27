@@ -89,7 +89,7 @@ class EpisodeActionSaver
 
 		$episodeActionEntity->setId($episodeActionEntityToUpdate->getId());
 
-		$this->assertGuidDoesNotGetNulledWithOldData($episodeActionEntityToUpdate, $episodeActionEntity);
+		$this->ensureGuidDoesNotGetNulledWithOldData($episodeActionEntityToUpdate, $episodeActionEntity);
 
 		return $this->episodeActionWriter->update($episodeActionEntity);
 	}
@@ -108,7 +108,7 @@ class EpisodeActionSaver
 		);
 	}
 
-	private function assertGuidDoesNotGetNulledWithOldData(EpisodeActionEntity $episodeActionEntityToUpdate, EpisodeActionEntity $episodeActionEntity): void
+	private function ensureGuidDoesNotGetNulledWithOldData(EpisodeActionEntity $episodeActionEntityToUpdate, EpisodeActionEntity $episodeActionEntity): void
 	{
 		$existingGuid = $episodeActionEntityToUpdate->getGuid();
 		if ($existingGuid !== null && $episodeActionEntity->getGuid() == null) {
