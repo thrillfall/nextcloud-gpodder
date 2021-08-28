@@ -55,11 +55,6 @@ class EpisodeActionSaver
 		return $episodeActionEntities;
 	}
 
-	/**
-	 * @param string $timestamp
-	 *
-	 * @return string
-	 */
 	private function convertTimestampToDbDateTimeString(string $timestamp): string
 	{
 		return \DateTime::createFromFormat('D F d H:i:s T Y', $timestamp)
@@ -67,11 +62,6 @@ class EpisodeActionSaver
 			->format("Y-m-d\TH:i:s");
 	}
 
-	/**
-	 * @param EpisodeActionEntity $episodeActionEntity
-	 *
-	 * @return EpisodeActionEntity
-	 */
 	private function updateEpisodeAction(
 		EpisodeActionEntity $episodeActionEntity,
 		string $userId
@@ -94,12 +84,6 @@ class EpisodeActionSaver
 		return $this->episodeActionWriter->update($episodeActionEntity);
 	}
 
-	/**
-	 * @param string $episodeUrl
-	 * @param string $userId
-	 *
-	 * @return EpisodeActionEntity|null
-	 */
 	private function getOldEpisodeActionByEpisodeUrl(string $episodeUrl, string $userId): ?EpisodeActionEntity
 	{
 		return $this->episodeActionRepository->findByEpisodeIdentifier(
@@ -116,12 +100,6 @@ class EpisodeActionSaver
 		}
 	}
 
-	/**
-	 * @param EpisodeAction $episodeAction
-	 * @param string $userId
-	 *
-	 * @return EpisodeActionEntity
-	 */
 	private function hydrateEpisodeActionEntity(EpisodeAction $episodeAction, string $userId): EpisodeActionEntity
 	{
 		$episodeActionEntity = new EpisodeActionEntity();
