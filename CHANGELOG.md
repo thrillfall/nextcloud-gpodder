@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.0 - 2021-08-29
+### Changed
+- add field "guid" to episode_action
+- identify episode actions by guid. episode_action.episode (episode url) serves as fallback if no guid is provided.
+
 ## 1.0.14 - 2021-08-24
 ### Fixed
 - enable processing of multiple EpisodeActions (thanks https://github.com/JonOfUs)
