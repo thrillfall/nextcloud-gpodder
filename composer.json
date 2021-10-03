@@ -1,0 +1,10 @@
+{
+	"name": "thrillfall/gpoddersync",
+	"type": "project",
+	"license": "AGPLv3",
+	"authors": [
+		{
+			"name": "thrillfall"
+		}
+	]
+}
