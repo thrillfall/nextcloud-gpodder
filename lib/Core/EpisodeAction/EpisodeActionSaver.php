@@ -29,15 +29,17 @@ class EpisodeActionSaver
 	}
 
 	/**
-	 * @param string $data
+	 * @param string|array $data
 	 *
 	 * @return EpisodeActionEntity[]
 	 */
-	public function saveEpisodeActions(string $data, string $userId): array
+	public function saveEpisodeActions($data, string $userId): array
 	{
 		$episodeActionEntities = [];
 
-		$episodeActions = $this->episodeActionReader->fromString($data);
+		$episodeActions = is_array($data) 
+			? $this->episodeActionReader->fromArray($data)
+			: $this->episodeActionReader->fromString($data);
 
         foreach ($episodeActions as $episodeAction) {
 			$episodeActionEntity = $this->hydrateEpisodeActionEntity($episodeAction, $userId);
