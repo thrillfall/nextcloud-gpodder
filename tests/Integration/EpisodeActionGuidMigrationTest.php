@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace tests\Integration;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use OC\DB\Exceptions\DbalException;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionReader;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionSaver;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
@@ -52,7 +53,7 @@ class EpisodeActionGuidMigrationTest extends TestCase
 
 	public function testCreateSameEpisodeActionTriggersUniqueConstraintViolationException()
 	{
-		self::expectException(UniqueConstraintViolationException::class);
+		self::expectExceptionMessageMatches("/duplicate key value violates unique constraint/");
 
 		$episodeActionEntity = new EpisodeActionEntity();
 		$episodeActionEntity->setPodcast("https://podcast_01.url");
