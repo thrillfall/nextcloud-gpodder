@@ -64,38 +64,25 @@ class EpisodeActionReaderTest extends TestCase {
 		$this->assertSame(3121, $episodeActions[2]->getTotal());
 	}
 
+	public function testCreateFromArray(): void {
+		$reader = new EpisodeActionReader();
+		$episodeActions = $reader->fromArray([["podcast" => "https://example.org/feed.xml", "episode" => "https://example.org/episode1.mp3", "action" => "PLAY", "timestamp" => "Sun Oct 03 14:03:17 GMT+02:00 2021", "started" => 0, "position" => 50, "total"=> 3422]]);
+
+		$this->assertSame("https://example.org/feed.xml",  $episodeActions[0]->getPodcast());
+		$this->assertSame("https://example.org/episode1.mp3", $episodeActions[0]->getEpisode());
+		$this->assertSame("PLAY", $episodeActions[0]->getAction());
+		$this->assertSame("Sun Oct 03 14:03:17 GMT+02:00 2021", $episodeActions[0]->getTimestamp());
+		$this->assertSame(0, $episodeActions[0]->getStarted());
+		$this->assertSame(50, $episodeActions[0]->getPosition());
+		$this->assertSame(3422, $episodeActions[0]->getTotal());
+	}
+
 	public function testCreateFromMultipleEpisodesArray(): void {
 		$reader = new EpisodeActionReader();
-		$episodeActions = $reader->fromArray([[
-				"podcast" => "https://example.org/feed.xml", 
-				"episode" => "https://example.org/episode1.mp3", 
-				"guid" => "episode1", 
-				"action" => "PLAY", 
-				"timestamp" => "Sun Oct 03 14:03:17 GMT+02:00 2021", 
-				"started" => 0, 
-				"position" => 50, 
-				"total"=> 3422
-			],
-			[
-				"podcast" => "https://example.org/feed.xml", 
-				"episode" => "https://example.org/episode2.mp3", 
-				"guid" => "episode2", 
-				"action" => "DOWNLOAD", 
-				"timestamp" => "Sat Oct 02 11:06:28 GMT+02:00 2021", 
-				"started" => -1, 
-				"position" => -1, 
-				"total"=> -1
-			],
-			[
-				"podcast" => "https://example.com/feed.xml", 
-				"episode" => "https://chrt.fm/track/47G541/injector.simplecastaudio.com/f16c3da7-cf46-4a42-99b7-8467255c6086/episodes/e8e24c01-6157-40e8-9b5a-45d539aeb7e6/audio/128/default.mp3?aid=rss_feed&awCollectionId=f16c3da7-cf46-4a42-99b7-8467255c6086&awEpisodeId=e8e24c01-6157-40e8-9b5a-45d539aeb7e6&feed=wEl4UUJZ", 
-				"guid" => "EPISODE-001-EXAMPLE-COM", 
-				"action" => "PLAY", 
-				"timestamp" => "Sun Oct 03 14:07:15 GMT+02:00 2021", 
-				"started" => 50, 
-				"position" => 221, 
-				"total"=> 450
-			]
+		$episodeActions = $reader->fromArray([
+			["podcast" => "https://example.org/feed.xml", "episode" => "https://example.org/episode1.mp3", "guid" => "episode1", "action" => "PLAY", "timestamp" => "Sun Oct 03 14:03:17 GMT+02:00 2021", "started" => 0, "position" => 50, "total"=> 3422], 
+			["podcast" => "https://example.org/feed.xml", "episode" => "https://example.org/episode2.mp3", "guid" => "episode2", "action" => "DOWNLOAD", "timestamp" => "Sat Oct 02 11:06:28 GMT+02:00 2021", "started" => -1, "position" => -1, "total"=> -1], 
+			["podcast" => "https://example.com/feed.xml", "episode" => "https://chrt.fm/track/47G541/injector.simplecastaudio.com/f16c3da7-cf46-4a42-99b7-8467255c6086/episodes/e8e24c01-6157-40e8-9b5a-45d539aeb7e6/audio/128/default.mp3?aid=rss_feed&awCollectionId=f16c3da7-cf46-4a42-99b7-8467255c6086&awEpisodeId=e8e24c01-6157-40e8-9b5a-45d539aeb7e6&feed=wEl4UUJZ", "guid" => "EPISODE-001-EXAMPLE-COM", "action" => "PLAY", "timestamp" => "Sun Oct 03 14:07:15 GMT+02:00 2021", "started" => 50, "position" => 221, "total"=> 450]
 		]);
 
 		$this->assertSame("https://example.org/feed.xml",  $episodeActions[0]->getPodcast());
