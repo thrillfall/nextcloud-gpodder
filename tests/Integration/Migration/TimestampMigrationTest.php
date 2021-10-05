@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace tests\Integration\Migration;
 
+use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
 use OC\AllConfig;
 use OC\Log;
 use OC\Migration\SimpleOutput;
+use OC\OCS\Exception;
+use OC\OCS\Result;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionMapper;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
@@ -54,6 +57,10 @@ class TimestampMigrationTest extends TestCase
 
 	public function testTimestampConversionRepairStep()
 	{
+		if (!$this->dbConnection->getDatabasePlatform() instanceof PostgreSQL100Platform) {
+			self::markTestSkipped("This test only works on postgres");
+		}
+
 		$episodeActionEntity = new EpisodeActionEntity();
 		$episodeActionEntity->setPodcast("https://podcast_01.url");
 		$episodeActionEntity->setEpisode(uniqid("https://episode_01.url"));
