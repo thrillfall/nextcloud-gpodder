@@ -17,6 +17,8 @@ class EpisodeActionSaver
 	private EpisodeActionWriter $episodeActionWriter;
 	private EpisodeActionReader $episodeActionReader;
 
+	const DATETIME_FORMAT = 'Y-m-d\TH:i:s';
+
 	public function __construct(
 		EpisodeActionRepository $episodeActionRepository,
 		EpisodeActionWriter $episodeActionWriter,
