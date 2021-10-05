@@ -61,7 +61,7 @@ class TimestampMigrationTest extends TestCase
 		$episodeActionEntity->setPosition(5);
 		$episodeActionEntity->setStarted(0);
 		$episodeActionEntity->setTotal(123);
-		$episodeActionEntity->setTimestamp("Mon Aug 23 01:58:56 GMT+02:00 2021");
+		$episodeActionEntity->setTimestamp("Sun Aug 22 23:58:56 GMT+00:00 2021");
 		$episodeActionEntity->setUserId(self::ADMIN);
 		$guid = uniqid("self::TEST_GUID_1234");
 		$episodeActionEntity->setGuid($guid);
