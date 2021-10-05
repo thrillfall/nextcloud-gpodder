@@ -45,4 +45,14 @@ class EpisodeActionEntity extends Entity implements JsonSerializable {
 	public function getStarted() : int {
 		return (int) $this->started;
 	}
+
+	public function getPosition(): int
+	{
+		return (int) $this->position;
+	}
+
+	public function getTotal(): int
+	{
+		return (int) $this->total;
+	}
 }
