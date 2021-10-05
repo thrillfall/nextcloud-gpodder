@@ -3,14 +3,11 @@ declare(strict_types=1);
 
 namespace tests\Integration;
 
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use OC\DB\Exceptions\DbalException;
-use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionReader;
-use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionSaver;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionWriter;
 use OCP\AppFramework\App;
+use OCP\AppFramework\IAppContainer;
 use Test\TestCase;
 use tests\Helper\DatabaseTransaction;
 
@@ -23,7 +20,7 @@ class EpisodeActionGuidMigrationTest extends TestCase
 
 	private const USER_ID_0 = "user0@127.0.0.1";
 
-	private \OCP\AppFramework\IAppContainer $container;
+	private IAppContainer $container;
 
 	/**
 	 * @var EpisodeActionWriter
@@ -71,10 +68,6 @@ class EpisodeActionGuidMigrationTest extends TestCase
 
 	}
 
-	/**
-	 *
-	 * @group findme
-	 */
 	public function testFindEpisodeActionByEpisodeUrlAndThenGuid()
 	{
 		$episodeActionEntity = new EpisodeActionEntity();

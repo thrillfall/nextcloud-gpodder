@@ -15,4 +15,9 @@
 		<php min-version="7.4"/>
 		<nextcloud min-version="20" max-version="22"/>
     </dependencies>
+	<repair-steps>
+		<post-migration>
+			<step>OCA\GPodderSync\Migration\TimestampMigration</step>
+		</post-migration>
+	</repair-steps>
 </info>

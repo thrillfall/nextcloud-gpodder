@@ -44,4 +44,5 @@ class EpisodeActionSaverGuidBackwardCompatbilityTest extends TestCase
 		self::assertSame($savedEpisodeActionEntity->getId(), $savedEpisodeActionEntityWithoutGuidFromOldDevice->getId());
 		self::assertNotNull($savedEpisodeActionEntityWithoutGuidFromOldDevice->getGuid());
 	}
+
 }

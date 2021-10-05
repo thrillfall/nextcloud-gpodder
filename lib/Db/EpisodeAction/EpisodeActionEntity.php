@@ -15,6 +15,7 @@ class EpisodeActionEntity extends Entity implements JsonSerializable {
 	protected $started;
 	protected $total;
 	protected $timestamp;
+	protected $timestampEpoch;
 	protected $guid;
 	protected $userId;
 
@@ -33,6 +34,7 @@ class EpisodeActionEntity extends Entity implements JsonSerializable {
 			'started' => $this->started,
 			'total' => $this->total,
 			'timestamp' => (new \DateTime($this->timestamp))->format("Y-m-d\TH:i:s"),
+			'timestamp_epoch' => $this->timestampEpoch,
 		];
 	}
 }

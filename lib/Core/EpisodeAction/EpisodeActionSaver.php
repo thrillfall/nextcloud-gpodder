@@ -55,7 +55,7 @@ class EpisodeActionSaver
 		return $episodeActionEntities;
 	}
 
-	private function convertTimestampToDbDateTimeString(string $timestamp): string
+	private function convertTimestampTo(string $timestamp): string
 	{
 		return \DateTime::createFromFormat('D F d H:i:s T Y', $timestamp)
 			->setTimezone(new DateTimeZone('UTC'))
@@ -110,7 +110,7 @@ class EpisodeActionSaver
 		$episodeActionEntity->setPosition($episodeAction->getPosition());
 		$episodeActionEntity->setStarted($episodeAction->getStarted());
 		$episodeActionEntity->setTotal($episodeAction->getTotal());
-		$episodeActionEntity->setTimestamp($this->convertTimestampToDbDateTimeString($episodeAction->getTimestamp()));
+		$episodeActionEntity->setTimestamp($this->convertTimestampTo($episodeAction->getTimestamp()));
 		$episodeActionEntity->setUserId($userId);
 
 		return $episodeActionEntity;

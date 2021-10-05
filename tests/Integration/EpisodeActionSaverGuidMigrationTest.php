@@ -5,6 +5,7 @@ namespace tests\Integration;
 
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionSaver;
 use OCP\AppFramework\App;
+use OCP\AppFramework\IAppContainer;
 use Test\TestCase;
 
 /**
@@ -12,10 +13,9 @@ use Test\TestCase;
  */
 class EpisodeActionSaverGuidMigrationTest extends TestCase
 {
-
 	private const USER_ID_0 = "testuser0";
 
-	private \OCP\AppFramework\IAppContainer $container;
+	private IAppContainer $container;
 
 	public function setUp(): void {
 		parent::setUp();
@@ -59,9 +59,10 @@ class EpisodeActionSaverGuidMigrationTest extends TestCase
 
 		$savedEpisodeActionEntityWithDifferentEpisodeUrl = $episodeActionSaver->saveEpisodeActions(
 			"[EpisodeAction{podcast='https://rss.art19.com/dr-death-s3-miracle-man', episode='{$episodeUrl}_different', guid='{$guid}', action=PLAY, timestamp=Mon Aug 23 01:58:56 GMT+02:00 2021, started=47, position=54, total=2252}]",
-			self::USER_ID_0
+		self::USER_ID_0
 		)[0];
 
 		self::assertSame($savedEpisodeActionEntity->getId(), $savedEpisodeActionEntityWithDifferentEpisodeUrl->getId());
 	}
+
 }

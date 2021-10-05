@@ -7,19 +7,19 @@ use Closure;
 use Doctrine\DBAL\Types\Types;
 use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
+use OCP\Migration\SimpleMigrationStep;
 
-class Version0004Date20210823115513 extends \OCP\Migration\SimpleMigrationStep {
+class Version0005Date20211004110900 extends SimpleMigrationStep {
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
 		$table = $schema->getTable('gpodder_episode_action');
-		$table->addColumn('guid', Types::STRING, [
-			'length' => 500,
-			'notnull' => false
+		$table->addColumn('timestamp_epoch', Types::INTEGER, [
+			'notnull' => false,
+			'default' => 0,
+			'unsigned' => true,
 		]);
-
-		$table->addUniqueIndex(['guid', 'user_id'], 'gpodder_guid_user_id');
 
 		return $schema;
 	}
