@@ -29,32 +29,27 @@ class EpisodeActionSaver
 	}
 
 	/**
-	 * @param string|array $data
+	 * @param array $episodeActionsArray
 	 *
-	 * @return EpisodeActionEntity[]
+	 * @return void
 	 */
-	public function saveEpisodeActions($data, string $userId): array
+	public function saveEpisodeActions($episodeActionsArray, string $userId): void
 	{
-		$episodeActionEntities = [];
-
-		$episodeActions = is_array($data) 
-			? $this->episodeActionReader->fromArray($data)
-			: $this->episodeActionReader->fromString($data);
+		$episodeActions = $this->episodeActionReader->fromArray($episodeActionsArray);
 
         foreach ($episodeActions as $episodeAction) {
 			$episodeActionEntity = $this->hydrateEpisodeActionEntity($episodeAction, $userId);
 
 			try {
-                $episodeActionEntities[] = $this->episodeActionWriter->save($episodeActionEntity);
+                $this->episodeActionWriter->save($episodeActionEntity);
             } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
-                $episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
+                $this->updateEpisodeAction($episodeActionEntity, $userId);
             } catch (Exception $exception) {
                 if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-                    $episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
+                    $this->updateEpisodeAction($episodeActionEntity, $userId);
                 }
             }
         }
-		return $episodeActionEntities;
 	}
 
 	private function convertTimestampToUnixEpoch(string $timestamp): string

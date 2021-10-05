@@ -22,6 +22,8 @@ class EpisodeActionController extends Controller {
 	private $userId;
 	private EpisodeActionSaver $episodeActionSaver;
 
+	protected $request;
+
 	public function __construct(
 		string $AppName,
 		IRequest $request,
@@ -33,6 +35,7 @@ class EpisodeActionController extends Controller {
 		$this->episodeActionRepository = $episodeActionRepository;
 		$this->userId = $UserId;
 		$this->episodeActionSaver = $episodeActionSaver;
+		$this->request = $request;
 	}
 
 	/**
@@ -40,10 +43,15 @@ class EpisodeActionController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @return Response
+	 * @return JSONResponse
 	 */
-	public function create($data) {
-		return $this->episodeActionSaver->saveEpisodeActions($data, $this->userId);
+	public function create(): JSONResponse {
+
+		$episodeActionsArray = $this->filterEpisodesFromRequestParams($this->request->getParams());
+		
+		$this->episodeActionSaver->saveEpisodeActions($episodeActionsArray, $this->userId);
+
+		return new JSONResponse(["timestamp" => time()]);
 	}
 
 	/**
@@ -67,4 +75,26 @@ class EpisodeActionController extends Controller {
 			"timestamp" => time()
 		]);
 	}
+
+	/**
+	 * @param array $requestParams
+	 * 
+	 * @return array $episodeActionsArray
+	 */
+	public function filterEpisodesFromRequestParams(array $data): array {
+		return array_filter($data, "is_numeric", ARRAY_FILTER_USE_KEY);
+	}
+
+	/**
+	 * @param int|null $since
+	 *
+	 * @return DateTime
+	 */
+	private function createDateTimeFromTimestamp(?int $since): DateTime {
+		return ($since !== null)
+			? (new \DateTime)->setTimestamp($since)
+			: (new \DateTime('-1 week'));
+	}
+
+
 }
