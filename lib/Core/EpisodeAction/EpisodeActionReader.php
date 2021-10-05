@@ -44,6 +44,7 @@ class EpisodeActionReader
 						(int)$matches["position"],
 						(int)$matches["total"],
 						$matches["guid"] ?? null,
+						null,
 					);
 					break;
 				}

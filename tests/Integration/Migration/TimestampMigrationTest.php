@@ -7,6 +7,7 @@ use OC\AllConfig;
 use OC\Log;
 use OC\Migration\SimpleOutput;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
+use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionMapper;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionWriter;
 use OCA\GPodderSync\Migration\TimestampMigration;
@@ -28,7 +29,7 @@ class TimestampMigrationTest extends TestCase
 	const TEST_GUID_1234 = "test_uuid_1234";
 	const ADMIN = "admin";
 	private EpisodeActionWriter $episodeActionWriter;
-	private EpisodeActionRepository $episodeActionRepository;
+	private EpisodeActionMapper $episodeActionMapper;
 	private IDBConnection $dbConnection;
 	private IConfig $migrationConfig;
 
@@ -38,7 +39,7 @@ class TimestampMigrationTest extends TestCase
 		$app = new App('gpoddersync');
 		$this->container = $app->getContainer();
 		$this->episodeActionWriter = $this->container->get(EpisodeActionWriter::class);
-		$this->episodeActionRepository = $this->container->get(EpisodeActionRepository::class);
+		$this->episodeActionMapper = $this->container->get(EpisodeActionMapper::class);
 		$this->dbConnection = $this->container->get(IDBConnection::class);
 		$this->migrationConfig = $this->container->get(AllConfig::class );
 	}
@@ -66,19 +67,19 @@ class TimestampMigrationTest extends TestCase
 		$episodeActionEntity->setGuid($guid);
 		$this->episodeActionWriter->save($episodeActionEntity);
 
-		$episodeActionEntityBeforeConversion = $this->episodeActionRepository->findByEpisodeIdentifier($guid, self::ADMIN);
+		$episodeActionBeforeConversion = $this->episodeActionMapper->findByEpisodeIdentifier($guid, self::ADMIN);
 		$this->assertEquals(
 			0,
-			$episodeActionEntityBeforeConversion->getTimestampEpoch()
+			$episodeActionBeforeConversion->getTimestampEpoch()
 		);
 
 		$timestampMigration = new TimestampMigration($this->dbConnection, $this->migrationConfig);
 		$timestampMigration->run(new SimpleOutput(new Log(new TestWriter()), "gpoddersync"));
 
-		$episodeActionEntityAfterConversion = $this->episodeActionRepository->findByEpisodeIdentifier($guid, self::ADMIN);
+		$episodeActionAfterConversion = $this->episodeActionMapper->findByEpisodeIdentifier($guid, self::ADMIN);
 		$this->assertSame(
-			(int)(new \DateTime($episodeActionEntity->getTimestamp()))->format("U"),
-			$episodeActionEntityAfterConversion->getTimestampEpoch()
+			1629676736,
+			$episodeActionAfterConversion->getTimestampEpoch()
 		);
 	}
 

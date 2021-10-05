@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Db\EpisodeAction;
 
+use OCA\GPodderSync\Core\EpisodeAction\EpisodeAction;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use Safe\DateTime;
 
 class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper
 {
@@ -30,6 +32,7 @@ class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper
 			);
 
 		return $this->findEntities($qb);
+
 	}
 
 	public function findByEpisodeIdentifier(string $episodeIdentifier, string $userId) : ?EpisodeActionEntity
@@ -48,7 +51,7 @@ class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper
 			);
 
 		try {
-			/** @var EpisodeActionEntity $episodeActionEntity*/
+			/** @var EpisodeActionEntity $episodeActionEntity */
 			$episodeActionEntity = $this->findEntity($qb);
 
 			return $episodeActionEntity;
@@ -58,4 +61,6 @@ class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper
 
 		return null;
 	}
+
+
 }

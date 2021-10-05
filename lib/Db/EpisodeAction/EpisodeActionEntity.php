@@ -33,8 +33,12 @@ class EpisodeActionEntity extends Entity implements JsonSerializable {
 			'position' => $this->position,
 			'started' => $this->started,
 			'total' => $this->total,
-			'timestamp' => (new \DateTime($this->timestamp))->format("Y-m-d\TH:i:s"),
-			'timestamp_epoch' => $this->timestampEpoch,
+			'timestamp' => $this->timestampEpoch,
 		];
+	}
+
+	public function getTimestampEpoch() : int
+	{
+		return (int) $this->timestampEpoch;
 	}
 }

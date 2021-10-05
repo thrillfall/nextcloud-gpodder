@@ -55,11 +55,11 @@ class EpisodeActionSaver
 		return $episodeActionEntities;
 	}
 
-	private function convertTimestampTo(string $timestamp): string
+	private function convertTimestampToUnixEpoch(string $timestamp): string
 	{
 		return \DateTime::createFromFormat('D F d H:i:s T Y', $timestamp)
 			->setTimezone(new DateTimeZone('UTC'))
-			->format("Y-m-d\TH:i:s");
+			->format("U");
 	}
 
 	private function updateEpisodeAction(
@@ -68,23 +68,23 @@ class EpisodeActionSaver
 	): EpisodeActionEntity
 	{
 		$identifier = $episodeActionEntity->getGuid() ?? $episodeActionEntity->getEpisode();
-		$episodeActionEntityToUpdate = $this->episodeActionRepository->findByEpisodeIdentifier(
+		$episodeActionToUpdate = $this->episodeActionRepository->findByEpisodeIdentifier(
 			$identifier,
 			$userId
 		);
 
-		if ($episodeActionEntityToUpdate === null && $episodeActionEntity->getGuid() !== null) {
-			$episodeActionEntityToUpdate = $this->getOldEpisodeActionByEpisodeUrl($episodeActionEntity->getEpisode(), $userId);
+		if ($episodeActionToUpdate === null && $episodeActionEntity->getGuid() !== null) {
+			$episodeActionToUpdate = $this->getOldEpisodeActionByEpisodeUrl($episodeActionEntity->getEpisode(), $userId);
 		}
 
-		$episodeActionEntity->setId($episodeActionEntityToUpdate->getId());
+		$episodeActionEntity->setId($episodeActionToUpdate->getId());
 
-		$this->ensureGuidDoesNotGetNulledWithOldData($episodeActionEntityToUpdate, $episodeActionEntity);
+		$this->ensureGuidDoesNotGetNulledWithOldData($episodeActionToUpdate, $episodeActionEntity);
 
 		return $this->episodeActionWriter->update($episodeActionEntity);
 	}
 
-	private function getOldEpisodeActionByEpisodeUrl(string $episodeUrl, string $userId): ?EpisodeActionEntity
+	private function getOldEpisodeActionByEpisodeUrl(string $episodeUrl, string $userId): ?EpisodeAction
 	{
 		return $this->episodeActionRepository->findByEpisodeIdentifier(
 			$episodeUrl,
@@ -92,9 +92,9 @@ class EpisodeActionSaver
 		);
 	}
 
-	private function ensureGuidDoesNotGetNulledWithOldData(EpisodeActionEntity $episodeActionEntityToUpdate, EpisodeActionEntity $episodeActionEntity): void
+	private function ensureGuidDoesNotGetNulledWithOldData(EpisodeAction $episodeActionToUpdate, EpisodeActionEntity $episodeActionEntity): void
 	{
-		$existingGuid = $episodeActionEntityToUpdate->getGuid();
+		$existingGuid = $episodeActionToUpdate->getGuid();
 		if ($existingGuid !== null && $episodeActionEntity->getGuid() == null) {
 			$episodeActionEntity->setGuid($existingGuid);
 		}
@@ -110,7 +110,7 @@ class EpisodeActionSaver
 		$episodeActionEntity->setPosition($episodeAction->getPosition());
 		$episodeActionEntity->setStarted($episodeAction->getStarted());
 		$episodeActionEntity->setTotal($episodeAction->getTotal());
-		$episodeActionEntity->setTimestamp($this->convertTimestampTo($episodeAction->getTimestamp()));
+		$episodeActionEntity->setTimestampEpoch($this->convertTimestampToUnixEpoch($episodeAction->getTimestamp()));
 		$episodeActionEntity->setUserId($userId);
 
 		return $episodeActionEntity;
