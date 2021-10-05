@@ -41,4 +41,8 @@ class EpisodeActionEntity extends Entity implements JsonSerializable {
 	{
 		return (int) $this->timestampEpoch;
 	}
+
+	public function getStarted() : int {
+		return (int) $this->started;
+	}
 }
