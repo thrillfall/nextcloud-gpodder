@@ -61,7 +61,7 @@ class EpisodeActionGuidMigrationTest extends TestCase
 		$episodeActionEntity->setPosition(5);
 		$episodeActionEntity->setStarted(0);
 		$episodeActionEntity->setTotal(123);
-		$episodeActionEntity->setTimestamp("Mon Aug 23 01:58:56 GMT+02:00 2021");
+		$episodeActionEntity->setTimestampEpoch(1629676736);
 		$episodeActionEntity->setUserId(self::USER_ID_0);
 		$this->episodeActionWriter->save($episodeActionEntity);
 
@@ -79,7 +79,7 @@ class EpisodeActionGuidMigrationTest extends TestCase
 		$episodeActionEntity->setPosition(5);
 		$episodeActionEntity->setStarted(0);
 		$episodeActionEntity->setTotal(123);
-		$episodeActionEntity->setTimestamp("Mon Aug 23 01:58:56 GMT+02:00 2021");
+		$episodeActionEntity->setTimestampEpoch(1629676736);
 		$episodeActionEntity->setUserId(self::USER_ID_0);
 		$savedEpisodeActionEntity = $this->episodeActionWriter->save($episodeActionEntity);
 
