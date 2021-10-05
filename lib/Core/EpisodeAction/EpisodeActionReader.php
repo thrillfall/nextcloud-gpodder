@@ -34,7 +34,7 @@ class EpisodeActionReader
 					$matches
 				);
 
-				if ($matches["action"] !== null) {
+				if (isset($matches["action"])) {
 					$episodeActions[] = new EpisodeAction(
 						$matches["podcast"],
 						$matches["episode"],
