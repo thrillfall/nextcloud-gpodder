@@ -32,12 +32,12 @@ class EpisodeActionSaverGuidBackwardCompatbilityTest extends TestCase
 		$guid = uniqid("test_gid://art19-episode-locator/V0/Ktd");
 
 		$savedEpisodeActionEntity = $episodeActionSaver->saveEpisodeActions(
-			"[EpisodeAction{podcast='https://rss.art19.com/dr-death-s3-miracle-man', episode='{$episodeUrl}', guid='{$guid}', action=PLAY, timestamp=Mon Aug 23 01:58:56 GMT+02:00 2021, started=47, position=54, total=2252}]",
+			[["podcast" => 'https://rss.art19.com/dr-death-s3-miracle-man',	"episode" => $episodeUrl, "guid" => $guid, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 47, "position" => 54, "total" => 2252]],
 			self::USER_ID_0
 		)[0];
 
 		$savedEpisodeActionEntityWithoutGuidFromOldDevice = $episodeActionSaver->saveEpisodeActions(
-			"[EpisodeAction{podcast='https://rss.art19.com/dr-death-s3-miracle-man', episode='{$episodeUrl}', action=PLAY, timestamp=Mon Aug 23 01:58:56 GMT+02:00 2021, started=47, position=54, total=2252}]",
+			[["podcast" => 'https://rss.art19.com/dr-death-s3-miracle-man',	"episode" => $episodeUrl, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 47, "position" => 54, "total" => 2252]],
 			self::USER_ID_0
 		)[0];
 
