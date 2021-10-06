@@ -23,7 +23,7 @@ The API replicates this: https://gpoddernet.readthedocs.io/en/latest/api/referen
 
 The API replicates this: https://gpoddernet.readthedocs.io/en/latest/api/reference/events.html
 
-we also process the property `uuid`
+we also process the property `guid`
 
 #### Example requests:
 ```json
