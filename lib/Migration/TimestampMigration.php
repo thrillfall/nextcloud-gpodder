@@ -21,7 +21,7 @@ class TimestampMigration implements \OCP\Migration\IRepairStep
      */
     public function getName() : string
     {
-        return "migrate timestamp values to integer to store unix epoch";
+        return "Migrate timestamp values to integer to store unix epoch";
     }
 
     /**
