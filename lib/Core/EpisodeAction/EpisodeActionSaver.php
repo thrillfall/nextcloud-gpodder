@@ -56,8 +56,7 @@ class EpisodeActionSaver
 
 	private function convertTimestampToUnixEpoch(string $timestamp): string
 	{
-		return \DateTime::createFromFormat('D F d H:i:s T Y', $timestamp)
-			->setTimezone(new DateTimeZone('UTC'))
+		return \DateTime::createFromFormat('Y-m-d\TH:i:s', $timestamp)
 			->format("U");
 	}
 
