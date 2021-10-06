@@ -103,7 +103,6 @@ class EpisodeAction {
 	{
 		return
 		[
-			'id' => $this->id,
 			'podcast' => $this->getPodcast(),
 			'episode' => $this->getEpisode(),
 			'timestamp' => $this->getTimestamp(),
