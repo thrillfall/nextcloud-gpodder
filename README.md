@@ -15,15 +15,15 @@ The API replicates this: https://gpoddernet.readthedocs.io/en/latest/api/referen
 ## episode action
 * **get episode actions**: `GET /index.php/apps/gpoddersync/episode_action`
 	* *(optional)* GET parameter `since` (UNIX time)
-* **upload episode actions**: `POST /index.php/apps/gpoddersync/episode_action/create`
+	* fields: *podcast*, *episode*, *guid*, *action*, *timestamp*, *position*, *started*, *total*
+* **create episode actions**: `POST /index.php/apps/gpoddersync/episode_action/create`
+  * fields: *podcast*, *episode*, *guid*, *action*, *timestamp*, *position*, *started*, *total*
+  * *position*, *started* and *total* are optional, default value is -1
   * returns JSON with current timestamp
 
 The API replicates this: https://gpoddernet.readthedocs.io/en/latest/api/reference/events.html
 
 we also process the property `uuid`
-
-fields: podcast, episode, guid, action, position, started, total, timestamp
-
 
 #### Example requests:
 ```json
@@ -32,7 +32,6 @@ GET /index.php/apps/gpoddersync/episode_action?since=1633240761
 {
     "actions": [
       {
-       "id": 54, 
        "podcast": "http://example.com/feed.rss",
        "episode": "http://example.com/files/s01e20.mp3",
        "guid": "s01e20-example-org",
@@ -41,7 +40,17 @@ GET /index.php/apps/gpoddersync/episode_action?since=1633240761
        "started": 15,
        "position": 120,
        "total":  500
-      }
+      },
+      {
+       "podcast": "http://example.com/feed.rss",
+       "episode": "http://example.com/files/s01e20.mp3",
+       "guid": "s01e20-example-org",
+       "action": "DOWNLOAD",
+       "timestamp": "2009-12-12T09:00:00",
+       "started": -1,
+       "position": -1,
+       "total":  -1
+      },
     ],
     "timestamp": 12345
 }
@@ -54,7 +63,7 @@ POST /index.php/apps/gpoddersync/episode_action/create
    "podcast": "http://example.com/feed.rss",
    "episode": "http://example.com/files/s01e20.mp3",
    "guid": "s01e20-example-org",
-   "action": "PLAY",
+   "action": "play",
    "timestamp": "2009-12-12T09:00:00",
    "started": 15,
    "position": 120,
@@ -66,9 +75,6 @@ POST /index.php/apps/gpoddersync/episode_action/create
    "guid": "foo-bar-123",
    "action": "DOWNLOAD",
    "timestamp": "2009-12-12T09:05:21",
-   "started": -1,
-   "position": -1,
-   "total":  -1
   }
 ]
 ```
