@@ -35,7 +35,7 @@ class TimestampMigration implements \OCP\Migration\IRepairStep
 		foreach ($timestamps as $timestamp) {
 			$timestampEpoch = (new DateTime($timestamp["timestamp"]))->format("U");
 			$sql = 'UPDATE `*PREFIX*gpodder_episode_action` '
-				. 'SET `timestamp_epoch` = ' . $timestampEpoch
+				. 'SET `timestamp_epoch` = ' . $timestampEpoch . ' '
 				. 'WHERE `timestamp_epoch` = 0';
 
 			$result = $this->db->executeUpdate($sql);
