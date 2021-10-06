@@ -7,11 +7,8 @@ use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
 use OC\AllConfig;
 use OC\Log;
 use OC\Migration\SimpleOutput;
-use OC\OCS\Exception;
-use OC\OCS\Result;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionMapper;
-use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionWriter;
 use OCA\GPodderSync\Migration\TimestampMigration;
 use OCP\AppFramework\App;
@@ -36,15 +33,14 @@ class TimestampMigrationTest extends TestCase
 	private IDBConnection $dbConnection;
 	private IConfig $migrationConfig;
 
-
 	public function setUp(): void {
 		parent::setUp();
 		$app = new App('gpoddersync');
-		$this->container = $app->getContainer();
-		$this->episodeActionWriter = $this->container->get(EpisodeActionWriter::class);
-		$this->episodeActionMapper = $this->container->get(EpisodeActionMapper::class);
-		$this->dbConnection = $this->container->get(IDBConnection::class);
-		$this->migrationConfig = $this->container->get(AllConfig::class );
+		$container = $app->getContainer();
+		$this->episodeActionWriter = $container->get(EpisodeActionWriter::class);
+		$this->episodeActionMapper = $container->get(EpisodeActionMapper::class);
+		$this->dbConnection = $container->get(IDBConnection::class);
+		$this->migrationConfig = $container->get(AllConfig::class );
 	}
 
 	/**

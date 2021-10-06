@@ -5,6 +5,7 @@ namespace OCA\GPodderSync\Controller;
 
 use DateTime;
 use GuzzleHttp\Psr7\Response;
+use OCA\GPodderSync\Core\EpisodeAction\EpisodeAction;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionSaver;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 use OCP\AppFramework\Controller;
@@ -54,23 +55,16 @@ class EpisodeActionController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function list(int $since): JSONResponse {
-		$sinceDatetime = $this->createDateTimeFromTimestamp($since);
+		$episodeActions = $this->episodeActionRepository->findAll($since, $this->userId);
+		$untypedEpisodeActionData = [];
+
+		foreach ($episodeActions as $episodeAction) {
+			$untypedEpisodeActionData[] = $episodeAction->toArray();
+		}
+
 		return new JSONResponse([
-			"actions" => $this->episodeActionRepository->findAll($sinceDatetime, $this->userId),
+			"actions" => $untypedEpisodeActionData,
 			"timestamp" => time()
 		]);
 	}
-
-	/**
-	 * @param int|null $since
-	 *
-	 * @return DateTime
-	 */
-	private function createDateTimeFromTimestamp(?int $since): DateTime {
-		return ($since !== null)
-			? (new \DateTime)->setTimestamp($since)
-			: (new \DateTime('-1 week'));
-	}
-
-
 }

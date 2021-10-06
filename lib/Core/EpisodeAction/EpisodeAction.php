@@ -99,5 +99,21 @@ class EpisodeAction {
 		return $this->id;
 	}
 
+	public function toArray()
+	{
+		return
+		[
+			'id' => $this->id,
+			'podcast' => $this->getPodcast(),
+			'episode' => $this->getEpisode(),
+			'timestamp' => $this->getTimestamp(),
+			'guid' => $this->getGuid(),
+			'position' => $this->getPosition(),
+			'started' => $this->getStarted(),
+			'total' => $this->getTotal(),
+			'action' => $this->getAction(),
+		];
+	}
+
 
 }

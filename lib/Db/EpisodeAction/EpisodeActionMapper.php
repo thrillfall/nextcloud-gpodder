@@ -17,14 +17,14 @@ class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper
 		parent::__construct($db, 'gpodder_episode_action', EpisodeActionEntity::class);
 	}
 
-	public function findAll(\DateTime $sinceTimestamp, string $userId): array
+	public function findAll(int $sinceTimestamp, string $userId): array
 	{
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->gt('timestamp', $qb->createNamedParameter($sinceTimestamp, IQueryBuilder::PARAM_DATE))
+				$qb->expr()->gt('timestamp_epoch', $qb->createNamedParameter($sinceTimestamp, IQueryBuilder::PARAM_INT))
 			)
 			->andWhere(
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))

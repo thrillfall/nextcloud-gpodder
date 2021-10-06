@@ -15,9 +15,16 @@ class EpisodeActionRepository {
 		$this->episodeActionMapper = $episodeActionMapper;
 	}
 
-	public function findAll(\DateTime $sinceTimestamp, string $userId) : array {
+	/**
+	 * @param int $sinceEpoch
+	 * @param string $userId
+	 *
+	 * @return EpisodeAction[]
+	 * @throws \Safe\Exceptions\DatetimeException
+	 */
+	public function findAll(int $sinceEpoch, string $userId) : array {
 		$episodeActions = [];
-		foreach ($this->episodeActionMapper->findAll($sinceTimestamp, $userId) as $entity) {
+		foreach ($this->episodeActionMapper->findAll($sinceEpoch, $userId) as $entity) {
 			$episodeActions[] = $this->mapEntityToEpisodeAction($entity);
 		}
 		return $episodeActions;
