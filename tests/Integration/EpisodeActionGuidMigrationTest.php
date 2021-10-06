@@ -51,7 +51,7 @@ class EpisodeActionGuidMigrationTest extends TestCase
 	public function testCreateSameEpisodeActionTriggersUniqueConstraintViolationException()
 	{
 		self::expectExceptionMessageMatches(
-			"/(duplicate key value violates unique constraint|Integrity constraint violation)/"
+			"/(unique constraint|Integrity constraint violation)/"
 		);
 
 		$episodeActionEntity = new EpisodeActionEntity();
