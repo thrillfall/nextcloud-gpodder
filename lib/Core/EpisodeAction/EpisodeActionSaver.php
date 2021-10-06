@@ -33,25 +33,28 @@ class EpisodeActionSaver
 	/**
 	 * @param array $episodeActionsArray
 	 *
-	 * @return void
+	 * @return EpisodeActionEntity[]
 	 */
-	public function saveEpisodeActions($episodeActionsArray, string $userId): void
+	public function saveEpisodeActions($episodeActionsArray, string $userId): array
 	{
 		$episodeActions = $this->episodeActionReader->fromArray($episodeActionsArray);
+
+		$episodeActionEntities = [];
 
         foreach ($episodeActions as $episodeAction) {
 			$episodeActionEntity = $this->hydrateEpisodeActionEntity($episodeAction, $userId);
 
 			try {
-                $this->episodeActionWriter->save($episodeActionEntity);
+                $episodeActionEntities[] = $this->episodeActionWriter->save($episodeActionEntity);
             } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
-                $this->updateEpisodeAction($episodeActionEntity, $userId);
+                $episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
             } catch (Exception $exception) {
                 if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-                    $this->updateEpisodeAction($episodeActionEntity, $userId);
+                    $episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
                 }
             }
         }
+		return $episodeActionEntities;
 	}
 
 	private function convertTimestampToUnixEpoch(string $timestamp): string
