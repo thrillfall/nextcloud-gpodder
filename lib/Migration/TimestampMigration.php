@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Migration;
 
-use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use Safe\DateTime;
@@ -11,12 +10,10 @@ use Safe\DateTime;
 class TimestampMigration implements \OCP\Migration\IRepairStep
 {
 	private IDBConnection $db;
-	private IConfig $config;
 
-	public function __construct(IDBConnection $db, IConfig $config)
+	public function __construct(IDBConnection $db)
 	{
 		$this->db = $db;
-		$this->config = $config;
 	}
 
 	/**
@@ -32,12 +29,6 @@ class TimestampMigration implements \OCP\Migration\IRepairStep
      */
     public function run(IOutput $output)
     {
-		$installedVersion = $this->config->getAppValue('gpoddersync', 'installed_version');
-
-		if (\version_compare($installedVersion, '2.1.0', '>')) {
-			return;
-		}
-
 		$queryTimestamps = 'SELECT id, timestamp FROM `*PREFIX*gpodder_episode_action` WHERE timestamp_epoch = 0';
 		$timestamps = $this->db->executeQuery($queryTimestamps)->fetchAll();
 
