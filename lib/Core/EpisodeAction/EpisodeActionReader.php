@@ -19,10 +19,11 @@ class EpisodeActionReader
 				$episodeAction["episode"],
 				$episodeAction["action"],
 				$episodeAction["timestamp"],
-				$episodeAction["started"],
-				$episodeAction["position"],
-				$episodeAction["total"],
+				$episodeAction["started"] ?? -1,
+				$episodeAction["position"] ?? -1,
+				$episodeAction["total"] ?? -1,
 				$episodeAction["guid"] ?? null,
+				null
 			);
 		}
 

@@ -84,17 +84,4 @@ class EpisodeActionController extends Controller {
 	public function filterEpisodesFromRequestParams(array $data): array {
 		return array_filter($data, "is_numeric", ARRAY_FILTER_USE_KEY);
 	}
-
-	/**
-	 * @param int|null $since
-	 *
-	 * @return DateTime
-	 */
-	private function createDateTimeFromTimestamp(?int $since): DateTime {
-		return ($since !== null)
-			? (new \DateTime)->setTimestamp($since)
-			: (new \DateTime('-1 week'));
-	}
-
-
 }
