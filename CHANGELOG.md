@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0 - 2021-10-06
+### Changed
+- EpisodeAction upload now expects JSON similar to gpodder.net (see README)
+- expanded minimal API documentation (see README)
+- query episodes by UNIX time instead of DateTime
+
 ## 2.0.0 - 2021-08-29
 ### Changed
 - add field "guid" to episode_action
