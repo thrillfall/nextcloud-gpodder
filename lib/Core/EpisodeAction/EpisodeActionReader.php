@@ -17,7 +17,7 @@ class EpisodeActionReader
 			$episodeActions[] = new EpisodeAction(
 				$episodeAction["podcast"],
 				$episodeAction["episode"],
-				$episodeAction["action"],
+				strtoupper($episodeAction["action"]),
 				$episodeAction["timestamp"],
 				$episodeAction["started"] ?? -1,
 				$episodeAction["position"] ?? -1,
