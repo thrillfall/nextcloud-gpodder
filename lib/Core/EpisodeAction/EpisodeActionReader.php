@@ -3,17 +3,20 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Core\EpisodeAction;
 
-class EpisodeActionReader
-{
+class EpisodeActionReader {
+	private array $requiredProperties = ['podcast', 'episode', 'action', 'timestamp'];
+
 	/**
-	 * @param $episodeActionsArray[]
+	 * @param array $episodeActionsArray []
 	 * @return EpisodeAction[]
 	 */
-	public function fromArray(array $episodeActionsArray): array
-	{
+	public function fromArray(array $episodeActionsArray): array {
 		$episodeActions = [];
 
-		foreach($episodeActionsArray as $episodeAction) {
+		foreach ($episodeActionsArray as $episodeAction) {
+			if ($this->hasRequiredProperties($episodeAction) === false) {
+				continue;
+			}
 			$episodeActions[] = new EpisodeAction(
 				$episodeAction["podcast"],
 				$episodeAction["episode"],
@@ -28,5 +31,13 @@ class EpisodeActionReader
 		}
 
 		return $episodeActions;
+	}
+
+	/**
+	 * @param array $episodeAction
+	 * @return bool
+	 */
+	private function hasRequiredProperties(array $episodeAction): bool {
+		return (count(array_intersect($this->requiredProperties, array_keys($episodeAction))) === count($this->requiredProperties));
 	}
 }

@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Controller;
 
-use DateTime;
-use GuzzleHttp\Psr7\Response;
-use OCA\GPodderSync\Core\EpisodeAction\EpisodeAction;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionSaver;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 use OCP\AppFramework\Controller;
@@ -14,12 +11,8 @@ use OCP\IRequest;
 
 class EpisodeActionController extends Controller {
 
-	/**
-	 * @var EpisodeActionRepository
-	 */
 	private EpisodeActionRepository $episodeActionRepository;
-
-	private $userId;
+	private string $userId;
 	private EpisodeActionSaver $episodeActionSaver;
 
 	protected $request;
@@ -48,14 +41,12 @@ class EpisodeActionController extends Controller {
 	public function create(): JSONResponse {
 
 		$episodeActionsArray = $this->filterEpisodesFromRequestParams($this->request->getParams());
-		
 		$this->episodeActionSaver->saveEpisodeActions($episodeActionsArray, $this->userId);
 
 		return new JSONResponse(["timestamp" => time()]);
 	}
 
 	/**
-	 *
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
@@ -77,8 +68,7 @@ class EpisodeActionController extends Controller {
 	}
 
 	/**
-	 * @param array $requestParams
-	 * 
+	 * @param array $data
 	 * @return array $episodeActionsArray
 	 */
 	public function filterEpisodesFromRequestParams(array $data): array {

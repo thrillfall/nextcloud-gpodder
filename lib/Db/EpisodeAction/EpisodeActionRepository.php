@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Db\EpisodeAction;
 
+use DateTime;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeAction;
 
 class EpisodeActionRepository {
@@ -20,7 +21,6 @@ class EpisodeActionRepository {
 	 * @param string $userId
 	 *
 	 * @return EpisodeAction[]
-	 * @throws \Safe\Exceptions\DatetimeException
 	 */
 	public function findAll(int $sinceEpoch, string $userId) : array {
 		$episodeActions = [];
@@ -30,6 +30,11 @@ class EpisodeActionRepository {
 		return $episodeActions;
 	}
 
+	/**
+	 * @param string $identifier
+	 * @param string $userId
+	 * @return EpisodeAction|null
+	 */
 	public function findByEpisodeIdentifier(string $identifier, string $userId): ?EpisodeAction {
 		$episodeActionEntity = $this->episodeActionMapper->findByEpisodeIdentifier($identifier, $userId);
 
@@ -45,8 +50,6 @@ class EpisodeActionRepository {
 	/**
 	 * @param EpisodeActionEntity $episodeActionEntity
 	 * @return EpisodeAction
-	 * @throws \Safe\Exceptions\DatetimeException
-	 *
 	 */
 	private function mapEntityToEpisodeAction(EpisodeActionEntity $episodeActionEntity): EpisodeAction
 	{
@@ -54,7 +57,7 @@ class EpisodeActionRepository {
 			$episodeActionEntity->getPodcast(),
 			$episodeActionEntity->getEpisode(),
 			$episodeActionEntity->getAction(),
-			\DateTime::createFromFormat(
+			DateTime::createFromFormat(
 				"U",
 				(string)$episodeActionEntity->getTimestampEpoch())
 				->format("Y-m-d\TH:i:s"),

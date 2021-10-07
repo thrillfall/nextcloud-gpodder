@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Core\EpisodeAction;
 
-use DateTimeZone;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use DateTime;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionWriter;
@@ -17,7 +16,7 @@ class EpisodeActionSaver
 	private EpisodeActionWriter $episodeActionWriter;
 	private EpisodeActionReader $episodeActionReader;
 
-	const DATETIME_FORMAT = 'Y-m-d\TH:i:s';
+	private const DATETIME_FORMAT = 'Y-m-d\TH:i:s';
 
 	public function __construct(
 		EpisodeActionRepository $episodeActionRepository,
@@ -32,10 +31,10 @@ class EpisodeActionSaver
 
 	/**
 	 * @param array $episodeActionsArray
-	 *
+	 * @param string $userId
 	 * @return EpisodeActionEntity[]
 	 */
-	public function saveEpisodeActions($episodeActionsArray, string $userId): array
+	public function saveEpisodeActions(array $episodeActionsArray, string $userId): array
 	{
 		$episodeActions = $this->episodeActionReader->fromArray($episodeActionsArray);
 
@@ -46,12 +45,12 @@ class EpisodeActionSaver
 
 			try {
                 $episodeActionEntities[] = $this->episodeActionWriter->save($episodeActionEntity);
-            } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
-                $episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
             } catch (Exception $exception) {
                 if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-                    $episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
-                }
+					try {
+						$episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
+					} catch (Exception $exception) {}
+				}
             }
         }
 		return $episodeActionEntities;
@@ -59,10 +58,13 @@ class EpisodeActionSaver
 
 	private function convertTimestampToUnixEpoch(string $timestamp): string
 	{
-		return \DateTime::createFromFormat('Y-m-d\TH:i:s', $timestamp)
+		return DateTime::createFromFormat(self::DATETIME_FORMAT, $timestamp)
 			->format("U");
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	private function updateEpisodeAction(
 		EpisodeActionEntity $episodeActionEntity,
 		string $userId
@@ -96,7 +98,7 @@ class EpisodeActionSaver
 	private function ensureGuidDoesNotGetNulledWithOldData(EpisodeAction $episodeActionToUpdate, EpisodeActionEntity $episodeActionEntity): void
 	{
 		$existingGuid = $episodeActionToUpdate->getGuid();
-		if ($existingGuid !== null && $episodeActionEntity->getGuid() == null) {
+		if ($existingGuid !== null && $episodeActionEntity->getGuid() === null) {
 			$episodeActionEntity->setGuid($existingGuid);
 		}
 	}

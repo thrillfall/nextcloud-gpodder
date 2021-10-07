@@ -13,15 +13,9 @@ use OCP\IRequest;
 
 class SubscriptionChangeController extends Controller {
 
-	/**
-	 * @var SubscriptionChangeSaver
-	 */
 	private SubscriptionChangeSaver $subscriptionChangeSaver;
-	/**
-	 * @var SubscriptionChangeRepository
-	 */
 	private SubscriptionChangeRepository $subscriptionChangeRepository;
-	private $userId;
+	private string $userId;
 
 	public function __construct(
 		string $AppName,
@@ -42,9 +36,11 @@ class SubscriptionChangeController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
+	 * @param array $add
+	 * @param array $remove
 	 * @return JSONResponse
 	 */
-	public function create($add, $remove): JSONResponse {
+	public function create(array $add, array $remove): JSONResponse {
 		$this->subscriptionChangeSaver->saveSubscriptionChanges($add, $remove, $this->userId);
 
 		return new JSONResponse(["timestamp" => time()]);
@@ -55,7 +51,7 @@ class SubscriptionChangeController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $since
+	 * @param int|null $since
 	 * @return JSONResponse
 	 * @throws \Exception
 	 */
@@ -75,8 +71,8 @@ class SubscriptionChangeController extends Controller {
 	 */
 	private function createDateTimeFromTimestamp(?int $since): DateTime {
 		return ($since !== null)
-			? (new \DateTime)->setTimestamp($since)
-			: (new \DateTime('-1 week'));
+			? (new DateTime)->setTimestamp($since)
+			: (new DateTime('-1 week'));
 	}
 
 	/**
@@ -85,7 +81,7 @@ class SubscriptionChangeController extends Controller {
 	 * @return mixed
 	 */
 	private function extractUrlList(array $allSubscribed): array {
-		return array_map(function (SubscriptionChangeEntity $subscription) {
+		return array_map(static function (SubscriptionChangeEntity $subscription) {
 			return $subscription->getUrl();
 		}, $allSubscribed);
 	}

@@ -21,9 +21,13 @@ class EpisodeActionEntity extends Entity implements JsonSerializable {
 
 	public function __construct() {
 		$this->addType('id','integer');
+		$this->addType('started','integer');
+		$this->addType('position','integer');
+		$this->addType('total','integer');
+		$this->addType('timestampEpoch','integer');
 	}
 
-	public function jsonSerialize() {
+	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,
 			'podcast' => $this->podcast,
@@ -37,22 +41,4 @@ class EpisodeActionEntity extends Entity implements JsonSerializable {
 		];
 	}
 
-	public function getTimestampEpoch() : int
-	{
-		return (int) $this->timestampEpoch;
-	}
-
-	public function getStarted() : int {
-		return (int) $this->started;
-	}
-
-	public function getPosition(): int
-	{
-		return (int) $this->position;
-	}
-
-	public function getTotal(): int
-	{
-		return (int) $this->total;
-	}
 }
