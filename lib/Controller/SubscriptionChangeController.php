@@ -53,7 +53,6 @@ class SubscriptionChangeController extends Controller {
 	 *
 	 * @param int|null $since
 	 * @return JSONResponse
-	 * @throws \Exception
 	 */
 	public function list(int $since = null): JSONResponse {
 		$sinceDatetime = $this->createDateTimeFromTimestamp($since);
@@ -66,7 +65,6 @@ class SubscriptionChangeController extends Controller {
 
 	/**
 	 * @param int|null $since
-	 *
 	 * @return DateTime
 	 */
 	private function createDateTimeFromTimestamp(?int $since): DateTime {
@@ -77,7 +75,6 @@ class SubscriptionChangeController extends Controller {
 
 	/**
 	 * @param array $allSubscribed
-	 *
 	 * @return mixed
 	 */
 	private function extractUrlList(array $allSubscribed): array {
