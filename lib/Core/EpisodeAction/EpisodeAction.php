@@ -99,8 +99,7 @@ class EpisodeAction {
 		return $this->id;
 	}
 
-	public function toArray()
-	{
+	public function toArray(): array {
 		return
 		[
 			'podcast' => $this->getPodcast(),

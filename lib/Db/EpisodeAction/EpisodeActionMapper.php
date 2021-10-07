@@ -3,20 +3,23 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Db\EpisodeAction;
 
-use OCA\GPodderSync\Core\EpisodeAction\EpisodeAction;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
-use Safe\DateTime;
 
-class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper
+class EpisodeActionMapper extends QBMapper
 {
 	public function __construct(IDBConnection $db)
 	{
 		parent::__construct($db, 'gpodder_episode_action', EpisodeActionEntity::class);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function findAll(int $sinceTimestamp, string $userId): array
 	{
 		$qb = $this->db->getQueryBuilder();
@@ -35,6 +38,11 @@ class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper
 
 	}
 
+	/**
+	 * @param string $episodeIdentifier
+	 * @param string $userId
+	 * @return EpisodeActionEntity|null
+	 */
 	public function findByEpisodeIdentifier(string $episodeIdentifier, string $userId) : ?EpisodeActionEntity
 	{
 		$qb = $this->db->getQueryBuilder();
@@ -52,14 +60,10 @@ class EpisodeActionMapper extends \OCP\AppFramework\Db\QBMapper
 
 		try {
 			/** @var EpisodeActionEntity $episodeActionEntity */
-			$episodeActionEntity = $this->findEntity($qb);
-
-			return $episodeActionEntity;
-		} catch (DoesNotExistException $e) {
-		} catch (MultipleObjectsReturnedException $e) {
+			return $this->findEntity($qb);
+		} catch (DoesNotExistException|MultipleObjectsReturnedException|Exception $e) {
+			return null;
 		}
-
-		return null;
 	}
 
 

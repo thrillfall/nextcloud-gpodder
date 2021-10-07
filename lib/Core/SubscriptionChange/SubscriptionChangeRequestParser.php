@@ -21,10 +21,10 @@ class SubscriptionChangeRequestParser {
 	 * @return SubscriptionChange[]
 	 */
 	public function createSubscriptionChangeList(array $urlsSubscribed, array $urlsUnsubscribed): array {
-		$urlsToSubscribe = $this->subscriptionChangeReader->mapToSubscriptionsChanges($urlsSubscribed, true);
-		$urlsToDelete = $this->subscriptionChangeReader->mapToSubscriptionsChanges($urlsUnsubscribed, false);
+		$urlsToSubscribe = $this->subscriptionChangeReader::mapToSubscriptionsChanges($urlsSubscribed, true);
+		$urlsToDelete = $this->subscriptionChangeReader::mapToSubscriptionsChanges($urlsUnsubscribed, false);
 
-		/** @var \OCA\GPodderSync\Core\SubscriptionChange\SubscriptionChange[] $subscriptionChanges */
+		/** @var SubscriptionChange[] $subscriptionChanges */
 		return array_merge($urlsToSubscribe, $urlsToDelete);
 	}
 }
