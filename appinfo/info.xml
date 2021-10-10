@@ -10,6 +10,7 @@
     <author mail="thrillfall@disroot.org">Thrillfall</author>
     <namespace>GPodderSync</namespace>
     <category>integration</category>
+    <category>multimedia</category>
     <bugs>https://github.com/thrillfall/nextcloud-gpodder/issues</bugs>
     <dependencies>
 		<php min-version="7.4"/>
