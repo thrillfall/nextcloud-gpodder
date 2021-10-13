@@ -32,7 +32,7 @@ class TimestampMigration implements \OCP\Migration\IRepairStep
 		$queryTimestamps = 'SELECT id, timestamp FROM `*PREFIX*gpodder_episode_action` WHERE timestamp_epoch = 0';
 		$timestamps = $this->db->executeQuery($queryTimestamps)->fetchAll();
 
-		$result = null;
+		$result = 0;
 
 		foreach ($timestamps as $timestamp) {
 			$timestampEpoch = (new DateTime($timestamp["timestamp"]))->format("U");
@@ -40,7 +40,7 @@ class TimestampMigration implements \OCP\Migration\IRepairStep
 				. 'SET `timestamp_epoch` = ' . $timestampEpoch . ' '
 				. 'WHERE `id` = ' . $timestamp["id"];
 
-			$result = $this->db->executeUpdate($sql);
+			$result += $this->db->executeUpdate($sql);
 
 		}
 
