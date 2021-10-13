@@ -14,10 +14,5 @@ return [
 
 		['name' => 'subscription_change#list', 'url' => '/subscriptions', 'verb' => 'GET'],
 		['name' => 'subscription_change#create', 'url' => '/subscription_change/create', 'verb' => 'POST'],
-
-		['name' => 'version#index', 'url' => '/', 'verb' => 'GET'],
-
-
-
 	]
 ];
