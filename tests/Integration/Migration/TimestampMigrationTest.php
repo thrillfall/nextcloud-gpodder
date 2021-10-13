@@ -57,20 +57,35 @@ class TimestampMigrationTest extends TestCase
 			self::markTestSkipped("This test only works on postgres");
 		}
 
-		$episodeActionEntity = new EpisodeActionEntity();
-		$episodeActionEntity->setPodcast("https://podcast_01.url");
-		$episodeActionEntity->setEpisode(uniqid("https://episode_01.url"));
-		$episodeActionEntity->setAction("PLAY");
-		$episodeActionEntity->setPosition(5);
-		$episodeActionEntity->setStarted(0);
-		$episodeActionEntity->setTotal(123);
-		$episodeActionEntity->setTimestamp("2021-08-22T23:58:56");
-		$episodeActionEntity->setUserId(self::ADMIN);
-		$guid = uniqid("self::TEST_GUID_1234");
-		$episodeActionEntity->setGuid($guid);
-		$this->episodeActionWriter->save($episodeActionEntity);
+		$scienceEpisodeActionEntity = new EpisodeActionEntity();
+		$scienceEpisodeActionEntity->setPodcast("https://podcast_01.url");
+		$scienceEpisodeActionEntity->setEpisode(uniqid("https://episode_01.url"));
+		$scienceEpisodeActionEntity->setAction("PLAY");
+		$scienceEpisodeActionEntity->setPosition(5);
+		$scienceEpisodeActionEntity->setStarted(0);
+		$scienceEpisodeActionEntity->setTotal(123);
+		$scienceEpisodeActionEntity->setTimestamp("2021-08-22T23:58:56");
+		$scienceEpisodeActionEntity->setUserId(self::ADMIN);
+		$scienceEpisodeActionEntity->setGuid(uniqid("self::TEST_GUID_1234"));
+		$this->episodeActionWriter->save($scienceEpisodeActionEntity);
 
-		$episodeActionBeforeConversion = $this->episodeActionMapper->findByEpisodeIdentifier($guid, self::ADMIN);
+		$trueCrimeEpisodeActionEntity = new EpisodeActionEntity();
+		$trueCrimeEpisodeActionEntity->setPodcast(uniqid("podcast"));
+		$trueCrimeEpisodeActionEntity->setEpisode(uniqid("episode_url"));
+		$trueCrimeEpisodeActionEntity->setAction("PLAY");
+		$trueCrimeEpisodeActionEntity->setPosition(5);
+		$trueCrimeEpisodeActionEntity->setStarted(0);
+		$trueCrimeEpisodeActionEntity->setTotal(123);
+		$trueCrimeEpisodeActionEntity->setTimestamp("2021-10-22T12:00:00");
+		$trueCrimeEpisodeActionEntity->setUserId(self::ADMIN);
+		$trueCrimeEpisodeActionEntity->setGuid(uniqid("self::TEST_GUID_1234"));
+		$this->episodeActionWriter->save($trueCrimeEpisodeActionEntity);
+
+		$episodeActionBeforeConversion = $this->episodeActionMapper->findByEpisodeIdentifier(
+			$scienceEpisodeActionEntity->getGuid(),
+			self::ADMIN
+		);
+
 		$this->assertEquals(
 			0,
 			$episodeActionBeforeConversion->getTimestampEpoch()
@@ -79,10 +94,22 @@ class TimestampMigrationTest extends TestCase
 		$timestampMigration = new TimestampMigration($this->dbConnection, $this->migrationConfig);
 		$timestampMigration->run(new SimpleOutput(new Log(new TestWriter()), "gpoddersync"));
 
-		$episodeActionAfterConversion = $this->episodeActionMapper->findByEpisodeIdentifier($guid, self::ADMIN);
+		$scienceEpisodeActionAfterConversion = $this->episodeActionMapper->findByEpisodeIdentifier(
+			$scienceEpisodeActionEntity->getGuid(),
+			self::ADMIN
+		);
 		$this->assertSame(
 			1629676736,
-			$episodeActionAfterConversion->getTimestampEpoch()
+			$scienceEpisodeActionAfterConversion->getTimestampEpoch()
+		);
+
+		$trueCrimeEpisodeActionAfterConversion = $this->episodeActionMapper->findByEpisodeIdentifier(
+			$trueCrimeEpisodeActionEntity->getGuid(),
+			self::ADMIN
+		);
+		$this->assertSame(
+			1634904000,
+			$trueCrimeEpisodeActionAfterConversion->getTimestampEpoch()
 		);
 	}
 
