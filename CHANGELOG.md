@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.1 - 2021-10-13
+### Fixed
+- Timestamp migration writes correct values to database @JonOfUs
+
 ## 3.0.0 - 2021-10-06
 ### Changed
 - EpisodeAction upload now expects JSON similar to gpodder.net (see README)
