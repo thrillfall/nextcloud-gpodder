@@ -1,7 +1,8 @@
 # nextcloud-gpodder
-nextcloud app that replicates basic gpodder.net api 
+Nextcloud app that replicates basic gpodder.net api
 
-This app serves as synchronization endpoint for AntennaPod: https://github.com/AntennaPod/AntennaPod/pull/5243/
+This app serves as synchronization endpoint for AntennaPod: https://github.com/AntennaPod/AntennaPod/pull/5243/  
+This feature will be available in AntennaPod as of version 2.5.0, which will be released towards the end of 2021.
 
 # API
 ## subscription
