@@ -11,14 +11,18 @@
     <namespace>GPodderSync</namespace>
     <category>integration</category>
     <category>multimedia</category>
+    <website>https://github.com/thrillfall/nextcloud-gpodder</website>
     <bugs>https://github.com/thrillfall/nextcloud-gpodder/issues</bugs>
+    <documentation>
+        <developer>https://github.com/thrillfall/nextcloud-gpodder/blob/main/README.md#api</developer>
+    </documentation>
     <dependencies>
-		<php min-version="7.4"/>
-		<nextcloud min-version="20" max-version="22"/>
+        <php min-version="7.4"/>
+        <nextcloud min-version="20" max-version="22"/>
     </dependencies>
-	<repair-steps>
-		<post-migration>
-			<step>OCA\GPodderSync\Migration\TimestampMigration</step>
-		</post-migration>
-	</repair-steps>
+    <repair-steps>
+        <post-migration>
+            <step>OCA\GPodderSync\Migration\TimestampMigration</step>
+        </post-migration>
+    </repair-steps>
 </info>
