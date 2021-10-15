@@ -38,11 +38,6 @@ class EpisodeActionMapper extends QBMapper
 
 	}
 
-	/**
-	 * @param string $episodeIdentifier
-	 * @param string $userId
-	 * @return EpisodeActionEntity|null
-	 */
 	public function findByEpisodeIdentifier(string $episodeIdentifier, string $userId) : ?EpisodeActionEntity
 	{
 		$qb = $this->db->getQueryBuilder();
