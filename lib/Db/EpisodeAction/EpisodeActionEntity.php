@@ -6,6 +6,17 @@ namespace OCA\GPodderSync\Db\EpisodeAction;
 use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
 
+/**
+ * @method string getPodcast()
+ * @method string getEpisode()
+ * @method string getAction()
+ * @method integer getTimestampEpoch()
+ * @method integer getStarted()
+ * @method integer getPosition()
+ * @method integer getTotal()
+ * @method string getGuid()
+ * @method string getUserId()
+ */
 class EpisodeActionEntity extends Entity implements JsonSerializable {
 
 	protected $podcast;
