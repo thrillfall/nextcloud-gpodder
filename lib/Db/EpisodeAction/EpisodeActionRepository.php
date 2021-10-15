@@ -30,11 +30,6 @@ class EpisodeActionRepository {
 		return $episodeActions;
 	}
 
-	/**
-	 * @param string $identifier
-	 * @param string $userId
-	 * @return EpisodeAction|null
-	 */
 	public function findByEpisodeIdentifier(string $identifier, string $userId): ?EpisodeAction {
 		$episodeActionEntity = $this->episodeActionMapper->findByEpisodeIdentifier($identifier, $userId);
 
