@@ -42,10 +42,12 @@ class SubscriptionChangeController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @return void
+	 * @return JSONResponse
 	 */
-	public function create($add, $remove) {
+	public function create($add, $remove): JSONResponse {
 		$this->subscriptionChangeSaver->saveSubscriptionChanges($add, $remove, $this->userId);
+
+		return new JSONResponse(["timestamp" => time()]);
 	}
 
 	/**
