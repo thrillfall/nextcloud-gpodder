@@ -87,8 +87,7 @@ class EpisodeActionControllerTest extends \Test\TestCase
 	/**
 	 * @after
 	 */
-	public function after()
-	{
-		$this->rollbackTransation();
+	public function after(): void {
+		$this->rollbackTransaction();
 	}
 }
