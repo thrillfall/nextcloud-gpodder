@@ -111,6 +111,6 @@ class EpisodeActionGuidMigrationTest extends TestCase
 	 */
 	public function after()
 	{
-		$this->rollbackTransation();
+		$this->rollbackTransaction();
 	}
 }

@@ -14,7 +14,7 @@ trait DatabaseTransaction {
 		$db->beginTransaction();
 	}
 
-	public function rollbackTransation() {
+	public function rollbackTransaction() {
 		/* @var $db IDBConnection */
 		$db = OC::$server->get(IDBConnection::class);
 

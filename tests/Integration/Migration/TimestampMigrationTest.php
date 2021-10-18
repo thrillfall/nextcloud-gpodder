@@ -118,6 +118,6 @@ class TimestampMigrationTest extends TestCase
 	 */
 	public function after()
 	{
-		$this->rollbackTransation();
+		$this->rollbackTransaction();
 	}
 }
