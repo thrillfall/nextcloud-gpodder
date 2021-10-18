@@ -1,4 +1,7 @@
 # Changelog
+## 3.1.0 - 2021-10-18
+### Changed
+- Add timestamp to subscription change response @JonOfUs
 
 ## 3.0.1 - 2021-10-13
 ### Fixed
