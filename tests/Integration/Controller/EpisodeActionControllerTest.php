@@ -8,17 +8,19 @@ use OC\Security\SecureRandom;
 use OCA\GPodderSync\Controller\EpisodeActionController;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionSaver;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
+use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionMapper;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionWriter;
 use OCP\AppFramework\App;
 use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
+use Test\TestCase;
 use tests\Helper\DatabaseTransaction;
 
 /**
  * @group DB
  */
-class EpisodeActionControllerTest extends \Test\TestCase
+class EpisodeActionControllerTest extends TestCase
 {
 
 	use DatabaseTransaction;
@@ -30,6 +32,7 @@ class EpisodeActionControllerTest extends \Test\TestCase
 		parent::setUp();
 		$app = new App('gpoddersync');
 		$this->container = $app->getContainer();
+		$this->db = \OC::$server->getDatabaseConnection();
 	}
 
 	/**
@@ -82,6 +85,57 @@ class EpisodeActionControllerTest extends \Test\TestCase
 		self::assertSame(0, $episodeActionInResponse['started']);
 		self::assertSame(123, $episodeActionInResponse['total']);
 		self::assertSame("PLAY", $episodeActionInResponse['action']);
+	}
+
+	public function testEpisodeActionCreateAction(): void {
+		$time = time();
+		$userId = uniqid('test_user', true);
+		$payload = json_decode('[
+  {
+   "podcast": "https://example.com/feed.rss",
+   "episode": "https://example.com/files/s01e20.mp3",
+   "guid": "s01e20-example-org",
+   "action": "PLAY",
+   "timestamp": "2009-12-12T09:00:00",
+   "started": 15,
+   "position": 120,
+   "total":  500
+  },
+  {
+   "podcast": "https://example.org/podcast.php",
+   "episode": "https://example.com/files/foo-bar-123.mp3",
+   "guid": "foo-bar-123",
+   "timestamp": "2009-12-12T09:05:21",
+   "started": -1,
+   "position": -1,
+   "total":  -1
+  }
+]', true, 512, JSON_THROW_ON_ERROR);
+		$request = new Request([], new SecureRandom(), $this->getMockBuilder(IConfig::class)->getMock());
+		$request->setUrlParameters($payload);
+		$episodeActionController = new EpisodeActionController(
+			"gpoddersync",
+			$request,
+			$userId,
+			$this->container->get(EpisodeActionRepository::class),
+			$this->container->get(EpisodeActionSaver::class)
+		);
+		$response = $episodeActionController->create();
+
+		$this->assertArrayHasKey('timestamp', $response->getData());
+		$this->assertGreaterThanOrEqual($time, $response->getData()['timestamp']);
+		/** @var EpisodeActionMapper $mapper */
+		$mapper = $this->container->query(EpisodeActionMapper::class);
+		$episodeActionEntities = $mapper->findAll(0, $userId);
+		/** @var EpisodeActionEntity $firstEntity */
+		$firstEntity = $episodeActionEntities[0];
+		$this->assertSame("https://example.com/feed.rss", $firstEntity->getPodcast());
+		$this->assertSame("https://example.com/files/s01e20.mp3", $firstEntity->getEpisode());
+		$this->assertSame("s01e20-example-org", $firstEntity->getGuid());
+		$this->assertSame("PLAY", $firstEntity->getAction());
+		$this->assertSame(120, $firstEntity->getPosition());
+		$this->assertSame(15, $firstEntity->getStarted());
+		$this->assertSame(1260608400, $firstEntity->getTimestampEpoch());
 	}
 
 	/**
