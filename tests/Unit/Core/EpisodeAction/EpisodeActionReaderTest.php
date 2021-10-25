@@ -57,11 +57,12 @@ class EpisodeActionReaderTest extends TestCase {
 	}
 
 	public function testCreateWithFaultyData(): void {
-		$episodeActions = (new EpisodeActionReader())->fromArray([
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Client sent incomplete or invalid data: {"podcast":"https:\/\/example.org\/feed.xml","action":"download","timestamp":"2021-10-03T12:03:17"}');
+		(new EpisodeActionReader())->fromArray([
 			["podcast" => "https://example.org/feed.xml", "action" => "download", "timestamp" => "2021-10-03T12:03:17"],
 			["podcast" => "https://example.org/feed.xml", "episode" => "https://example.org/episode2.mp3", "guid" => "episode2", "action" => "download", "timestamp" => "2021-10-03T12:03:17"],
 		]);
-		$this->assertCount(1, $episodeActions);
 	}
 
 }

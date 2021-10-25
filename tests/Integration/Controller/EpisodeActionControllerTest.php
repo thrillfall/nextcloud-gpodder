@@ -100,15 +100,6 @@ class EpisodeActionControllerTest extends TestCase
    "started": 15,
    "position": 120,
    "total":  500
-  },
-  {
-   "podcast": "https://example.org/podcast.php",
-   "episode": "https://example.com/files/foo-bar-123.mp3",
-   "guid": "foo-bar-123",
-   "timestamp": "2009-12-12T09:05:21",
-   "started": -1,
-   "position": -1,
-   "total":  -1
   }
 ]', true, 512, JSON_THROW_ON_ERROR);
 		$request = new Request([], new SecureRandom(), $this->getMockBuilder(IConfig::class)->getMock());

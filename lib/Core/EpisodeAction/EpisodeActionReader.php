@@ -3,19 +3,22 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Core\EpisodeAction;
 
+use InvalidArgumentException;
+
 class EpisodeActionReader {
 	private array $requiredProperties = ['podcast', 'episode', 'action', 'timestamp'];
 
 	/**
 	 * @param array $episodeActionsArray []
 	 * @return EpisodeAction[]
+	 * @throws InvalidArgumentException
 	 */
 	public function fromArray(array $episodeActionsArray): array {
 		$episodeActions = [];
 
 		foreach ($episodeActionsArray as $episodeAction) {
 			if ($this->hasRequiredProperties($episodeAction) === false) {
-				continue;
+				throw new InvalidArgumentException(sprintf('Client sent incomplete or invalid data: %s', json_encode($episodeAction, JSON_THROW_ON_ERROR)));
 			}
 			$episodeActions[] = new EpisodeAction(
 				$episodeAction["podcast"],
