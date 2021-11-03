@@ -7,9 +7,7 @@ use DateTime;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeAction;
 
 class EpisodeActionRepository {
-	/**
-	 * @var EpisodeActionMapper
-	 */
+
 	private EpisodeActionMapper $episodeActionMapper;
 
 	public function __construct(EpisodeActionMapper $episodeActionMapper) {
@@ -30,11 +28,6 @@ class EpisodeActionRepository {
 		return $episodeActions;
 	}
 
-	/**
-	 * @param string $identifier
-	 * @param string $userId
-	 * @return EpisodeAction|null
-	 */
 	public function findByEpisodeIdentifier(string $identifier, string $userId): ?EpisodeAction {
 		$episodeActionEntity = $this->episodeActionMapper->findByEpisodeIdentifier($identifier, $userId);
 
@@ -47,10 +40,6 @@ class EpisodeActionRepository {
 		);
 	}
 
-	/**
-	 * @param EpisodeActionEntity $episodeActionEntity
-	 * @return EpisodeAction
-	 */
 	private function mapEntityToEpisodeAction(EpisodeActionEntity $episodeActionEntity): EpisodeAction
 	{
 		return new EpisodeAction(
