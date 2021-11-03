@@ -47,14 +47,10 @@ class EpisodeActionSaver
 			try {
                 $episodeActionEntities[] = $this->episodeActionWriter->save($episodeActionEntity);
 			} catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
-				try {
 					$episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
-				} catch (Exception $exception) {}
             } catch (Exception $exception) {
                 if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-					try {
 						$episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
-					} catch (Exception $exception) {}
 				}
             }
         }
@@ -67,9 +63,6 @@ class EpisodeActionSaver
 			->format("U");
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	private function updateEpisodeAction(
 		EpisodeActionEntity $episodeActionEntity,
 		string $userId
