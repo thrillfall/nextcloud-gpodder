@@ -14,4 +14,14 @@ class SubscriptionChangeReaderTest extends TestCase {
 		$this->assertSame("https://feeds.megaphone.fm/another", $subscriptionChange[1]->getUrl());
 	}
 
+
+    public function testNonUrisAreOmmited(): void {
+        $subscriptionChange = SubscriptionChangesReader::mapToSubscriptionsChanges([
+                "https://feeds.megaphone.fm/HSW8286374095",
+                "antennapod_local:content://com.android.externalstorage.documents/tree/home:podcast"
+            ], true);
+        $this->assertCount(1, $subscriptionChange);
+        $this->assertSame("https://feeds.megaphone.fm/HSW8286374095", $subscriptionChange[0]->getUrl());
+    }
+
 }
