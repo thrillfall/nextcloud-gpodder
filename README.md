@@ -1,5 +1,5 @@
 # nextcloud-gpodder
-Nextcloud app that replicates basic gpodder.net api
+Nextcloud app that replicates basic gpodder.net api to sync podcast consumer apps (podcatchers) like AntennaPod.
 
 ### Clients supporting sync
 | client | support status |
