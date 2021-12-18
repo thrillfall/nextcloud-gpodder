@@ -1,11 +1,17 @@
 # nextcloud-gpodder
 Nextcloud app that replicates basic gpodder.net api
 
-This app serves as synchronization endpoint for AntennaPod: https://github.com/AntennaPod/AntennaPod/pull/5243/  
-This feature will be available in AntennaPod as of version 2.5.0, which will be released towards the end of 2021.
+### Clients supporting sync
+| client | support status |
+| :- | :- |
+| [AntennaPod](https://antennapod.org) | Initial purpose for this project, as a synchronization endpoint for this client.<br> Support will be available [as of version 2.5.0](https://github.com/AntennaPod/AntennaPod/pull/5243/) (release probably towards end of 2021). |
+| [KDE Kasts](https://apps.kde.org/de/kasts/) | Supported since version 21.12 |
 
-# API
-## subscription
+### Installation
+Either from the official Nextcloud app store ([link to app page](https://apps.nextcloud.com/apps/gpoddersync)) or by downloading the [latest release](https://github.com/thrillfall/nextcloud-gpodder/releases/latest) and extracting it into your Nextcloud apps/ directory.
+
+## API
+### subscription
 * **get subscription changes**: `GET /index.php/apps/gpoddersync/subscriptions`
 	* *(optional)* GET parameter `since` (UNIX time)
 * **upload subscription changes** : `POST /index.php/apps/gpoddersync/subscription_change/create`
@@ -13,7 +19,7 @@ This feature will be available in AntennaPod as of version 2.5.0, which will be 
 
 The API replicates this: https://gpoddernet.readthedocs.io/en/latest/api/reference/subscriptions.html
 
-## episode action
+### episode action
 * **get episode actions**: `GET /index.php/apps/gpoddersync/episode_action`
 	* *(optional)* GET parameter `since` (UNIX time)
 	* fields: *podcast*, *episode*, *guid*, *action*, *timestamp*, *position*, *started*, *total*
