@@ -4,7 +4,7 @@ Nextcloud app that replicates basic gpodder.net api to sync podcast consumer app
 ### Clients supporting sync
 | client | support status |
 | :- | :- |
-| [AntennaPod](https://antennapod.org) | Initial purpose for this project, as a synchronization endpoint for this client.<br> Support will be available [as of version 2.5.0](https://github.com/AntennaPod/AntennaPod/pull/5243/) (release probably towards end of 2021). |
+| [AntennaPod](https://antennapod.org) | Initial purpose for this project, as a synchronization endpoint for this client.<br> Support is available [as of version 2.5.1](https://github.com/AntennaPod/AntennaPod/pull/5243/). |
 | [KDE Kasts](https://apps.kde.org/de/kasts/) | Supported since version 21.12 |
 
 ### Installation
