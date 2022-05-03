@@ -5,7 +5,6 @@ namespace tests\Integration\Migration;
 
 use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
 use OC\AllConfig;
-use OC\Log;
 use OC\Migration\SimpleOutput;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionMapper;
@@ -16,7 +15,6 @@ use OCP\IConfig;
 use OCP\IDBConnection;
 use test\TestCase;
 use tests\Helper\DatabaseTransaction;
-use tests\Helper\Writer\TestWriter;
 
 /**
  * @group DB
@@ -92,7 +90,7 @@ class TimestampMigrationTest extends TestCase
 		);
 
 		$timestampMigration = new TimestampMigration($this->dbConnection, $this->migrationConfig);
-		$timestampMigration->run(new SimpleOutput(new Log(new TestWriter()), "gpoddersync"));
+		$timestampMigration->run($this->createMock(SimpleOutput::class));
 
 		$scienceEpisodeActionAfterConversion = $this->episodeActionMapper->findByEpisodeIdentifier(
 			$scienceEpisodeActionEntity->getGuid(),
