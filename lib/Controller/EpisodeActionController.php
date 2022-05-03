@@ -26,7 +26,7 @@ class EpisodeActionController extends Controller {
 	) {
 		parent::__construct($AppName, $request);
 		$this->episodeActionRepository = $episodeActionRepository;
-		$this->userId = $UserId;
+		$this->userId = $UserId !== null ? $UserId : '';
 		$this->episodeActionSaver = $episodeActionSaver;
 		$this->request = $request;
 	}

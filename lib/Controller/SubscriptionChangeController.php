@@ -28,7 +28,7 @@ class SubscriptionChangeController extends Controller {
 		parent::__construct($AppName, $request);
 		$this->subscriptionChangeSaver = $subscriptionChangeSaver;
 		$this->subscriptionChangeRepository = $subscriptionChangeRepository;
-		$this->userId = $UserId;
+		$this->userId = $UserId !== null ? $UserId : '';
 	}
 
 	/**
