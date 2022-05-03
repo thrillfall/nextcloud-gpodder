@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace tests\Integration\Controller;
 
-use OC\AppFramework\Http\Request;
 use OC\Security\SecureRandom;
 use OCA\GPodderSync\Controller\EpisodeActionController;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionSaver;
@@ -14,6 +13,7 @@ use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionWriter;
 use OCP\AppFramework\App;
 use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
+use OCP\IRequest;
 use Test\TestCase;
 use tests\Helper\DatabaseTransaction;
 
@@ -49,7 +49,7 @@ class EpisodeActionControllerTest extends TestCase
 		$userId = uniqid("test_user");
 		$episodeActionController = new EpisodeActionController(
 			"gpoddersync",
-			new Request([], new SecureRandom(), self::getMockBuilder(IConfig::class)->getMock()),
+			$this->createMock(IRequest::class),
 			$userId,
 			$this->container->get(EpisodeActionRepository::class),
 			$this->container->get(EpisodeActionSaver::class)
@@ -102,8 +102,10 @@ class EpisodeActionControllerTest extends TestCase
    "total":  500
   }
 ]', true, 512, JSON_THROW_ON_ERROR);
-		$request = new Request([], new SecureRandom(), $this->getMockBuilder(IConfig::class)->getMock());
-		$request->setUrlParameters($payload);
+		$request = $this->createMock(IRequest::class);
+		$request->expects($this->once())
+				->method('getParams')
+				->will($this->returnValue($payload));
 		$episodeActionController = new EpisodeActionController(
 			"gpoddersync",
 			$request,
