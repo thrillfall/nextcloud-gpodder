@@ -54,23 +54,13 @@ class SubscriptionChangeController extends Controller {
 	 * @param int|null $since
 	 * @return JSONResponse
 	 */
-	public function list(int $since = null): JSONResponse {
-		$sinceDatetime = $this->createDateTimeFromTimestamp($since);
+	public function list(int $since = 0): JSONResponse {
+		$sinceDatetime = (new DateTime)->setTimestamp($since);
 		return new JSONResponse([
 			"add" => $this->extractUrlList($this->subscriptionChangeRepository->findAllSubscribed($sinceDatetime, $this->userId)),
 			"remove" => $this->extractUrlList($this->subscriptionChangeRepository->findAllUnSubscribed($sinceDatetime, $this->userId)),
 			"timestamp" => time()
 		]);
-	}
-
-	/**
-	 * @param int|null $since
-	 * @return DateTime
-	 */
-	private function createDateTimeFromTimestamp(?int $since): DateTime {
-		return ($since !== null)
-			? (new DateTime)->setTimestamp($since)
-			: (new DateTime('-1 week'));
 	}
 
 	/**
