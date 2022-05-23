@@ -53,7 +53,7 @@ class EpisodeActionController extends Controller {
 	 * @param int $since
 	 * @return JSONResponse
 	 */
-	public function list(int $since): JSONResponse {
+	public function list(int $since = 0): JSONResponse {
 		$episodeActions = $this->episodeActionRepository->findAll($since, $this->userId);
 		$untypedEpisodeActionData = [];
 
