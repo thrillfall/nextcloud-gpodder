@@ -17,7 +17,7 @@ Either from the official Nextcloud app store ([link to app page](https://apps.ne
 * **get subscription changes**: `GET /index.php/apps/gpoddersync/subscriptions`
 	* *(optional)* GET parameter `since` (UNIX time)
 * **upload subscription changes** : `POST /index.php/apps/gpoddersync/subscription_change/create`
-	* returns nothing
+  * returns JSON with current timestamp
 
 The API replicates this: https://gpoddernet.readthedocs.io/en/latest/api/reference/subscriptions.html
 
