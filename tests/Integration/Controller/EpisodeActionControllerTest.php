@@ -87,6 +87,48 @@ class EpisodeActionControllerTest extends TestCase
 		self::assertSame("PLAY", $episodeActionInResponse['action']);
 	}
 
+	public function testEpisodeActionListWithoutSinceAction()
+	{
+		$userId = uniqid("test_user");
+		$episodeActionController = new EpisodeActionController(
+			"gpoddersync",
+			$this->createMock(IRequest::class),
+			$userId,
+			$this->container->get(EpisodeActionRepository::class),
+			$this->container->get(EpisodeActionSaver::class)
+		);
+
+		/** @var EpisodeActionWriter $episodeActionWriter */
+		$episodeActionWriter = $this->container->get(EpisodeActionWriter::class);
+
+		$episodeActionEntity = new EpisodeActionEntity();
+		$expectedPodcast = uniqid("test");
+		$episodeActionEntity->setPodcast($expectedPodcast);
+		$expectedEpisode = uniqid("test");
+		$episodeActionEntity->setEpisode($expectedEpisode);
+		$episodeActionEntity->setAction("PLAY");
+		$episodeActionEntity->setPosition(5);
+		$episodeActionEntity->setStarted(0);
+		$episodeActionEntity->setTotal(123);
+		$episodeActionEntity->setTimestampEpoch(1633520363);
+		$episodeActionEntity->setUserId($userId);
+		$episodeActionEntity->setGuid(self::TEST_GUID);
+		$episodeActionWriter->save($episodeActionEntity);
+
+		$response = $episodeActionController->list();
+		self::assertCount(1, $response->getData()['actions']);
+
+		$episodeActionInResponse = $response->getData()['actions'][0];
+		self::assertSame("2021-10-06T11:39:23", $episodeActionInResponse['timestamp']);
+		self::assertSame($expectedEpisode, $episodeActionInResponse['episode']);
+		self::assertSame($expectedPodcast, $episodeActionInResponse['podcast']);
+		self::assertSame(self::TEST_GUID, $episodeActionInResponse['guid']);
+		self::assertSame(5, $episodeActionInResponse['position']);
+		self::assertSame(0, $episodeActionInResponse['started']);
+		self::assertSame(123, $episodeActionInResponse['total']);
+		self::assertSame("PLAY", $episodeActionInResponse['action']);
+	}
+
 	public function testEpisodeActionCreateAction(): void {
 		$time = time();
 		$userId = uniqid('test_user', true);
