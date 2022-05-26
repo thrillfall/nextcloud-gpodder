@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.4.0 - 2022-05-26
+### Fixed
+- Don't crash if no sync timestamp is passed
+### Changed
+- Return all entries on list actions if no timestamp is passed
+
 ## 3.3.0 - 2022-05-03
 ### Fixed
 - Don't crash on unauthenticated api call
