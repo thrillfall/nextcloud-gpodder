@@ -58,7 +58,7 @@ class PersonalSettingsController extends Controller {
 		$subStats = array();
 		foreach ($episodeActions as $ep) {
 			$url = $ep->getPodcast();
-			$stats = $subStats[$url] ?? $this->defaultSubscriptionData();
+			$stats = $subStats[$url] ?? self::defaultSubscriptionData();
 			$actionCounts = $stats['actionCounts'];
 			$actionLower = strtolower($ep->getAction());
 			if (array_key_exists($actionLower, $actionCounts)) {
@@ -76,7 +76,7 @@ class PersonalSettingsController extends Controller {
 
 		$subscriptions = array_map(function (SubscriptionChangeEntity $sub) use ($subStats) {
 			$url = $sub->getUrl();
-			$stats = $subStats[$url] ?? $this->defaultSubscriptionData();
+			$stats = $subStats[$url] ?? self::defaultSubscriptionData();
 			$sub = [
 				'url' => $url ?? '',
 				'listenedSeconds' => $stats['listenedSeconds'],
@@ -100,7 +100,7 @@ class PersonalSettingsController extends Controller {
 		]);
 	}
 
-	private function defaultSubscriptionData(): array {
+	private static function defaultSubscriptionData(): array {
 		return [
 			'listenedSeconds' => 0,
 			'actionCounts' => [
