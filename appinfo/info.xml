@@ -26,7 +26,7 @@
         </post-migration>
     </repair-steps>
     <settings>
-	<personal>OCA\GPodderSync\Settings\GPodderSyncPersonal</personal>
-	<personal-section>OCA\GPodderSync\Sections\GPodderSyncPersonal</personal-section>
+        <personal>OCA\GPodderSync\Settings\GPodderSyncPersonal</personal>
+        <personal-section>OCA\GPodderSync\Sections\GPodderSyncPersonal</personal-section>
     </settings>
 </info>
