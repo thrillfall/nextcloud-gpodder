@@ -11,8 +11,6 @@ Nextcloud app that replicates basic gpodder.net api to sync podcast consumer app
 ### Installation
 Either from the official Nextcloud app store ([link to app page](https://apps.nextcloud.com/apps/gpoddersync)) or by downloading the [latest release](https://github.com/thrillfall/nextcloud-gpodder/releases/latest) and extracting it into your Nextcloud apps/ directory.
 
-💡 There is no app icon since there are no settings to be set.
-
 ## API
 ### subscription
 * **get subscription changes**: `GET /index.php/apps/gpoddersync/subscriptions`
