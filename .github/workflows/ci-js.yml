@@ -1,0 +1,21 @@
+name: NPM build
+
+on:
+  pull_request:
+
+env:
+  APP_NAME: gpoddersync
+
+jobs:
+  js:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: ${{ env.APP_NAME }}
+      - name: Install NPM packages
+        run: cd ${{ env.APP_NAME }} && make npm-init
+      - name: Build JS
+        run: cd ${{ env.APP_NAME }} && make build-js-production
