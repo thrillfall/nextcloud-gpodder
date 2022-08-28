@@ -52,7 +52,7 @@ class PodcastCacheService {
 			'author' => self::getXPathContent($xml, '/rss/channel/itunes:author'),
 			'link' => (string)$channel->link,
 			'description' => (string)$channel->description,
-			'image' => 
+			'image' =>
 				self::getXPathContent($xml, '/rss/channel/image/url')
 				?? self::getXPathAttribute($xml, '/rss/channel/itunes:image/@href'),
 			'fetchedAtUnix' => (new DateTime())->getTimestamp(),
