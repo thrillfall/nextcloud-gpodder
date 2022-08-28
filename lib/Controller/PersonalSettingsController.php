@@ -12,9 +12,7 @@ use OCA\GPodderSync\Db\SubscriptionChange\SubscriptionChangeRepository;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\IL10N;
 use OCP\IRequest;
-use OCP\Settings\ISettings;
 
 use Psr\Log\LoggerInterface;
 
@@ -85,7 +83,7 @@ class PersonalSettingsController extends Controller {
 			try {
 				$podcast = $this->podcastCacheService->getCachedOrFetchPodcastData($url);
 				$sub['podcast'] = $podcast;
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$sub['podcast'] = null;
 				$this->logger->error("Failed to get podcast data.", [
 					'exception' => $e,

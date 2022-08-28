@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace OCA\GPodderSync\Settings;
 
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\IConfig;
-use OCP\IL10N;
 use OCP\Settings\ISettings;
 
 class GPodderSyncPersonal implements ISettings {
