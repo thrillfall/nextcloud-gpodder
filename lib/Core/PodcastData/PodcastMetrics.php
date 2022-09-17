@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Core\PodcastData;
 
-class PodcastMetrics {
+use JsonSerializable;
+
+class PodcastMetrics implements JsonSerializable {
 	private string $url;
 	private int $listenedSeconds;
 	private PodcastActionCounts $actionCounts;
@@ -56,6 +58,9 @@ class PodcastMetrics {
 		return $this->podcastData;
 	}
 
+	/**
+	 * @return array<string,mixed>
+	 */
 	public function toArray(): array {
 		return
 		[
@@ -64,5 +69,12 @@ class PodcastMetrics {
 			'actionCounts' => $this->actionCounts->toArray(),
 			'podcastData' => $this->podcastData->toArray(),
 		];
+	}
+
+	/**
+	 * @return array<string,mixed>
+	 */
+	public function jsonSerialize(): mixed {
+		return $this->toArray();
 	}
 }

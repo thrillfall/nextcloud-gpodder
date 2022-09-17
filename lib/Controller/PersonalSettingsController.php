@@ -35,12 +35,8 @@ class PersonalSettingsController extends Controller {
 	 */
 	public function metrics(): JSONResponse {
 		$metrics = $this->metricsReader->metrics($this->userId);
-
-		$metricsArrays = array_map(function (PodcastMetrics $metric) {
-			return $metric->toArray();
-		}, $metrics);
 		return new JSONResponse([
-			'subscriptions' => $metricsArrays,
+			'subscriptions' => $metrics,
 		]);
 	}
 }

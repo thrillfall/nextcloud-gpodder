@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace OCA\GPodderSync\Core\PodcastData;
 
 use DateTime;
+use JsonSerializable;
 use SimpleXMLElement;
 
-class PodcastData {
+class PodcastData implements JsonSerializable {
 	private string $title;
 	private string $author;
 	private string $link;
@@ -30,6 +31,10 @@ class PodcastData {
 		$this->fetchedAtUnix = $fetchedAtUnix;
 	}
 
+	/**
+	 * @return PodcastData
+	 * @throws Exception if the XML data could not be parsed.
+	 */
 	public static function parseRssXml(string $xmlString, ?int $fetchedAtUnix = null): PodcastData {
 		$xml = new SimpleXMLElement($xmlString);
 		$channel = $xml->channel;
@@ -45,7 +50,7 @@ class PodcastData {
 		);
 	}
 
-	private static function getXPathContent(SimpleXMLElement $xml, string $xpath) {
+	private static function getXPathContent(SimpleXMLElement $xml, string $xpath): ?string {
 		$match = $xml->xpath($xpath);
 		if ($match) {
 			return (string)$match[0];
@@ -53,7 +58,7 @@ class PodcastData {
 		return null;
 	}
 
-	private static function getXPathAttribute(SimpleXMLElement $xml, string $xpath) {
+	private static function getXPathAttribute(SimpleXMLElement $xml, string $xpath): ?string {
 		$match = $xml->xpath($xpath);
 		if ($match) {
 			return (string)$match[0][0];
@@ -111,7 +116,7 @@ class PodcastData {
 	}
 
 	/**
-	 * @return array
+	 * @return array<string,mixed>
 	 */
 	public function toArray(): array {
 		return
@@ -123,6 +128,13 @@ class PodcastData {
 			'image' => $this->image,
 			'fetchedAtUnix' => $this->fetchedAtUnix,
 		];
+	}
+
+	/**
+	 * @return array<string,mixed>
+	 */
+	public function jsonSerialize(): mixed {
+		return $this->toArray();
 	}
 
 	/**
