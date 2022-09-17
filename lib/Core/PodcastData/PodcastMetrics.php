@@ -9,18 +9,15 @@ class PodcastMetrics implements JsonSerializable {
 	private string $url;
 	private int $listenedSeconds;
 	private PodcastActionCounts $actionCounts;
-	private ?PodcastData $podcastData;
 
 	public function __construct(
 		string $url,
 		int $listenedSeconds = 0,
 		?PodcastActionCounts $actionCounts = null,
-		?PodcastData $podcastData = null,
 	) {
 		$this->url = $url;
 		$this->actionCounts = $actionCounts ?? new PodcastActionCounts;
 		$this->listenedSeconds = $listenedSeconds;
-		$this->podcastData = $podcastData;
 	}
 
 	/**
@@ -52,13 +49,6 @@ class PodcastMetrics implements JsonSerializable {
 	}
 
 	/**
-	 * @return PodcastData|null
-	 */
-	public function getPodcastData(): ?PodcastData {
-		return $this->podcastData;
-	}
-
-	/**
 	 * @return array<string,mixed>
 	 */
 	public function toArray(): array {
@@ -67,7 +57,6 @@ class PodcastMetrics implements JsonSerializable {
 			'url' => $this->url,
 			'listenedSeconds' => $this->listenedSeconds,
 			'actionCounts' => $this->actionCounts->toArray(),
-			'podcastData' => $this->podcastData->toArray(),
 		];
 	}
 

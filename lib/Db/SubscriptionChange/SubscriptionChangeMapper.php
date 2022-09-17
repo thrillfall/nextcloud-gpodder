@@ -25,7 +25,7 @@ class SubscriptionChangeMapper extends \OCP\AppFramework\Db\QBMapper {
 		return $this->findEntities($qb);
 	}
 
-	public function findByUrl(string $url, string $userId): SubscriptionChangeEntity {
+	public function findByUrl(string $url, string $userId): ?SubscriptionChangeEntity {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -42,6 +42,7 @@ class SubscriptionChangeMapper extends \OCP\AppFramework\Db\QBMapper {
 		} catch (DoesNotExistException $e) {
 		} catch (MultipleObjectsReturnedException $e) {
 		}
+		return null;
 	}
 
 	public function remove(SubscriptionChangeEntity $subscriptionChangeEntity) {
