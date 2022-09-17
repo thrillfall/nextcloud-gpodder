@@ -42,7 +42,7 @@ class PodcastDataCache {
 			throw new \ErrorException("Podcast RSS URL returned non-2xx status code: $statusCode");
 		}
 		$body = $resp->getBody();
-		return PodcastData::parseXml($body);
+		return PodcastData::parseRssXml($body);
 	}
 
 	public function tryGetCachedPodcastData(string $url): ?PodcastData {
@@ -50,14 +50,7 @@ class PodcastDataCache {
 		if (!$oldData) {
 			return null;
 		}
-		return new PodcastData(
-			title: $oldData['title'],
-			author: $oldData['author'],
-			link: $oldData['link'],
-			description: $oldData['description'],
-			image: $oldData['image'],
-			fetchedAtUnix: $oldData['fetchedAtUnix'],
-		);
+		return PodcastData::fromArray($oldData);
 	}
 
 	public function trySetCachedPodcastData(string $url, PodcastData $data) {
