@@ -30,7 +30,7 @@ class PodcastData {
 		$this->fetchedAtUnix = $fetchedAtUnix;
 	}
 
-	public static function parseXml(string $xmlString): PodcastData {
+	public static function parseRssXml(string $xmlString, ?int $fetchedAtUnix = null): PodcastData {
 		$xml = new SimpleXMLElement($xmlString);
 		$channel = $xml->channel;
 		return new PodcastData(
@@ -41,7 +41,7 @@ class PodcastData {
 			image:
 				self::getXPathContent($xml, '/rss/channel/image/url')
 				?? self::getXPathAttribute($xml, '/rss/channel/itunes:image/@href'),
-			fetchedAtUnix: (new DateTime())->getTimestamp(),
+			fetchedAtUnix: $fetchedAtUnix ?? (new DateTime())->getTimestamp(),
 		);
 	}
 
@@ -103,10 +103,16 @@ class PodcastData {
 		return $this->fetchedAtUnix;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function __toString() : String {
 		return $this->title;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function toArray(): array {
 		return
 		[
@@ -117,6 +123,20 @@ class PodcastData {
 			'image' => $this->image,
 			'fetchedAtUnix' => $this->fetchedAtUnix,
 		];
+	}
+
+	/**
+	 * @return PodcastData
+	 */
+	public static function fromArray(array $data): PodcastData {
+		return new PodcastData(
+			title: $data['title'],
+			author: $data['author'],
+			link: $data['link'],
+			description: $data['description'],
+			image: $data['image'],
+			fetchedAtUnix: $data['fetchedAtUnix'],
+		);
 	}
 }
 
