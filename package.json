@@ -26,11 +26,11 @@
 		"stylelint:fix": "stylelint css/*.css css/*.scss src/**/*.scss src/**/*.vue --fix"
 	},
 	"dependencies": {
-		"@nextcloud/axios": "^1.10.0",
-		"@nextcloud/dialogs": "^3.1.2",
+		"@nextcloud/axios": "^1.11.0",
+		"@nextcloud/dialogs": "^3.2.0",
 		"@nextcloud/router": "^2.0.0",
-		"@nextcloud/vue": "^5.3.1",
-		"vue": "^2.7.7",
+		"@nextcloud/vue": "^5.4.0",
+		"vue": "^2.7.10",
 		"vue-material-design-icons": "^5.1.2"
 	},
 	"browserslist": [
