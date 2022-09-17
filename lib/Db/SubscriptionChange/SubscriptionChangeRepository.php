@@ -18,7 +18,7 @@ class SubscriptionChangeRepository {
 		return $this->subscriptionChangeMapper->findAll();
 	}
 
-	public function findByUrl(string $episode, string $userId): SubscriptionChangeEntity {
+	public function findByUrl(string $episode, string $userId): ?SubscriptionChangeEntity {
 		return $this->subscriptionChangeMapper->findByUrl($episode, $userId);
 	}
 

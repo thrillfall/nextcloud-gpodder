@@ -13,21 +13,15 @@ use Psr\Log\LoggerInterface;
 
 class PodcastMetricsReader {
 
-	private LoggerInterface $logger;
 	private SubscriptionChangeRepository $subscriptionChangeRepository;
 	private EpisodeActionRepository $episodeActionRepository;
-	private PodcastDataCache $cache;
 
 	public function __construct(
-		LoggerInterface $logger,
 		SubscriptionChangeRepository $subscriptionChangeRepository,
 		EpisodeActionRepository $episodeActionRepository,
-		PodcastDataCache $cache,
 	) {
-		$this->logger = $logger;
 		$this->subscriptionChangeRepository = $subscriptionChangeRepository;
 		$this->episodeActionRepository = $episodeActionRepository;
-		$this->cache = $cache;
 	}
 
 	/**
@@ -69,24 +63,12 @@ class PodcastMetricsReader {
 		return $subscriptions;
 	}
 
-	private function tryGetParsedPodcastData(string $url): ?PodcastData {
-		try {
-			return $this->cache->getCachedOrFetchPodcastData($url);
-		} catch (\Exception $e) {
-			$this->logger->error("Failed to get podcast data.", [
-				'exception' => $e,
-				'podcastUrl' => $url,
-			]);
-			return null;
-		}
-	}
-
 	private function createMetricsForUrl(string $url): PodcastMetrics {
 		return new PodcastMetrics(
 			url: $url,
 			listenedSeconds: 0,
 			actionCounts: new PodcastActionCounts(),
-			podcastData: $this->tryGetParsedPodcastData($url),
 		);
 	}
+
 }
