@@ -6,18 +6,18 @@
 				<ul>
 					<ListItem v-for="sub in subscriptions"
 						:key="sub.url"
-						:title="sub.podcast?.title ?? sub.url"
+						:title="sub.podcastData?.title ?? sub.url"
 						:details="formatSubscriptionDetails(sub)">
 						<template #icon>
 							<Avatar :size="44"
-								:url="sub.podcast?.image"
-								:display-name="sub.podcast?.author" />
+								:url="sub.podcastData?.image"
+								:display-name="sub.podcastData?.author" />
 						</template>
 						<template #subtitle>
-							{{ sub.podcast?.description }}
+							{{ sub.podcastData?.description }}
 						</template>
 						<template #actions>
-							<ActionLink :href="sub.podcast?.link"
+							<ActionLink :href="sub.podcastData?.link"
 								target="_blank"
 								icon="icon-external">
 								Podcast's homepage
