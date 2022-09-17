@@ -35,12 +35,12 @@ class PodcastData {
 		$channel = $xml->channel;
 		return new PodcastData(
 			title: (string)$channel->title,
-			author: self::getXPathContent($xml, '/rss/channel/itunes:author'),
+			author: (string)self::getXPathContent($xml, '/rss/channel/itunes:author'),
 			link: (string)$channel->link,
 			description: (string)$channel->description,
 			image:
-				self::getXPathContent($xml, '/rss/channel/image/url')
-				?? self::getXPathAttribute($xml, '/rss/channel/itunes:image/@href'),
+				(string)(self::getXPathContent($xml, '/rss/channel/image/url')
+				?? self::getXPathAttribute($xml, '/rss/channel/itunes:image/@href')),
 			fetchedAtUnix: $fetchedAtUnix ?? (new DateTime())->getTimestamp(),
 		);
 	}
