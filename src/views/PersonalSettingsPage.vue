@@ -77,7 +77,7 @@ export default {
 				throw new Error('expected subscriptions array in metrics response')
 			}
 			this.subscriptions = resp.data.subscriptions
-			this.subscriptions.sort(this.sortBy.compare);
+			this.subscriptions.sort(this.sortBy.compare)
 		} catch (e) {
 			console.error(e)
 			showError(t('gpoddersync', 'Could not fetch podcast synchronization stats'))
