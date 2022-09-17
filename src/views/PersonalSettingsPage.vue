@@ -3,6 +3,16 @@
 		<SettingsSection :title="t('gpoddersync', 'Synced subscriptions')"
 			:description="t('gpoddersync', 'Podcast subscriptions that has so far been synchronized with this Nextcloud account.')">
 			<div v-if="subscriptions.length > 0">
+				<div class="sorting-container">
+					<label for="gpoddersync_sorting">Sort by:</label>
+					<Multiselect id="gpoddersync_sorting"
+						v-model="sortBy"
+						:options="sortingOptions"
+						track-by="label"
+						label="label"
+						:allow-empty="false"
+						@change="updateSorting" />
+				</div>
 				<ul>
 					<SubscriptionListItem v-for="sub in subscriptions"
 						:key="sub.url"
@@ -28,6 +38,7 @@
 
 <script>
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import SubscriptionListItem from '../components/SubscriptionListItem.vue'
 
@@ -37,10 +48,16 @@ import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
 
+const sortingOptions = [
+	{ label: 'Listened time (desc)', compare: (a, b) => a?.listenedSeconds < b?.listenedSeconds },
+	{ label: 'Listened time (asc)', compare: (a, b) => a?.listenedSeconds > b?.listenedSeconds },
+]
+
 export default {
 	name: 'PersonalSettingsPage',
 	components: {
 		EmptyContent,
+		Multiselect,
 		Podcast,
 		SettingsSection,
 		SubscriptionListItem,
@@ -49,6 +66,8 @@ export default {
 		return {
 			subscriptions: [],
 			isLoading: true,
+			sortBy: sortingOptions[0],
+			sortingOptions,
 		}
 	},
 	async mounted() {
@@ -58,6 +77,7 @@ export default {
 				throw new Error('expected subscriptions array in metrics response')
 			}
 			this.subscriptions = resp.data.subscriptions
+			this.subscriptions.sort(this.sortBy.compare);
 		} catch (e) {
 			console.error(e)
 			showError(t('gpoddersync', 'Could not fetch podcast synchronization stats'))
@@ -77,6 +97,9 @@ export default {
 				return `(${modMinutes}min ${modSeconds}s listened)`
 			}
 			return `(${hours}h ${modMinutes}min listened)`
+		},
+		updateSorting(sorting) {
+			this.subscriptions.sort(sorting.compare)
 		},
 	},
 }
