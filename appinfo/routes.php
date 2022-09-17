@@ -16,6 +16,5 @@ return [
 		['name' => 'subscription_change#create', 'url' => '/subscription_change/create', 'verb' => 'POST'],
 		['name' => 'personal_settings#metrics', 'url' => '/personal_settings/metrics', 'verb' => 'GET'],
 		['name' => 'personal_settings#podcastData', 'url' => '/personal_settings/podcast_data', 'verb' => 'GET'],
-		['name' => 'personal_settings#imageProxy', 'url' => '/personal_settings/image_proxy', 'verb' => 'GET'],
 	]
 ];
