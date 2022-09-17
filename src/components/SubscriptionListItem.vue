@@ -3,7 +3,7 @@
 		:details="formatSubscriptionDetails(sub)">
 		<template #icon>
 			<Avatar :size="44"
-				:url="podcastData?.image"
+				:url="podcastData?.imageBlob ?? podcastData?.imageUrl"
 				:display-name="podcastData?.author" />
 		</template>
 		<template #subtitle>

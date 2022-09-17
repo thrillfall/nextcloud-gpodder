@@ -8,27 +8,30 @@ use JsonSerializable;
 use SimpleXMLElement;
 
 class PodcastData implements JsonSerializable {
-	private string $title;
-	private string $author;
-	private string $link;
-	private string $description;
-	private string $image;
+	private ?string $title;
+	private ?string $author;
+	private ?string $link;
+	private ?string $description;
+	private ?string $imageUrl;
 	private int $fetchedAtUnix;
+	private ?string $imageBlob;
 
 	public function __construct(
-		string $title,
-		string $author,
-		string $link,
-		string $description,
-		string $image,
+		?string $title,
+		?string $author,
+		?string $link,
+		?string $description,
+		?string $imageUrl,
 		int $fetchedAtUnix,
+		?string $imageBlob = null,
 	) {
 		$this->title = $title;
 		$this->author = $author;
 		$this->link = $link;
 		$this->description = $description;
-		$this->image = $image;
+		$this->imageUrl = $imageUrl;
 		$this->fetchedAtUnix = $fetchedAtUnix;
+		$this->imageBlob = $imageBlob;
 	}
 
 	/**
@@ -39,15 +42,22 @@ class PodcastData implements JsonSerializable {
 		$xml = new SimpleXMLElement($xmlString);
 		$channel = $xml->channel;
 		return new PodcastData(
-			title: (string)$channel->title,
-			author: (string)self::getXPathContent($xml, '/rss/channel/itunes:author'),
-			link: (string)$channel->link,
-			description: (string)$channel->description,
-			image:
-				(string)(self::getXPathContent($xml, '/rss/channel/image/url')
-				?? self::getXPathAttribute($xml, '/rss/channel/itunes:image/@href')),
+			title: self::stringOrNull($channel->title),
+			author: self::getXPathContent($xml, '/rss/channel/itunes:author'),
+			link: self::stringOrNull($channel->link),
+			description: self::stringOrNull($channel->description),
+			imageUrl:
+				self::getXPathContent($xml, '/rss/channel/image/url')
+				?? self::getXPathAttribute($xml, '/rss/channel/itunes:image/@href'),
 			fetchedAtUnix: $fetchedAtUnix ?? (new DateTime())->getTimestamp(),
 		);
+	}
+
+	private static function stringOrNull(mixed $value): ?string {
+		if ($value) {
+			return (string)$value;
+		}
+		return null;
 	}
 
 	private static function getXPathContent(SimpleXMLElement $xml, string $xpath): ?string {
@@ -67,52 +77,67 @@ class PodcastData implements JsonSerializable {
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getTitle(): string {
+	public function getTitle(): ?string {
 		return $this->title;
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getAuthor(): string {
+	public function getAuthor(): ?string {
 		return $this->author;
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getLink(): string {
+	public function getLink(): ?string {
 		return $this->link;
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getDescription(): string {
+	public function getDescription(): ?string {
 		return $this->description;
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getImage(): string {
-		return $this->image;
+	public function getImageUrl(): ?string {
+		return $this->imageUrl;
 	}
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFetchedAtUnix(): int {
+	public function getFetchedAtUnix(): ?int {
 		return $this->fetchedAtUnix;
 	}
 
 	/**
+	 * @return string|null
+	 */
+	public function getImageBlob(): ?string {
+		return $this->imageBlob;
+	}
+
+	/**
+	 * @param string $blob
+	 * @return void
+	 */
+	public function setImageBlob(?string $blob): void {
+		$this->imageBlob = $blob;
+	}
+
+	/**
 	 * @return string
 	 */
-	public function __toString() : String {
-		return $this->title;
+	public function __toString() : string {
+		return $this->title ?? '/no title/';
 	}
 
 	/**
@@ -125,7 +150,8 @@ class PodcastData implements JsonSerializable {
 			'author' => $this->author,
 			'link' => $this->link,
 			'description' => $this->description,
-			'image' => $this->image,
+			'imageUrl' => $this->imageUrl,
+			'imageBlob' => $this->imageBlob,
 			'fetchedAtUnix' => $this->fetchedAtUnix,
 		];
 	}
@@ -146,8 +172,9 @@ class PodcastData implements JsonSerializable {
 			author: $data['author'],
 			link: $data['link'],
 			description: $data['description'],
-			image: $data['image'],
+			imageUrl: $data['imageUrl'],
 			fetchedAtUnix: $data['fetchedAtUnix'],
+			imageBlob: $data['imageBlob'],
 		);
 	}
 }
