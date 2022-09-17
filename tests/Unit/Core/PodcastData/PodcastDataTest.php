@@ -14,7 +14,8 @@ class EpisodeActionTest extends TestCase {
 			'author' => 'author1',
 			'link' => 'http://example.com/',
 			'description' => 'description1',
-			'image' => 'http://example.com/image.jpg',
+			'imageUrl' => 'http://example.com/image.jpg',
+			'imageBlob' => null,
 			'fetchedAtUnix' => 1337,
 		];
 		$this->assertSame($expected, $podcastData->toArray());
@@ -69,7 +70,8 @@ class EpisodeActionTest extends TestCase {
 			'author' => 'The Podcast Author',
 			'link' => 'http://example.com',
 			'description' => 'Some long description',
-			'image' => 'https://example.com/image.jpg',
+			'imageUrl' => 'https://example.com/image.jpg',
+			'imageBlob' => null,
 			'fetchedAtUnix' => 1337,
 		];
 		$this->assertSame($expected, $podcastData->toArray());
@@ -102,8 +104,9 @@ class EpisodeActionTest extends TestCase {
 			'title' => 'The title of this Podcast',
 			'author' => 'The Podcast Author',
 			'link' => 'http://example.com',
-			'description' => '',
-			'image' => '',
+			'description' => null,
+			'imageUrl' => null,
+			'imageBlob' => null,
 			'fetchedAtUnix' => 1337,
 		];
 		$this->assertSame($expected, $podcastData->toArray());
