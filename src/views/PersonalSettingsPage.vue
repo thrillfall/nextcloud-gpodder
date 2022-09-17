@@ -4,33 +4,9 @@
 			:description="t('gpoddersync', 'Podcast subscriptions that has so far been synchronized with this Nextcloud account.')">
 			<div v-if="subscriptions.length > 0">
 				<ul>
-					<ListItem v-for="sub in subscriptions"
+					<SubscriptionListItem v-for="sub in subscriptions"
 						:key="sub.url"
-						:title="sub.podcastData?.title ?? sub.url"
-						:details="formatSubscriptionDetails(sub)">
-						<template #icon>
-							<Avatar :size="44"
-								:url="sub.podcastData?.image"
-								:display-name="sub.podcastData?.author" />
-						</template>
-						<template #subtitle>
-							{{ sub.podcastData?.description }}
-						</template>
-						<template #actions>
-							<ActionLink :href="sub.podcastData?.link"
-								target="_blank"
-								icon="icon-external">
-								Podcast's homepage
-							</ActionLink>
-							<ActionLink :href="sub.url"
-								target="_blank">
-								<template #icon>
-									<Rss />
-								</template>
-								RSS feed
-							</ActionLink>
-						</template>
-					</ListItem>
+						:sub="sub" />
 				</ul>
 			</div>
 			<div v-if="subscriptions.length === 0 && !isLoading">
@@ -51,14 +27,11 @@
 </template>
 
 <script>
-import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
-import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
-import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
+import SubscriptionListItem from '../components/SubscriptionListItem.vue'
 
 import Podcast from 'vue-material-design-icons/Podcast'
-import Rss from 'vue-material-design-icons/Rss.vue'
 
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
@@ -67,13 +40,10 @@ import { showError } from '@nextcloud/dialogs'
 export default {
 	name: 'PersonalSettingsPage',
 	components: {
-		ActionLink,
-		Avatar,
 		EmptyContent,
-		ListItem,
 		Podcast,
-		Rss,
 		SettingsSection,
+		SubscriptionListItem,
 	},
 	data() {
 		return {
