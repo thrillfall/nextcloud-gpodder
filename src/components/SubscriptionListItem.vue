@@ -1,22 +1,22 @@
 <template>
-	<ListItem :title="podcastData?.title ?? sub.url"
-		:details="formatSubscriptionDetails(sub)">
+	<ListItem :title="getTitle()"
+		:details="getDetails()">
 		<template #icon>
 			<Avatar :size="44"
-				:url="podcastData?.imageBlob ?? podcastData?.imageUrl"
-				:display-name="podcastData?.author" />
+				:url="getImageSrc()"
+				:display-name="getAvatarName()" />
 		</template>
 		<template #subtitle>
 			<span v-if="isLoading"><em>(Loading RSS data...)</em></span>
-			<span v-else>{{ podcastData?.description }}</span>
+			<span v-else>{{ getSubtitle() }}</span>
 		</template>
 		<template #actions>
-			<ActionLink :href="podcastData?.link"
+			<ActionLink :href="getHomepageLink()"
 				target="_blank"
 				icon="icon-external">
 				Podcast's homepage
 			</ActionLink>
-			<ActionLink :href="sub.url"
+			<ActionLink :href="getRssLink()"
 				target="_blank">
 				<template #icon>
 					<Rss />
@@ -70,17 +70,36 @@ export default {
 		}
 	},
 	methods: {
-		formatSubscriptionDetails(sub) {
-			if (sub.listenedSeconds <= 0) {
+		getTitle() {
+			return this.podcastData?.title ?? this.sub.url ?? ''
+		},
+		getDetails() {
+			if (this.sub.listenedSeconds <= 0) {
 				return '(no time listened)'
 			}
-			const hours = Math.floor(sub.listenedSeconds / 3600)
-			const modMinutes = Math.floor(sub.listenedSeconds / 60) % 60
+			const seconds = this.sub.listenedSeconds
+			const hours = Math.floor(seconds / 3600)
+			const modMinutes = Math.floor(seconds / 60) % 60
 			if (hours === 0) {
-				const modSeconds = sub.listenedSeconds % 60
+				const modSeconds = seconds % 60
 				return `(${modMinutes}min ${modSeconds}s listened)`
 			}
 			return `(${hours}h ${modMinutes}min listened)`
+		},
+		getImageSrc() {
+			return this.podcastData?.imageBlob ?? this.podcastData?.imageUrl ?? ''
+		},
+		getAvatarName() {
+			return this.podcastData?.author ?? ''
+		},
+		getSubtitle() {
+			return this.podcastData?.description ?? ''
+		},
+		getHomepageLink() {
+			return this.podcastData?.link ?? ''
+		},
+		getRssLink() {
+			return this.sub.url ?? ''
 		},
 	},
 }
