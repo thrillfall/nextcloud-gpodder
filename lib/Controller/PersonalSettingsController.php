@@ -13,7 +13,7 @@ use OCP\IRequest;
 
 class PersonalSettingsController extends Controller {
 
-	private ?string $userId;
+	private string $userId;
 	private PodcastMetricsReader $metricsReader;
 	private PodcastDataReader $dataReader;
 
@@ -38,12 +38,6 @@ class PersonalSettingsController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function metrics(): JSONResponse {
-		if ($this->userId === null) {
-			return new JSONResponse([
-				'message' => "Unauthorized.",
-				'subscriptions' => null,
-			], statusCode: Http::STATUS_UNAUTHORIZED);
-		}
 		$metrics = $this->metricsReader->metrics($this->userId);
 		return new JSONResponse([
 			'subscriptions' => $metrics,
@@ -58,12 +52,6 @@ class PersonalSettingsController extends Controller {
 	 * @return JsonResponse
 	 */
 	public function podcastData(string $url = ''): JsonResponse {
-		if ($this->userId === null) {
-			return new JSONResponse([
-				'message' => "Unauthorized.",
-				'data' => null,
-			], statusCode: Http::STATUS_UNAUTHORIZED);
-		}
 		if ($url === '') {
 			return new JSONResponse([
 				'message' => "Missing query parameter 'url'.",
