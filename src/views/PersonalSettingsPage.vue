@@ -86,18 +86,6 @@ export default {
 		}
 	},
 	methods: {
-		formatSubscriptionDetails(sub) {
-			if (sub.listenedSeconds <= 0) {
-				return '(no time listened)'
-			}
-			const hours = Math.floor(sub.listenedSeconds / 3600)
-			const modMinutes = Math.floor(sub.listenedSeconds / 60) % 60
-			if (hours === 0) {
-				const modSeconds = sub.listenedSeconds % 60
-				return `(${modMinutes}min ${modSeconds}s listened)`
-			}
-			return `(${hours}h ${modMinutes}min listened)`
-		},
 		updateSorting(sorting) {
 			this.subscriptions.sort(sorting.compare)
 		},
