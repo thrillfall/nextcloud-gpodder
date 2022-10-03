@@ -1,7 +1,7 @@
 <template>
 	<div class="gpoddersync_settings">
 		<SettingsSection :title="t('gpoddersync', 'Synced subscriptions')"
-			:description="t('gpoddersync', 'Podcast subscriptions that has so far been synchronized with this Nextcloud account.')">
+			:description="t('gpoddersync', 'Podcast subscriptions synchronized to this Nextcloud account so far.')">
 			<div v-if="subscriptions.length > 0">
 				<div class="sorting-container">
 					<label for="gpoddersync_sorting">Sort by:</label>
@@ -96,6 +96,6 @@ export default {
 <style lang="scss" scoped>
 a.link {
 	text-decoration: underline;
-	color: var(--color-primary-element-light);
+	color: var(--color-primary-element);
 }
 </style>
