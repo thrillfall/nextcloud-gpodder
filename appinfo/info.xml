@@ -5,7 +5,7 @@
     <name>GPodder Sync</name>
     <summary>replicate basic GPodder.net API</summary>
     <description><![CDATA[Expose GPodder API to sync podcast consumer apps like AntennaPod]]></description>
-    <version>3.4.0</version>
+    <version>3.5.0</version>
     <licence>agpl</licence>
     <author mail="thrillfall@disroot.org">Thrillfall</author>
     <namespace>GPodderSync</namespace>
@@ -18,7 +18,7 @@
     </documentation>
     <dependencies>
         <php min-version="7.4"/>
-        <nextcloud min-version="20" max-version="24"/>
+        <nextcloud min-version="20" max-version="25"/>
     </dependencies>
     <repair-steps>
         <post-migration>
