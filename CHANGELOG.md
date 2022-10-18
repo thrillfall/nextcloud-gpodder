@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.0 - 2022-10-18
+## Changed
+- Add support for Nextcloud 25
+
 ## 3.4.0 - 2022-05-26
 ### Fixed
 - Don't crash if no sync timestamp is passed
