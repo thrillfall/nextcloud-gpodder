@@ -64,7 +64,7 @@ class EpisodeActionTest extends TestCase {
 		</rss>
 		';
 
-		$podcastData = PodcastData::parseRssXml($xml, fetchedAtUnix: 1337);
+		$podcastData = PodcastData::parseRssXml($xml, 1337);
 		$expected = [
 			'title' => 'The title of this Podcast',
 			'author' => 'The Podcast Author',
@@ -99,7 +99,7 @@ class EpisodeActionTest extends TestCase {
 		</rss>
 		';
 
-		$podcastData = PodcastData::parseRssXml($xml, fetchedAtUnix: 1337);
+		$podcastData = PodcastData::parseRssXml($xml, 1337);
 		$expected = [
 			'title' => 'The title of this Podcast',
 			'author' => 'The Podcast Author',
