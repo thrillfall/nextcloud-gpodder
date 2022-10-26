@@ -13,7 +13,7 @@ class PodcastMetrics implements JsonSerializable {
 	public function __construct(
 		string $url,
 		int $listenedSeconds = 0,
-		?PodcastActionCounts $actionCounts = null,
+		?PodcastActionCounts $actionCounts = null
 	) {
 		$this->url = $url;
 		$this->actionCounts = $actionCounts ?? new PodcastActionCounts;

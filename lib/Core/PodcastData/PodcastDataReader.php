@@ -19,7 +19,7 @@ class PodcastDataReader {
 	public function __construct(
 		ICacheFactory $cacheFactory,
 		IClientService $httpClientService,
-		SubscriptionChangeRepository $subscriptionChangeRepository,
+		SubscriptionChangeRepository $subscriptionChangeRepository
 	) {
 		if ($cacheFactory->isLocalCacheAvailable()) {
 			$this->cache = $cacheFactory->createLocal('GPodderSync-Podcasts');

@@ -22,7 +22,7 @@ class PersonalSettingsController extends Controller {
 		IRequest $request,
 		?string $UserId,
 		PodcastMetricsReader $metricsReader,
-		PodcastDataReader $dataReader,
+		PodcastDataReader $dataReader
 	) {
 		parent::__construct($AppName, $request);
 		$this->userId = $UserId ?? '';
