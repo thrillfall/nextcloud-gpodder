@@ -23,7 +23,7 @@ class PodcastData implements JsonSerializable {
 		?string $description,
 		?string $imageUrl,
 		int $fetchedAtUnix,
-		?string $imageBlob = null,
+		?string $imageBlob = null
 	) {
 		$this->title = $title;
 		$this->author = $author;

@@ -18,7 +18,7 @@ class PodcastMetricsReader {
 
 	public function __construct(
 		SubscriptionChangeRepository $subscriptionChangeRepository,
-		EpisodeActionRepository $episodeActionRepository,
+		EpisodeActionRepository $episodeActionRepository
 	) {
 		$this->subscriptionChangeRepository = $subscriptionChangeRepository;
 		$this->episodeActionRepository = $episodeActionRepository;
