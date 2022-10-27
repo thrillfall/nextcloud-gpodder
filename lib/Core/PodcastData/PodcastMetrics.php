@@ -63,7 +63,7 @@ class PodcastMetrics implements JsonSerializable {
 	/**
 	 * @return array<string,mixed>
 	 */
-	public function jsonSerialize(): mixed {
+	public function jsonSerialize(): array {
 		return $this->toArray();
 	}
 }

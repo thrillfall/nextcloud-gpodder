@@ -69,7 +69,7 @@ class PodcastDataReader {
 			$body = $resp->getBody();
 			$bodyBase64 = base64_encode($body);
 			return "data:$contentType;base64,$bodyBase64";
-		} catch (Exception) {
+		} catch (Exception $e) {
 			return null;
 		}
 	}
