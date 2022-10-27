@@ -42,18 +42,17 @@ class PodcastData implements JsonSerializable {
 		$xml = new SimpleXMLElement($xmlString);
 		$channel = $xml->channel;
 		return new PodcastData(
-			title: self::stringOrNull($channel->title),
-			author: self::getXPathContent($xml, '/rss/channel/itunes:author'),
-			link: self::stringOrNull($channel->link),
-			description: self::stringOrNull($channel->description),
-			imageUrl:
-				self::getXPathContent($xml, '/rss/channel/image/url')
+			self::stringOrNull($channel->title),
+			self::getXPathContent($xml, '/rss/channel/itunes:author'),
+			self::stringOrNull($channel->link),
+			self::stringOrNull($channel->description),
+			self::getXPathContent($xml, '/rss/channel/image/url')
 				?? self::getXPathAttribute($xml, '/rss/channel/itunes:image/@href'),
-			fetchedAtUnix: $fetchedAtUnix ?? (new DateTime())->getTimestamp(),
+			$fetchedAtUnix ?? (new DateTime())->getTimestamp()
 		);
 	}
 
-	private static function stringOrNull(mixed $value): ?string {
+	private static function stringOrNull($value): ?string {
 		if ($value) {
 			return (string)$value;
 		}
@@ -159,7 +158,7 @@ class PodcastData implements JsonSerializable {
 	/**
 	 * @return array<string,mixed>
 	 */
-	public function jsonSerialize(): mixed {
+	public function jsonSerialize(): array {
 		return $this->toArray();
 	}
 
@@ -168,13 +167,13 @@ class PodcastData implements JsonSerializable {
 	 */
 	public static function fromArray(array $data): PodcastData {
 		return new PodcastData(
-			title: $data['title'],
-			author: $data['author'],
-			link: $data['link'],
-			description: $data['description'],
-			imageUrl: $data['imageUrl'],
-			fetchedAtUnix: $data['fetchedAtUnix'],
-			imageBlob: $data['imageBlob'],
+			$data['title'],
+			$data['author'],
+			$data['link'],
+			$data['description'],
+			$data['imageUrl'],
+			$data['fetchedAtUnix'],
+			$data['imageBlob']
 		);
 	}
 }

@@ -65,9 +65,9 @@ class PodcastMetricsReader {
 
 	private function createMetricsForUrl(string $url): PodcastMetrics {
 		return new PodcastMetrics(
-			url: $url,
-			listenedSeconds: 0,
-			actionCounts: new PodcastActionCounts(),
+			$url,
+			0,
+			new PodcastActionCounts()
 		);
 	}
 

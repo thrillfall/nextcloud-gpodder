@@ -56,7 +56,7 @@ class PersonalSettingsController extends Controller {
 			return new JSONResponse([
 				'message' => "Missing query parameter 'url'.",
 				'data' => null,
-			], statusCode: Http::STATUS_BAD_REQUEST);
+			], Http::STATUS_BAD_REQUEST);
 		}
 		return new JsonResponse([
 			'data' => $this->dataReader->getCachedOrFetchPodcastData($url, $this->userId),
