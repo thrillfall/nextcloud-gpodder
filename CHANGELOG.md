@@ -1,7 +1,11 @@
 # Changelog
 
+## 3.6.0 - 2022-10-28
+### Added
+- New overview page of synchronized data in personal settings (thanks @jilleJr)
+
 ## 3.5.0 - 2022-10-18
-## Changed
+### Changed
 - Add support for Nextcloud 25
 
 ## 3.4.0 - 2022-05-26
