@@ -18,6 +18,9 @@ class SubscriptionChangeEntity extends Entity implements JsonSerializable {
 		$this->addType('subscribed','boolean');
 	}
 
+	/**
+	 * @return array<string,mixed>
+	 */
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,
