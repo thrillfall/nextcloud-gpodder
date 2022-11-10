@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.7.0 - 2022-11-10
+### Fixed
+- Podcast overview page no longer produces errors when using php8.X
+### Changed
+- Allow longer feed URLs with up to 1000 characters
+
 ## 3.6.0 - 2022-10-28
 ### Added
 - New overview page of synchronized data in personal settings (thanks @jilleJr)
