@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.1 - 2022-11-11
+### Fixed
+- Fix error where app couldn't be installed with some databases
+
 ## 3.7.0 - 2022-11-10
 ### Fixed
 - Podcast overview page no longer produces errors when using php8.X
