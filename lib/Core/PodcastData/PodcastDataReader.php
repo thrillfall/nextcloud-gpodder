@@ -46,7 +46,7 @@ class PodcastDataReader {
 		return $subscriptionChanges !== null;
 	}
 
-	public function fetchPodcastData(string $url, string $userId): PodcastData {
+	public function fetchPodcastData(string $url, string $userId): ?PodcastData {
 		if (!$this->userHasPodcast($url, $userId)) {
 			return null;
 		}
