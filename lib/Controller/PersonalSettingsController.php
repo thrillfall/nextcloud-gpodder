@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Controller;
 
+use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionReader;
 use OCA\GPodderSync\Core\PodcastData\PodcastDataReader;
 use OCA\GPodderSync\Core\PodcastData\PodcastMetricsReader;
 
@@ -14,6 +15,7 @@ use OCP\IRequest;
 class PersonalSettingsController extends Controller {
 
 	private string $userId;
+	private EpisodeActionReader $actionsReader;
 	private PodcastMetricsReader $metricsReader;
 	private PodcastDataReader $dataReader;
 
@@ -22,12 +24,14 @@ class PersonalSettingsController extends Controller {
 		IRequest $request,
 		?string $UserId,
 		PodcastMetricsReader $metricsReader,
-		PodcastDataReader $dataReader
+		PodcastDataReader $dataReader,
+		EpisodeActionReader $actionsReader
 	) {
 		parent::__construct($AppName, $request);
 		$this->userId = $UserId ?? '';
 		$this->metricsReader = $metricsReader;
 		$this->dataReader = $dataReader;
+		$this->actionsReader = $actionsReader;
 	}
 
 	/**
@@ -38,8 +42,10 @@ class PersonalSettingsController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function metrics(): JSONResponse {
+		$actions = $this->actionsReader->actions($this->userId);
 		$metrics = $this->metricsReader->metrics($this->userId);
 		return new JSONResponse([
+			'actions' => $actions,
 			'subscriptions' => $metrics,
 		]);
 	}

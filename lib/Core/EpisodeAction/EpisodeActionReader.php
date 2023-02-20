@@ -4,11 +4,20 @@ declare(strict_types=1);
 namespace OCA\GPodderSync\Core\EpisodeAction;
 
 use InvalidArgumentException;
+use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionData;
+use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 
 class EpisodeActionReader {
 	private array $requiredProperties = ['podcast', 'episode', 'action', 'timestamp'];
+    private EpisodeActionRepository $episodeActionRepository;
 
-	/**
+    public function __construct(
+        EpisodeActionRepository $episodeActionRepository
+    ) {
+        $this->episodeActionRepository = $episodeActionRepository;
+    }
+
+    /**
 	 * @param array $episodeActionsArray []
 	 * @return EpisodeAction[]
 	 * @throws InvalidArgumentException
@@ -35,6 +44,30 @@ class EpisodeActionReader {
 
 		return $episodeActions;
 	}
+
+    /**
+     * @param string $userId
+     *
+     * @return EpisodeActionData[]
+     */
+    public function actions(string $userId): array {
+        $episodeActions = $this->episodeActionRepository->findAll(0, $userId);
+        $episodeActionDataList = [];
+
+        foreach ($episodeActions as $episodeAction) {
+            $episodeActionData = new EpisodeActionData(
+                $episodeAction->getPodcast(),
+                $episodeAction->getEpisode(),
+                $episodeAction->getAction(),
+                $episodeAction->getPosition(),
+                $episodeAction->getStarted(),
+                $episodeAction->getTotal()
+            );
+            $episodeActionDataList[] = $episodeActionData;
+        }
+
+        return $episodeActionDataList;
+    }
 
 	/**
 	 * @param array $episodeAction

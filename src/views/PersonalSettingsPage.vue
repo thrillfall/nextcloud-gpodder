@@ -1,6 +1,16 @@
 <template>
 	<div class="gpoddersync_settings">
-		<SettingsSection :title="t('gpoddersync', 'Synced subscriptions')"
+    <SettingsSection :title="t('gpoddersync', 'Last actions')"
+      :description="t('gpoddersync', 'A list of last actions.')">
+      <div v-if="actions.length > 0">
+        <ul>
+          <ActionListItem v-for="action in actions.slice(0, 10)"
+                                :key="action.episode"
+                                :action="action" />
+        </ul>
+      </div>
+    </SettingsSection>
+    <SettingsSection :title="t('gpoddersync', 'Synced subscriptions')"
 			:description="t('gpoddersync', 'Podcast subscriptions synchronized to this Nextcloud account so far.')">
 			<div v-if="subscriptions.length > 0">
 				<div class="sorting-container">
@@ -41,6 +51,7 @@ import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import SubscriptionListItem from '../components/SubscriptionListItem.vue'
+import ActionListItem from '../components/ActionListItem.vue'
 
 import Podcast from 'vue-material-design-icons/Podcast'
 
@@ -61,10 +72,12 @@ export default {
 		Podcast,
 		SettingsSection,
 		SubscriptionListItem,
+    ActionListItem,
 	},
 	data() {
 		return {
 			subscriptions: [],
+			actions: [],
 			isLoading: true,
 			sortBy: sortingOptions[0],
 			sortingOptions,
@@ -73,6 +86,11 @@ export default {
 	async mounted() {
 		try {
 			const resp = await axios.get(generateUrl('/apps/gpoddersync/personal_settings/metrics'))
+      if (!Array.isArray(resp.data.actions)) {
+        throw new Error('expected actions array in metrics response')
+      }
+      this.actions = resp.data.actions
+      this.actions.sort(this.sortBy.compare)
 			if (!Array.isArray(resp.data.subscriptions)) {
 				throw new Error('expected subscriptions array in metrics response')
 			}
