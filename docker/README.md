@@ -6,7 +6,7 @@
 docker-compose up
 ```
 
-Afterwards you should be able to open <http://localhost:8081> (admin/admin) to
+Afterwards you should be able to open <http://localhost:8081/index.php/settings/user/gpoddersync> (admin/admin) to
 log in to your Nextcloud instance.
 
 ## Check nextcloud.log
