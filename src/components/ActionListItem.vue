@@ -1,19 +1,25 @@
 <template>
-	<ListItem :title="action.episodeUrl">
+	<ListItem :title="isLoading ? action.episodeUrl : getEpisodeName()">
     <template #subtitle>
       <span v-if="isLoading"><em>(Loading RSS data...)</em></span>
-      <span v-else>{{ action.podcastUrl }}</span>
+      <span v-else>{{ getPodcastName() }}</span>
     </template>
     <template #actions>
       <ActionLink :href="action.podcastUrl"
                   target="_blank"
                   icon="icon-external">
-        Podcast's homepage
+        Open RSS feed
       </ActionLink>
       <ActionLink :href="action.episodeUrl"
                   target="_blank"
                   icon="icon-external">
         Download episode media
+      </ActionLink>
+      <ActionLink v-if="!isLoading"
+                  :href="getEpisodeLink()"
+                  target="_blank"
+                  icon="icon-external">
+        Open episode link
       </ActionLink>
     </template>
 	</ListItem>
@@ -45,21 +51,23 @@ export default {
 	},
 	data() {
 		return {
-			actionData: null,
+			actionExtraData: null,
 			isLoading: true,
 		}
 	},
 	async mounted() {
-		// try {
-		// 	const resp = await axios.get(generateUrl('/apps/gpoddersync/personal_settings/podcast_data?url={url}', {
-		// 		url: this.action.url,
-		// 	}))
-		// 	this.actionData = resp.data?.data
-		// } catch (e) {
-		// 	console.error(e)
-		// } finally {
-		// 	this.isLoading = false
-		// }
+		try {
+			const resp = await axios.get(generateUrl('/apps/gpoddersync/personal_settings/action_extra_data?episodeUrl={url}', {
+				url: this.action.episodeUrl,
+			}))
+			this.actionExtraData = resp.data?.data
+      console.log("resp", resp);
+      console.log("this.actionExtraData", this.actionExtraData);
+		} catch (e) {
+			console.error(e)
+		} finally {
+			this.isLoading = false
+		}
     this.isLoading = false
 	},
 	methods: {
@@ -79,21 +87,15 @@ export default {
 			}
 			return `(${hours}h ${modMinutes}min listened)`
 		},
-		getImageSrc() {
-			return this.actionData?.imageBlob ?? this.actionData?.imageUrl ?? ''
+		getPodcastName() {
+			return this.actionExtraData?.podcastName ?? ''
 		},
-		getAvatarName() {
-			return this.actionData?.author ?? ''
-		},
-		getSubepisode() {
-			return this.actionData?.description ?? ''
-		},
-		getHomepageLink() {
-			return this.actionData?.link ?? ''
-		},
-		getRssLink() {
-			return this.action.url ?? ''
-		},
+    getEpisodeName() {
+      return this.actionExtraData?.episodeName ?? this.action.episodeUrl;
+    },
+    getEpisodeLink() {
+      return this.actionExtraData?.episodeLink ?? ''
+    },
 	},
 }
 </script>

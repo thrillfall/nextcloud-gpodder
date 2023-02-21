@@ -68,4 +68,23 @@ class PersonalSettingsController extends Controller {
 			'data' => $this->dataReader->getCachedOrFetchPodcastData($url, $this->userId),
 		]);
 	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @param string $episodeUrl
+	 * @return JsonResponse
+	 */
+	public function actionExtraData(string $episodeUrl = ''): JsonResponse {
+		if ($episodeUrl === '') {
+			return new JSONResponse([
+				'message' => "Missing query parameter 'episodeUrl'.",
+				'data' => null,
+			], Http::STATUS_BAD_REQUEST);
+		}
+		return new JsonResponse([
+			'data' => $this->actionsReader->getCachedOrFetchActionExtraData($episodeUrl, $this->userId),
+		]);
+	}
 }

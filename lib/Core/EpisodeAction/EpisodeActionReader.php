@@ -6,15 +6,56 @@ namespace OCA\GPodderSync\Core\EpisodeAction;
 use InvalidArgumentException;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionData;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
+use OCP\Http\Client\IClient;
+use OCP\Http\Client\IClientService;
+use OCP\Http\Client\IResponse;
+use OCP\ICache;
+use OCP\ICacheFactory;
 
 class EpisodeActionReader {
 	private array $requiredProperties = ['podcast', 'episode', 'action', 'timestamp'];
     private EpisodeActionRepository $episodeActionRepository;
+    private ?ICache $cache = null;
+    private IClient $httpClient;
 
     public function __construct(
-        EpisodeActionRepository $episodeActionRepository
+        IClientService $httpClientService,
+        EpisodeActionRepository $episodeActionRepository,
+		ICacheFactory $cacheFactory
     ) {
+        if ($cacheFactory->isLocalCacheAvailable()) {
+            $this->cache = $cacheFactory->createLocal('GPodderSync-Actions-2');
+        }
+        $this->httpClient = $httpClientService->newClient();
         $this->episodeActionRepository = $episodeActionRepository;
+    }
+
+    public function getCachedOrFetchActionExtraData(string $url, string $userId): ?EpisodeActionExtraData {
+        // TODO: remove me
+        $this->cache = null;
+
+        if ($this->cache == null) {
+            return $this->fetchActionExtraData($url, $userId);
+        }
+        $oldData = $this->tryGetCachedActionExtraData($url);
+        if ($oldData) {
+            return $oldData;
+        }
+        $newData = $this->fetchActionExtraData($url, $userId);
+        $this->trySetCachedActionExtraData($url, $newData);
+        return $newData;
+    }
+
+    public function tryGetCachedActionExtraData(string $url): ?EpisodeActionExtraData {
+        $oldData = $this->cache->get($url);
+        if (!$oldData) {
+            return null;
+        }
+        return EpisodeActionExtraData::fromArray($oldData);
+    }
+
+    public function trySetCachedActionExtraData(string $url, EpisodeActionExtraData $data): bool {
+        return $this->cache->set($url, $data->toArray());
     }
 
     /**
@@ -76,4 +117,31 @@ class EpisodeActionReader {
 	private function hasRequiredProperties(array $episodeAction): bool {
 		return (count(array_intersect($this->requiredProperties, array_keys($episodeAction))) === count($this->requiredProperties));
 	}
+
+    public function fetchActionExtraData(string $episodeUrl, string $userId): ?EpisodeActionExtraData {
+        if (!$this->userHasAction($episodeUrl, $userId)) {
+            return null;
+        }
+
+        $episodeAction = $this->episodeActionRepository->findByEpisodeIdentifier($episodeUrl, $userId);
+
+        $resp = $this->fetchUrl($episodeAction->getPodcast());
+        $data = EpisodeActionExtraData::parseRssXml($resp->getBody(), $episodeUrl);
+
+        return $data;
+    }
+
+    private function userHasAction(string $url, string $userId): bool {
+        $episodeAction = $this->episodeActionRepository->findByEpisodeIdentifier($url, $userId);
+        return $episodeAction !== null;
+    }
+
+    private function fetchUrl(string $url): IResponse {
+        $resp = $this->httpClient->get($url);
+        $statusCode = $resp->getStatusCode();
+        if ($statusCode < 200 || $statusCode >= 300) {
+            throw new \ErrorException("Web request returned non-2xx status code: $statusCode");
+        }
+        return $resp;
+    }
 }
