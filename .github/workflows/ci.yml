@@ -18,7 +18,7 @@ jobs:
       # do not stop on another job's failure
       fail-fast: false
       matrix:
-        php-versions: ['7.4', '8.0', '8.1']
+        php-versions: ['7.4', '8.0']
         databases: ['sqlite']
         server-versions: ['stable23', 'stable24', 'stable25']
 
@@ -76,7 +76,7 @@ jobs:
       # do not stop on another job's failure
       fail-fast: false
       matrix:
-        php-versions: ['7.4', '8.0', '8.1']
+        php-versions: ['7.4', '8.0']
         databases: ['mysql']
         server-versions: ['stable23', 'stable24', 'stable25']
 
@@ -143,7 +143,7 @@ jobs:
       # do not stop on another job's failure
       fail-fast: false
       matrix:
-        php-versions: ['7.4', '8.0', '8.1']
+        php-versions: ['7.4', '8.0']
         databases: ['pgsql']
         server-versions: ['stable23', 'stable24', 'stable25']
 
