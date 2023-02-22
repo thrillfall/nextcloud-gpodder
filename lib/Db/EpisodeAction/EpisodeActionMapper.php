@@ -20,7 +20,7 @@ class EpisodeActionMapper extends QBMapper
 	/**
 	 * @throws Exception
 	 */
-	public function findAll(int $sinceTimestamp, string $userId): array
+	public function findAll(int $sinceTimestamp, string $userId, $sort = '', $order = 'DESC'): array
 	{
 		$qb = $this->db->getQueryBuilder();
 
@@ -33,6 +33,10 @@ class EpisodeActionMapper extends QBMapper
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
 
 			);
+
+        if ($sort !== '') {
+            $qb->orderBy($sort, $order);
+        }
 
 		return $this->findEntities($qb);
 

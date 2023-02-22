@@ -24,15 +24,15 @@ class EpisodeActionReader {
 		ICacheFactory $cacheFactory
     ) {
         if ($cacheFactory->isLocalCacheAvailable()) {
-            $this->cache = $cacheFactory->createLocal('GPodderSync-Actions-2');
+            $this->cache = $cacheFactory->createLocal('GPodderSync-Actions');
         }
         $this->httpClient = $httpClientService->newClient();
         $this->episodeActionRepository = $episodeActionRepository;
     }
 
     public function getCachedOrFetchActionExtraData(string $url, string $userId): ?EpisodeActionExtraData {
-        // TODO: remove me
-        $this->cache = null;
+        // Set cache to null for debugging only
+//        $this->cache = null;
 
         if ($this->cache == null) {
             return $this->fetchActionExtraData($url, $userId);
@@ -91,8 +91,8 @@ class EpisodeActionReader {
      *
      * @return EpisodeActionData[]
      */
-    public function actions(string $userId): array {
-        $episodeActions = $this->episodeActionRepository->findAll(0, $userId);
+    public function actions(string $userId, $sort = '', $order = 'DESC'): array {
+        $episodeActions = $this->episodeActionRepository->findAll(0, $userId, $sort, $order);
         $episodeActionDataList = [];
 
         foreach ($episodeActions as $episodeAction) {

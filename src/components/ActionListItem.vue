@@ -1,5 +1,11 @@
 <template>
-	<ListItem :title="isLoading ? action.episodeUrl : getEpisodeName()">
+	<ListItem :title="isLoading ? action.episodeUrl : getEpisodeName()"
+            :details="getDetails()">
+    <template #icon>
+      <Avatar :size="44"
+              :url="getImageSrc()"
+              :display-name="getEpisodeName()" />
+    </template>
     <template #subtitle>
       <span v-if="isLoading"><em>(Loading RSS data...)</em></span>
       <span v-else>{{ getPodcastName() }}</span>
@@ -61,8 +67,6 @@ export default {
 				url: this.action.episodeUrl,
 			}))
 			this.actionExtraData = resp.data?.data
-      console.log("resp", resp);
-      console.log("this.actionExtraData", this.actionExtraData);
 		} catch (e) {
 			console.error(e)
 		} finally {
@@ -74,19 +78,21 @@ export default {
 		getEpisode() {
 			return this.action.episodeUrl ?? 'episodeUrl'
 		},
+    getTimeString(seconds) {
+      const hours = Math.floor(seconds / 3600)
+      const modMinutes = Math.floor(seconds / 60) % 60
+      if (hours === 0) {
+        const modSeconds = seconds % 60
+        return `${modMinutes}min ${modSeconds}s`
+      }
+      return `${hours}h ${modMinutes}min`
+    },
 		getDetails() {
-			if (this.action.listenedSeconds <= 0) {
-				return '(no time listened)'
-			}
-			const seconds = this.action.listenedSeconds
-			const hours = Math.floor(seconds / 3600)
-			const modMinutes = Math.floor(seconds / 60) % 60
-			if (hours === 0) {
-				const modSeconds = seconds % 60
-				return `(${modMinutes}min ${modSeconds}s listened)`
-			}
-			return `(${hours}h ${modMinutes}min listened)`
+			return `(${this.getTimeString(this.action.position)}  of ${this.getTimeString(this.action.total)} listened)`;
 		},
+    getImageSrc() {
+      return this.actionExtraData?.episodeImage ?? ''
+    },
 		getPodcastName() {
 			return this.actionExtraData?.podcastName ?? ''
 		},
@@ -104,5 +110,9 @@ export default {
 a.link {
 	text-decoration: underline;
 	color: var(--color-primary-element-light);
+}
+.podcast-image {
+  max-width: 44px;
+  max-height: 44px;
 }
 </style>

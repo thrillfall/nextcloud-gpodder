@@ -20,9 +20,9 @@ class EpisodeActionRepository {
 	 *
 	 * @return EpisodeAction[]
 	 */
-	public function findAll(int $sinceEpoch, string $userId) : array {
+	public function findAll(int $sinceEpoch, string $userId, $order = '', $sort = 'DESC') : array {
 		$episodeActions = [];
-		foreach ($this->episodeActionMapper->findAll($sinceEpoch, $userId) as $entity) {
+		foreach ($this->episodeActionMapper->findAll($sinceEpoch, $userId, $order, $sort) as $entity) {
 			$episodeActions[] = $this->mapEntityToEpisodeAction($entity);
 		}
 		return $episodeActions;

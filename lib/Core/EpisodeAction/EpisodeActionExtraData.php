@@ -14,6 +14,7 @@ class EpisodeActionExtraData implements JsonSerializable {
 	private ?string $episodeUrl;
 	private ?string $episodeName;
 	private ?string $episodeLink;
+	private ?string $episodeImage;
     private int $fetchedAtUnix;
 
 	public function __construct(
@@ -21,12 +22,14 @@ class EpisodeActionExtraData implements JsonSerializable {
 		?string $podcastName,
         ?string $episodeName,
         ?string $episodeLink,
+        ?string $episodeImage,
         int $fetchedAtUnix
 	) {
 		$this->episodeUrl = $episodeUrl;
         $this->podcastName = $podcastName;
 		$this->episodeName = $episodeName;
 		$this->episodeLink = $episodeLink;
+		$this->episodeImage = $episodeImage;
 		$this->fetchedAtUnix = $fetchedAtUnix;
 	}
 
@@ -54,6 +57,7 @@ class EpisodeActionExtraData implements JsonSerializable {
 			'episodeUrl' => $this->episodeUrl,
 			'episodeName' => $this->episodeName,
 			'episodeLink' => $this->episodeLink,
+			'episodeImage' => $this->episodeImage,
 			'fetchedAtUnix' => $this->fetchedAtUnix,
 		];
 	}
@@ -74,6 +78,7 @@ class EpisodeActionExtraData implements JsonSerializable {
 			$data['podcastName'],
 			$data['episodeName'],
 			$data['episodeLink'],
+			$data['episodeImage'],
 			$data['fetchedAtUnix']
 		);
 	}
@@ -111,8 +116,9 @@ class EpisodeActionExtraData implements JsonSerializable {
         $channel = $xml->channel;
         $episodeName = null;
         $episodeLink = null;
+        $episodeImage = null;
 
-        // TODO: find episode by url and add data for it
+        // Find episode by url and add data for it
         foreach($channel->item as $item)
         {
             $url = (string)$item->enclosure['url'];
@@ -123,6 +129,8 @@ class EpisodeActionExtraData implements JsonSerializable {
 
             $episodeName = self::stringOrNull($item->title);
             $episodeLink = self::stringOrNull($item->link);
+//            $episodeImage = (string) $item->children('itunes', true)->image['href'];
+            $episodeImage = (string) $item->children('http://www.itunes.com/dtds/podcast-1.0.dtd')->image->attributes()['href'];
         }
 
         return new EpisodeActionExtraData(
@@ -130,6 +138,7 @@ class EpisodeActionExtraData implements JsonSerializable {
             self::stringOrNull($channel->title),
             $episodeName,
             $episodeLink,
+            $episodeImage,
             $fetchedAtUnix ?? (new DateTime())->getTimestamp()
         );
     }
@@ -147,6 +156,14 @@ class EpisodeActionExtraData implements JsonSerializable {
     public function getFetchedAtUnix(): int
     {
         return $this->fetchedAtUnix;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEpisodeImage(): ?string
+    {
+        return $this->episodeImage;
     }
 }
 

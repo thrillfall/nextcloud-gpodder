@@ -42,7 +42,7 @@ class PersonalSettingsController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function metrics(): JSONResponse {
-		$actions = $this->actionsReader->actions($this->userId);
+		$actions = $this->actionsReader->actions($this->userId, 'timestamp_epoch', 'DESC');
 		$metrics = $this->metricsReader->metrics($this->userId);
 		return new JSONResponse([
 			'actions' => $actions,

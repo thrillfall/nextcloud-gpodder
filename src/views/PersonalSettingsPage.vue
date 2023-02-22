@@ -3,6 +3,16 @@
     <SettingsSection :title="t('gpoddersync', 'Last actions')"
       :description="t('gpoddersync', 'A list of last actions.')">
       <div v-if="actions.length > 0">
+        <div class="sorting-container">
+          <label for="gpoddersync_action_filtering">Action:</label>
+          <Multiselect id="gpoddersync_action_filtering"
+                       v-model="actionFilter"
+                       :options="actionFilteringOptions"
+                       track-by="label"
+                       label="label"
+                       :allow-empty="false"
+                       @change="updateActionFiltering" />
+        </div>
         <ul>
           <ActionListItem v-for="action in actions.slice(0, 10)"
                                 :key="action.episode"
@@ -64,6 +74,11 @@ const sortingOptions = [
 	{ label: 'Listened time (asc)', compare: (a, b) => a?.listenedSeconds > b?.listenedSeconds },
 ]
 
+const actionFilteringOptions = [
+	{ label: 'Play', action: 'PLAY' },
+	{ label: 'Download', action: 'DOWNLOAD' },
+]
+
 export default {
 	name: 'PersonalSettingsPage',
 	components: {
@@ -77,10 +92,13 @@ export default {
 	data() {
 		return {
 			subscriptions: [],
+			allActions: [],
 			actions: [],
 			isLoading: true,
 			sortBy: sortingOptions[0],
 			sortingOptions,
+      actionFilter: actionFilteringOptions[0],
+      actionFilteringOptions,
 		}
 	},
 	async mounted() {
@@ -89,8 +107,8 @@ export default {
       if (!Array.isArray(resp.data.actions)) {
         throw new Error('expected actions array in metrics response')
       }
-      this.actions = resp.data.actions
-      this.actions.sort(this.sortBy.compare)
+      this.allActions = resp.data.actions;
+      this.updateActionFiltering(this.actionFilter);
 			if (!Array.isArray(resp.data.subscriptions)) {
 				throw new Error('expected subscriptions array in metrics response')
 			}
@@ -104,9 +122,12 @@ export default {
 		}
 	},
 	methods: {
-		updateSorting(sorting) {
-			this.subscriptions.sort(sorting.compare)
-		},
+    updateSorting(sorting) {
+      this.subscriptions.sort(sorting.compare)
+    },
+    updateActionFiltering(filtering) {
+      this.actions = this.allActions.filter(obj => obj.action === filtering.action)
+    },
 	},
 }
 </script>

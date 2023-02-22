@@ -14,6 +14,7 @@ class EpisodeActionData implements JsonSerializable {
 	private int $position;
 	private int $started;
 	private int $total;
+	private int $timestampEpoch;
 
 	public function __construct(
 		?string $podcastUrl,
