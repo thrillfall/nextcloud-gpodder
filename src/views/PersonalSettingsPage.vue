@@ -2,7 +2,7 @@
 	<div class="gpoddersync_settings">
     <SettingsSection :title="t('gpoddersync', 'Last actions')"
       :description="t('gpoddersync', 'A list of last actions.')">
-      <div v-if="actions.length > 0">
+      <div v-if="actions.length > 0" class="actions">
         <div class="sorting-container">
           <label for="gpoddersync_action_filtering">Action:</label>
           <Multiselect id="gpoddersync_action_filtering"
@@ -14,10 +14,20 @@
                        @change="updateActionFiltering" />
         </div>
         <ul>
-          <ActionListItem v-for="action in actions.slice(0, 10)"
+          <ActionListItem v-for="action in actions.slice(0, maxActions)"
                                 :key="action.episode"
                                 :action="action" />
         </ul>
+        <Actions>
+          <ActionButton
+              :disabled="actions.length < maxActions"
+              @click="loadMoreActions">
+            <template #icon>
+              <PageNext />
+            </template>
+            {{ t('gpoddersync', 'Load more') }}
+          </ActionButton>
+        </Actions>
       </div>
     </SettingsSection>
     <SettingsSection :title="t('gpoddersync', 'Synced subscriptions')"
@@ -62,8 +72,10 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import SubscriptionListItem from '../components/SubscriptionListItem.vue'
 import ActionListItem from '../components/ActionListItem.vue'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 
 import Podcast from 'vue-material-design-icons/Podcast'
+import PageNext from 'vue-material-design-icons/PageNext.vue'
 
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
@@ -85,15 +97,18 @@ export default {
 		EmptyContent,
 		Multiselect,
 		Podcast,
+    PageNext,
 		SettingsSection,
 		SubscriptionListItem,
     ActionListItem,
+    ActionButton,
 	},
 	data() {
 		return {
 			subscriptions: [],
 			allActions: [],
 			actions: [],
+      maxActions: 10,
 			isLoading: true,
 			sortBy: sortingOptions[0],
 			sortingOptions,
@@ -128,6 +143,9 @@ export default {
     updateActionFiltering(filtering) {
       this.actions = this.allActions.filter(obj => obj.action === filtering.action)
     },
+    loadMoreActions() {
+      this.maxActions += 10;
+    },
 	},
 }
 </script>
@@ -136,5 +154,8 @@ export default {
 a.link {
 	text-decoration: underline;
 	color: var(--color-primary-element);
+}
+.actions actions li {
+  list-style: none;
 }
 </style>

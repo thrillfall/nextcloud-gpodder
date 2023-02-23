@@ -2,6 +2,13 @@
 	<ListItem :title="isLoading ? action.episodeUrl : getEpisodeName()"
             :details="getDetails()">
     <template #icon>
+      <!--
+      <img v-if="getImageSrc() !== ''" :alt="getEpisodeName()" :src="getImageSrc()" />
+      <Avatar v-if="getImageSrc() === ''"
+              :size="44"
+              :url="getImageSrc()"
+              :display-name="getEpisodeName()" />
+      -->
       <Avatar :size="44"
               :url="getImageSrc()"
               :display-name="getEpisodeName()" />
@@ -88,7 +95,17 @@ export default {
       return `${hours}h ${modMinutes}min`
     },
 		getDetails() {
-			return `(${this.getTimeString(this.action.position)}  of ${this.getTimeString(this.action.total)} listened)`;
+      if (this.action.position === -1 || this.action.total === -1) {
+        return '';
+      }
+
+      if (this.action.position === this.action.total) {
+        return `(done, ${this.getTimeString(this.action.total)})`;
+      }
+
+      const percent = Math.round(this.action.position / this.action.total * 100);
+
+			return `(${percent}% of ${this.getTimeString(this.action.total)} listened)`;
 		},
     getImageSrc() {
       return this.actionExtraData?.episodeImage ?? ''
