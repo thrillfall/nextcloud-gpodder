@@ -4,7 +4,8 @@
 	"version": "1.0.0",
 	"author": "Thrillfall <thrillfall@disroot.org>",
 	"contributors": [
-		"Kalle Fagerberg <kalle.f8@proton.me>"
+		"Kalle Fagerberg <kalle.f8@proton.me>",
+		"Patrizio Bekerle <patrizio@bekerle.com>"
 	],
 	"bugs": {
 		"url": "https://github.com/thrillfall/nextcloud-gpodder/issues"

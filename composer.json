@@ -5,6 +5,9 @@
 	"authors": [
 		{
 			"name": "thrillfall"
+		},
+		{
+			"name": "Patrizio Bekerle"
 		}
 	],
 	"require-dev": {
