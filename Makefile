@@ -62,6 +62,7 @@ appstore:
 	--exclude=/build \
 	--exclude=composer.json \
 	--exclude=composer.lock \
+	--exclude=docker \
 	--exclude=docs \
 	--exclude=.drone.yml \
 	--exclude=.eslintignore \
