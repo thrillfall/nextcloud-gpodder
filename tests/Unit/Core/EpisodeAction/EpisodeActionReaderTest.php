@@ -4,11 +4,14 @@ declare(strict_types=1);
 namespace OCA\GPodderSync\Tests\Unit\Core\EpisodeAction;
 
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionReader;
+use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
+use OCP\Http\Client\IClientService;
+use OCP\ICacheFactory;
 use Test\TestCase;
 
 class EpisodeActionReaderTest extends TestCase {
 	public function testCreateFromArray(): void {
-		$reader = new EpisodeActionReader();
+		$reader = new EpisodeActionReader(new IClientService(), new EpisodeActionRepository(), new ICacheFactory());
 		$episodeActions = $reader->fromArray([["podcast" => "https://example.org/feed.xml", "episode" => "https://example.org/episode1.mp3", "action" => "PLAY", "timestamp" => "2021-10-03T12:03:17", "started" => 0, "position" => 50, "total"=> 3422]]);
 
 		$this->assertSame("https://example.org/feed.xml",  $episodeActions[0]->getPodcast());
@@ -21,7 +24,7 @@ class EpisodeActionReaderTest extends TestCase {
 	}
 
 	public function testCreateFromMultipleEpisodesArray(): void {
-		$reader = new EpisodeActionReader();
+        $reader = new EpisodeActionReader(new IClientService(), new EpisodeActionRepository(), new ICacheFactory());
 		$episodeActions = $reader->fromArray([
 			["podcast" => "https://example.org/feed.xml", "episode" => "https://example.org/episode1.mp3", "guid" => "episode1", "action" => "PLAY", "timestamp" => "2021-10-03T12:03:17", "started" => 0, "position" => 50, "total"=> 3422],
 			["podcast" => "https://example.org/feed.xml", "episode" => "https://example.org/episode2.mp3", "guid" => "episode2", "action" => "download", "timestamp" => "2021-10-03T12:03:17"],
