@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace tests\Integration\Controller;
 
-use OC\Security\SecureRandom;
+require_once __DIR__ . '/../../Helper/DatabaseTransaction.php';
+require_once __DIR__ . '/../../Helper/Writer/TestWriter.php';
+
 use OCA\GPodderSync\Controller\EpisodeActionController;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionSaver;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
@@ -12,7 +14,6 @@ use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionWriter;
 use OCP\AppFramework\App;
 use OCP\AppFramework\IAppContainer;
-use OCP\IConfig;
 use OCP\IRequest;
 use Test\TestCase;
 use tests\Helper\DatabaseTransaction;

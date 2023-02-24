@@ -49,7 +49,7 @@ class EpisodeActionRepositoryTest extends \Test\TestCase
 		/** @var $episodeActionRepository EpisodeActionRepository */
 		$episodeActionRepository = $this->container->get(EpisodeActionRepository::class);
 
-		$retrievedEpisodeActionEntity = $episodeActionRepository->findByEpisodeIdentifier($guid, self::USER_ID_0);
+		$retrievedEpisodeActionEntity = $episodeActionRepository->findByGuid($guid, self::USER_ID_0);
 		self::assertSame('2021-08-22T23:58:56', $retrievedEpisodeActionEntity->getTimestamp());
 
 	}

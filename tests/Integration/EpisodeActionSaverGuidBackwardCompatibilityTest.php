@@ -10,7 +10,7 @@ use Test\TestCase;
 /**
  * @group DB
  */
-class EpisodeActionSaverGuidBackwardCompatbilityTest extends TestCase
+class EpisodeActionSaverGuidBackwardCompatibilityTest extends TestCase
 {
 
 	private const USER_ID_0 = "testuser0";

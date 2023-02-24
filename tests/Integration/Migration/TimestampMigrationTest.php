@@ -79,7 +79,7 @@ class TimestampMigrationTest extends TestCase
 		$trueCrimeEpisodeActionEntity->setGuid(uniqid("self::TEST_GUID_1234"));
 		$this->episodeActionWriter->save($trueCrimeEpisodeActionEntity);
 
-		$episodeActionBeforeConversion = $this->episodeActionMapper->findByEpisodeIdentifier(
+		$episodeActionBeforeConversion = $this->episodeActionMapper->findByGuid(
 			$scienceEpisodeActionEntity->getGuid(),
 			self::ADMIN
 		);
@@ -92,7 +92,7 @@ class TimestampMigrationTest extends TestCase
 		$timestampMigration = new TimestampMigration($this->dbConnection, $this->migrationConfig);
 		$timestampMigration->run($this->createMock(SimpleOutput::class));
 
-		$scienceEpisodeActionAfterConversion = $this->episodeActionMapper->findByEpisodeIdentifier(
+		$scienceEpisodeActionAfterConversion = $this->episodeActionMapper->findByGuid(
 			$scienceEpisodeActionEntity->getGuid(),
 			self::ADMIN
 		);
@@ -101,7 +101,7 @@ class TimestampMigrationTest extends TestCase
 			$scienceEpisodeActionAfterConversion->getTimestampEpoch()
 		);
 
-		$trueCrimeEpisodeActionAfterConversion = $this->episodeActionMapper->findByEpisodeIdentifier(
+		$trueCrimeEpisodeActionAfterConversion = $this->episodeActionMapper->findByGuid(
 			$trueCrimeEpisodeActionEntity->getGuid(),
 			self::ADMIN
 		);

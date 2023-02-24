@@ -22,19 +22,13 @@ class EpisodeActionGuidMigrationTest extends TestCase
 
 	private IAppContainer $container;
 
-	/**
-	 * @var EpisodeActionWriter
-	 */
-	private $episodeActionWriter;
+	private EpisodeActionWriter $episodeActionWriter;
 
-	/**
-	 * @var EpisodeActionRepository
-	 */
-	private $episodeActionRepository;
+	private EpisodeActionRepository $episodeActionRepository;
 
 	public function setUp(): void {
 		parent::setUp();
-		$app = new App('gpoddersync');
+		$app = new App('nextcloud-gpodder');
 		$this->container = $app->getContainer();
 		$this->episodeActionWriter = $this->container->get(EpisodeActionWriter::class);
 		$this->episodeActionRepository = $this->container->get(EpisodeActionRepository::class);
@@ -85,7 +79,7 @@ class EpisodeActionGuidMigrationTest extends TestCase
 
 		self::assertSame(
 			$savedEpisodeActionEntity->getId(),
-			$this->episodeActionRepository->findByEpisodeIdentifier($episodeActionEntity->getEpisode(), self::USER_ID_0)->getId()
+			$this->episodeActionRepository->findByEpisodeUrl($episodeActionEntity->getEpisode(), self::USER_ID_0)->getId()
 		);
 
 		//update same episode action again this time with guid
@@ -96,12 +90,12 @@ class EpisodeActionGuidMigrationTest extends TestCase
 
 		self::assertSame(
 			$savedEpisodeActionEntityWithGuid->getId(),
-			$this->episodeActionRepository->findByEpisodeIdentifier($episodeActionEntityWithGuid->getEpisode(), self::USER_ID_0)->getId()
+			$this->episodeActionRepository->findByEpisodeUrl($episodeActionEntityWithGuid->getEpisode(), self::USER_ID_0)->getId()
 		);
 
 		self::assertSame(
 			$savedEpisodeActionEntityWithGuid->getId(),
-			$this->episodeActionRepository->findByEpisodeIdentifier($episodeActionEntityWithGuid->getGuid(), self::USER_ID_0)->getId()
+			$this->episodeActionRepository->findByGuid($episodeActionEntityWithGuid->getGuid(), self::USER_ID_0)->getId()
 		);
 
 	}

@@ -43,20 +43,18 @@ class EpisodeActionMapper extends QBMapper
 	 * @param string $userId
 	 * @return EpisodeActionEntity|null
 	 */
-	public function findByEpisodeIdentifier(string $episodeIdentifier, string $userId) : ?EpisodeActionEntity
+	public function findByEpisodeUrl(string $episodeIdentifier, string $userId) : ?EpisodeActionEntity
 	{
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->orX(
-					$qb->expr()->eq('episode', $qb->createNamedParameter($episodeIdentifier)),
-					$qb->expr()->eq('guid', $qb->createNamedParameter($episodeIdentifier)))
-			)
+                $qb->expr()->eq('episode', $qb->createNamedParameter($episodeIdentifier))
+            )
 			->andWhere(
-				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
-			);
+                $qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
+            );
 
 		try {
 			/** @var EpisodeActionEntity $episodeActionEntity */
@@ -65,6 +63,27 @@ class EpisodeActionMapper extends QBMapper
 			return null;
 		}
 	}
+
+    public function findByGuid(string $guid, string $userId) : ?EpisodeActionEntity
+    {
+        $qb = $this->db->getQueryBuilder();
+
+        $qb->select('*')
+            ->from($this->getTableName())
+            ->where(
+                $qb->expr()->eq('guid', $qb->createNamedParameter($guid))
+            )
+            ->andWhere(
+                $qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
+            );
+
+        try {
+            /** @var EpisodeActionEntity $episodeActionEntity */
+            return $this->findEntity($qb);
+        } catch (DoesNotExistException|MultipleObjectsReturnedException|Exception $e) {
+            return null;
+        }
+    }
 
 
 }
