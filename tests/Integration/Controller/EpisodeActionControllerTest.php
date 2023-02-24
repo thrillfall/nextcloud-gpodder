@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace tests\Integration\Controller;
 
-require_once __DIR__ . '/../../Helper/DatabaseTransaction.php';
-require_once __DIR__ . '/../../Helper/Writer/TestWriter.php';
-
 use OCA\GPodderSync\Controller\EpisodeActionController;
 use OCA\GPodderSync\Core\EpisodeAction\EpisodeActionSaver;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
