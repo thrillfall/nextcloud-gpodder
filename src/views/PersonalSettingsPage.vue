@@ -72,6 +72,7 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import SubscriptionListItem from '../components/SubscriptionListItem.vue'
 import ActionListItem from '../components/ActionListItem.vue'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 
 import Podcast from 'vue-material-design-icons/Podcast'
@@ -102,6 +103,7 @@ export default {
 		SubscriptionListItem,
     ActionListItem,
     ActionButton,
+    Actions,
 	},
 	data() {
 		return {
@@ -154,8 +156,5 @@ export default {
 a.link {
 	text-decoration: underline;
 	color: var(--color-primary-element);
-}
-.actions actions li {
-  list-style: none;
 }
 </style>
