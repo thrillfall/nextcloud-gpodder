@@ -4,7 +4,12 @@
 	"license": "AGPLv3",
 	"authors": [
 		{
-			"name": "thrillfall"
+			"name": "thrillfall",
+			"email": "thrillfall@disroot.org"
+		},
+		{
+			"name": "JohnUfUs",
+			"email": "jonofus@flueren.eu"
 		}
 	],
 	"require-dev": {
