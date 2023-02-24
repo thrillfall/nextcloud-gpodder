@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace OCA\GPodderSync\Core\EpisodeAction;
 
 use DateTime;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionWriter;
@@ -41,8 +40,6 @@ class EpisodeActionSaver
 
             try {
                 $episodeActionEntities[] = $this->episodeActionWriter->save($episodeActionEntity);
-            } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
-                $episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
             } catch (Exception $exception) {
                 if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
                     $episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
@@ -71,8 +68,6 @@ class EpisodeActionSaver
 
         try {
             return $this->episodeActionWriter->update($episodeActionEntity);
-        } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
-            $this->deleteConflictingEpisodeAction($episodeActionEntity, $userId);
         } catch (Exception $exception) {
             if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
                 $this->deleteConflictingEpisodeAction($episodeActionEntity, $userId);
