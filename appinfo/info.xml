@@ -18,7 +18,7 @@
     </documentation>
     <dependencies>
         <php min-version="7.4"/>
-        <nextcloud min-version="20" max-version="25"/>
+        <nextcloud min-version="24" max-version="25"/>
     </dependencies>
     <repair-steps>
         <post-migration>
