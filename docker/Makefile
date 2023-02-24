@@ -17,3 +17,6 @@ check-code:
 
 show-log:
 	docker-compose run --rm app tail -f /var/www/html/data/nextcloud.log
+
+#test:
+#	docker-compose run --rm app su -c "cd custom_apps/gpoddersync && make test" www-data
