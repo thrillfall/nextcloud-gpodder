@@ -5,7 +5,7 @@
     <name>GPodder Sync</name>
     <summary>replicate basic GPodder.net API</summary>
     <description><![CDATA[Expose GPodder API to sync podcast consumer apps like AntennaPod]]></description>
-    <version>3.7.2</version>
+    <version>3.7.3</version>
     <licence>agpl</licence>
     <author mail="thrillfall@disroot.org">Thrillfall</author>
     <namespace>GPodderSync</namespace>
