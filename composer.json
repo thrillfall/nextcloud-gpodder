@@ -17,5 +17,8 @@
 		"platform": {
 			"php": "7.4.33"
 		}
+	},
+	"require": {
+		"ext-simplexml": "*"
 	}
 }
