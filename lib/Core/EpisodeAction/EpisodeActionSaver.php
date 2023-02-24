@@ -69,7 +69,17 @@ class EpisodeActionSaver
 
         $this->ensureGuidDoesNotGetNulledWithOldData($episodeActionToUpdate, $episodeActionEntity);
 
+        try {
+            return $this->episodeActionWriter->update($episodeActionEntity);
+        } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
+            $this->deleteConflictingEpisodeAction($episodeActionEntity, $userId);
+        } catch (Exception $exception) {
+            if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+                $this->deleteConflictingEpisodeAction($episodeActionEntity, $userId);
+            }
+        }
         return $this->episodeActionWriter->update($episodeActionEntity);
+
     }
 
     private function ensureGuidDoesNotGetNulledWithOldData(EpisodeAction $episodeActionToUpdate, EpisodeActionEntity $episodeActionEntity): void
@@ -114,5 +124,18 @@ class EpisodeActionSaver
         }
 
         return $episodeAction;
+    }
+
+    /**
+     * @param EpisodeActionEntity $episodeActionEntity
+     * @param string $userId
+     * @return void
+     */
+    private function deleteConflictingEpisodeAction(EpisodeActionEntity $episodeActionEntity, string $userId): void
+    {
+        $collidingEpisodeActionId = $this->episodeActionRepository->findByEpisodeUrl($episodeActionEntity->getGuid(), $userId)->getId();
+        if ($collidingEpisodeActionId !== $episodeActionEntity->getId()) {
+            $this->episodeActionRepository->deleteEpisodeActionByEpisodeUrl($episodeActionEntity->getGuid(), $userId);
+        }
     }
 }

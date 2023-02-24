@@ -14,39 +14,40 @@ use Test\TestCase;
 class EpisodeActionSaverGuidBackwardCompatibilityTest extends TestCase
 {
 
-	private const USER_ID_0 = "testuser0";
+    private const USER_ID_0 = "testuser0";
 
-	private \OCP\AppFramework\IAppContainer $container;
+    private \OCP\AppFramework\IAppContainer $container;
 
-	public function setUp(): void {
-		parent::setUp();
-		$app = new App('gpoddersync');
-		$this->container = $app->getContainer();
-	}
+    public function setUp(): void
+    {
+        parent::setUp();
+        $app = new App('gpoddersync');
+        $this->container = $app->getContainer();
+    }
 
-	public function testUpdateWithoutGuidDoesNotNullGuid() : void
-	{
-		/** @var EpisodeActionSaver $episodeActionSaver */
-		$episodeActionSaver = $this->container->get(EpisodeActionSaver::class);
+    public function testUpdateWithoutGuidDoesNotNullGuid(): void
+    {
+        /** @var EpisodeActionSaver $episodeActionSaver */
+        $episodeActionSaver = $this->container->get(EpisodeActionSaver::class);
 
-		$episodeUrl = uniqid("test_https://dts.podtrac.com/redirect.mp3/chrt.fm/track");
-		$guid = uniqid("test_gid://art19-episode-locator/V0/Ktd");
+        $episodeUrl = uniqid("test_https://dts.podtrac.com/redirect.mp3/chrt.fm/track");
+        $guid = uniqid("test_gid://art19-episode-locator/V0/Ktd");
 
-		$savedEpisodeActionEntity = $episodeActionSaver->saveEpisodeActions(
-			[["podcast" => 'https://rss.art19.com/dr-death-s3-miracle-man',	"episode" => $episodeUrl, "guid" => $guid, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 47, "position" => 54, "total" => 2252]],
-			self::USER_ID_0
-		)[0];
+        $savedEpisodeActionEntity = $episodeActionSaver->saveEpisodeActions(
+            [["podcast" => 'https://rss.art19.com/dr-death-s3-miracle-man', "episode" => $episodeUrl, "guid" => $guid, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 47, "position" => 54, "total" => 2252]],
+            self::USER_ID_0
+        )[0];
 
-		$savedEpisodeActionEntityWithoutGuidFromOldDevice = $episodeActionSaver->saveEpisodeActions(
-			[["podcast" => 'https://rss.art19.com/dr-death-s3-miracle-man',	"episode" => $episodeUrl, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 47, "position" => 54, "total" => 2252]],
-			self::USER_ID_0
-		)[0];
+        $savedEpisodeActionEntityWithoutGuidFromOldDevice = $episodeActionSaver->saveEpisodeActions(
+            [["podcast" => 'https://rss.art19.com/dr-death-s3-miracle-man', "episode" => $episodeUrl, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 47, "position" => 54, "total" => 2252]],
+            self::USER_ID_0
+        )[0];
 
-		self::assertSame($savedEpisodeActionEntity->getId(), $savedEpisodeActionEntityWithoutGuidFromOldDevice->getId());
-		self::assertNotNull($savedEpisodeActionEntityWithoutGuidFromOldDevice->getGuid());
-	}
+        self::assertSame($savedEpisodeActionEntity->getId(), $savedEpisodeActionEntityWithoutGuidFromOldDevice->getId());
+        self::assertNotNull($savedEpisodeActionEntityWithoutGuidFromOldDevice->getGuid());
+    }
 
-    public function testDoNotFailToUpdateEpisodeActionByGuidIfThereIsAnotherWithTheSameValueForEpisodeUrl() : void
+    public function testDoNotFailToUpdateEpisodeActionByGuidIfThereIsAnotherWithTheSameValueForEpisodeUrl(): void
     {
         //arrange
         /** @var EpisodeActionSaver $episodeActionSaver */
@@ -63,13 +64,13 @@ class EpisodeActionSaverGuidBackwardCompatibilityTest extends TestCase
         )[0];
 
         $episodeActionSaver->saveEpisodeActions(
-            [["podcast" => $podcastUrl,	"episode" => $urlWithParameter, "guid" => $url, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 100, "total" => 2252]],
+            [["podcast" => $podcastUrl, "episode" => $urlWithParameter, "guid" => $url, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 100, "total" => 2252]],
             self::USER_ID_0
         )[0];
 
         //act
         $episodeActionSaver->saveEpisodeActions(
-            [["podcast" => $podcastUrl,	"episode" => $urlWithParameter, "guid" => $url, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 100, "total" => 2252]],
+            [["podcast" => $podcastUrl, "episode" => $urlWithParameter, "guid" => $url, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 100, "total" => 2252]],
             self::USER_ID_0
         )[0];
 
@@ -78,19 +79,15 @@ class EpisodeActionSaverGuidBackwardCompatibilityTest extends TestCase
         $episodeActionRepository = $this->container->get(EpisodeActionRepository::class);
         $this->assertSame(100, $episodeActionRepository->findByGuid($urlWithParameter, self::USER_ID_0)->getPosition());
 
-        try {
-            //act
-            $episodeActionSaver->saveEpisodeActions(
-                [["podcast" => $podcastUrl, "episode" => $urlWithParameter, "guid" => $urlWithParameter, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 100, "total" => 2252]],
-                self::USER_ID_0
-            )[0];
+        //act
+        $episodeActionSaver->saveEpisodeActions(
+            [["podcast" => $podcastUrl, "episode" => $urlWithParameter, "guid" => $urlWithParameter, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 100, "total" => 2252]],
+            self::USER_ID_0
+        )[0];
 
-            $this->assertSame(1,2);
-
-        } catch (\Exception $exception) {
-            $this->assertStringContainsString("SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry", $exception->getMessage());
-            $this->assertStringContainsString("for key 'gpodder_episode_user_id'", $exception->getMessage());
-        }
-
+        //assert
+        /** @var EpisodeActionRepository $episodeActionRepository */
+        $episodeActionRepository = $this->container->get(EpisodeActionRepository::class);
+        $this->assertSame(100, $episodeActionRepository->findByGuid($urlWithParameter, self::USER_ID_0)->getPosition());
     }
 }

@@ -52,6 +52,11 @@ class EpisodeActionRepository {
         );
     }
 
+    public function deleteEpisodeActionByEpisodeUrl(string $episodeUrl, string $userId) : void {
+        $episodeAction = $this->episodeActionMapper->findByEpisodeUrl($episodeUrl, $userId);
+        $this->episodeActionMapper->delete($episodeAction);
+    }
+
 	private function mapEntityToEpisodeAction(EpisodeActionEntity $episodeActionEntity): EpisodeAction
 	{
 		return new EpisodeAction(
