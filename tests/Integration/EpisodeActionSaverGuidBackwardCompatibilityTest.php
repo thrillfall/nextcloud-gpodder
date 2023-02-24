@@ -78,6 +78,19 @@ class EpisodeActionSaverGuidBackwardCompatibilityTest extends TestCase
         $episodeActionRepository = $this->container->get(EpisodeActionRepository::class);
         $this->assertSame(100, $episodeActionRepository->findByGuid($urlWithParameter, self::USER_ID_0)->getPosition());
 
-    }
+        try {
+            //act
+            $episodeActionSaver->saveEpisodeActions(
+                [["podcast" => $podcastUrl, "episode" => $urlWithParameter, "guid" => $urlWithParameter, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 100, "total" => 2252]],
+                self::USER_ID_0
+            )[0];
 
+            $this->assertSame(1,2);
+
+        } catch (\Exception $exception) {
+            $this->assertStringContainsString("SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry", $exception->getMessage());
+            $this->assertStringContainsString("for key 'gpodder_episode_user_id'", $exception->getMessage());
+        }
+
+    }
 }
