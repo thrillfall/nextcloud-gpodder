@@ -115,3 +115,10 @@ POST /index.php/apps/gpoddersync/episode_action/create
   }
 ]
 ```
+
+## Development
+
+### Testing
+- mount project into apps-extra of nextcloud environment (https://github.com/juliushaertl/nextcloud-docker-dev) 
+- `docker-compose exec nextcloud occ app:enable gpoddersync` enable app so we have database tables
+- `docker-compose exec nextcloud phpunit9 -c apps-extra/nextcloud-gpodder/tests/phpunit.xml`
