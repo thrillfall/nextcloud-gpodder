@@ -16,6 +16,21 @@
     <template #subtitle>
       <span v-if="isLoading"><em>(Loading RSS data...)</em></span>
       <span v-else>{{ getPodcastName() }}</span>
+      <Modal
+          v-if="modalPlayer"
+          @close="closeModalPlayer"
+          size="small"
+          title="Play media"
+          :outTransition="true">
+        <div class="modal__content">
+          <h2 v-if="isLoading">Playing episode"</h2>
+          <h2 v-else>Playing "{{ getEpisodeName() }}"</h2>
+          <audio controls autoplay>
+            <source :src="action.episodeUrl">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </Modal>
     </template>
     <template #actions>
       <ActionLink :href="action.podcastUrl"
@@ -28,6 +43,11 @@
                   icon="icon-external">
         Download episode media
       </ActionLink>
+      <ActionButton @click="showModalPlayer"
+                  target="_blank"
+                  icon="icon-play">
+        Play episode media
+      </ActionButton>
       <ActionLink v-if="!isLoading"
                   :href="getEpisodeLink()"
                   target="_blank"
@@ -40,8 +60,10 @@
 
 <script>
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import ListItem from '@nextcloud/vue/dist/Components/ListItem'
+import Modal from '@nextcloud/vue/dist/Components/Modal'
 
 import Rss from 'vue-material-design-icons/Rss.vue'
 
@@ -52,9 +74,11 @@ export default {
 	name: 'ActionListItem',
 	components: {
 		ActionLink,
+    ActionButton,
 		Avatar,
 		ListItem,
 		Rss,
+    Modal,
 	},
 	props: {
 		action: {
@@ -66,6 +90,7 @@ export default {
 		return {
 			actionExtraData: null,
 			isLoading: true,
+      modalPlayer: false,
 		}
 	},
 	async mounted() {
@@ -119,17 +144,19 @@ export default {
     getEpisodeLink() {
       return this.actionExtraData?.episodeLink ?? ''
     },
-	},
+    showModalPlayer() {
+      this.modalPlayer = true
+    },
+    closeModalPlayer() {
+      this.modalPlayer = false
+    }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-a.link {
-	text-decoration: underline;
-	color: var(--color-primary-element-light);
-}
-.podcast-image {
-  max-width: 44px;
-  max-height: 44px;
+.modal__content {
+  margin: 50px;
+  text-align: center;
 }
 </style>
