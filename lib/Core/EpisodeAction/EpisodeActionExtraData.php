@@ -130,7 +130,8 @@ class EpisodeActionExtraData implements JsonSerializable {
             $episodeName = self::stringOrNull($item->title);
             $episodeLink = self::stringOrNull($item->link);
 //            $episodeImage = (string) $item->children('itunes', true)->image['href'];
-            $episodeImage = (string) $item->children('http://www.itunes.com/dtds/podcast-1.0.dtd')->image->attributes()['href'];
+            $episodeImageAttributes = (array) $item->children('http://www.itunes.com/dtds/podcast-1.0.dtd')->image->attributes();
+            $episodeImage = array_key_exists('href', $episodeImageAttributes) ? (string) $episodeImageAttributes['href'] : '';
         }
 
         return new EpisodeActionExtraData(
