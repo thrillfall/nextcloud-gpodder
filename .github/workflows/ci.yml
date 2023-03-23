@@ -20,7 +20,7 @@ jobs:
       matrix:
         php-versions: ['7.4', '8.0']
         databases: ['sqlite']
-        server-versions: ['stable24', 'stable25']
+        server-versions: ['stable24', 'stable25', 'stable26']
 
     name: php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
 
@@ -78,7 +78,7 @@ jobs:
       matrix:
         php-versions: ['7.4', '8.0']
         databases: ['mysql']
-        server-versions: ['stable24', 'stable25']
+        server-versions: ['stable24', 'stable25', 'stable26']
 
     name: php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
 
@@ -145,7 +145,7 @@ jobs:
       matrix:
         php-versions: ['7.4', '8.0']
         databases: ['pgsql']
-        server-versions: ['stable24', 'stable25']
+        server-versions: ['stable24', 'stable25', 'stable26']
 
     name: php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
 
