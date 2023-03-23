@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.8.0 - 2023-03-23
+### Changed
+- drop php7.4 support
+- add support for Nextcloud 26
+
 ## 3.7.3 - 2023-02-24
 ### Fixed
 - If EpisodeAction is updated with new episode url and there is a conflicting EpisodeAction with that same episode url the later will be deleted 
