@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.8.1 - 2023-06-18
+### Changed
+- add support for Nextcloud 27
+- drop support for Nextcloud 24
+
 ## 3.8.0 - 2023-03-23
 ### Changed
 - drop php7.4 support
