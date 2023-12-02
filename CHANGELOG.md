@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.8.2 - 2023-12-02
+### Changed
+- add support for Nextcloud 28
+- drop support for Nextcloud 25
+
 ## 3.8.1 - 2023-06-18
 ### Changed
 - add support for Nextcloud 27
