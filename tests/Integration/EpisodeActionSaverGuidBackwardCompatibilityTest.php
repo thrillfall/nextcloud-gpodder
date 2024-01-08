@@ -55,39 +55,41 @@ class EpisodeActionSaverGuidBackwardCompatibilityTest extends TestCase
 
         $url = uniqid("https://podcast-mp3.dradio.de/");
         $urlWithParameter = $url . "?ref=never_know_if_ill_be_removed";
+        $guid1 = uniqid("quid1");
+        $guid2 = uniqid("quid2");
 
         $podcastUrl = uniqid("https://podcast");
 
         $episodeActionSaver->saveEpisodeActions(
-            [["podcast" => $podcastUrl, "episode" => $url, "guid" => $urlWithParameter, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 100, "total" => 2252]],
+            [["podcast" => $podcastUrl, "episode" => $url, "guid" => $guid2, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 100, "total" => 2252]],
             self::USER_ID_0
         )[0];
 
         $episodeActionSaver->saveEpisodeActions(
-            [["podcast" => $podcastUrl, "episode" => $urlWithParameter, "guid" => $url, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 100, "total" => 2252]],
+            [["podcast" => $podcastUrl, "episode" => $urlWithParameter, "guid" => $guid1, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 101, "total" => 2252]],
             self::USER_ID_0
         )[0];
 
         //act
         $episodeActionSaver->saveEpisodeActions(
-            [["podcast" => $podcastUrl, "episode" => $urlWithParameter, "guid" => $url, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 100, "total" => 2252]],
+            [["podcast" => $podcastUrl, "episode" => $urlWithParameter, "guid" => $guid1, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 102, "total" => 2252]],
             self::USER_ID_0
         )[0];
 
         //assert
         /** @var EpisodeActionRepository $episodeActionRepository */
         $episodeActionRepository = $this->container->get(EpisodeActionRepository::class);
-        $this->assertSame(100, $episodeActionRepository->findByGuid($urlWithParameter, self::USER_ID_0)->getPosition());
+        $this->assertSame(100, $episodeActionRepository->findByGuid($guid2, self::USER_ID_0)->getPosition());
 
         //act
         $episodeActionSaver->saveEpisodeActions(
-            [["podcast" => $podcastUrl, "episode" => $urlWithParameter, "guid" => $urlWithParameter, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 100, "total" => 2252]],
+            [["podcast" => $podcastUrl, "episode" => $urlWithParameter, "guid" => $guid2, "action" => "PLAY", "timestamp" => "2021-08-22T23:58:56", "started" => 35, "position" => 103, "total" => 2252]],
             self::USER_ID_0
         )[0];
 
         //assert
         /** @var EpisodeActionRepository $episodeActionRepository */
         $episodeActionRepository = $this->container->get(EpisodeActionRepository::class);
-        $this->assertSame(100, $episodeActionRepository->findByGuid($urlWithParameter, self::USER_ID_0)->getPosition());
+        $this->assertSame(103, $episodeActionRepository->findByGuid($guid2, self::USER_ID_0)->getPosition());
     }
 }

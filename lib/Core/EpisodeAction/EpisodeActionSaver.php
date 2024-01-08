@@ -128,9 +128,9 @@ class EpisodeActionSaver
      */
     private function deleteConflictingEpisodeAction(EpisodeActionEntity $episodeActionEntity, string $userId): void
     {
-        $collidingEpisodeActionId = $this->episodeActionRepository->findByEpisodeUrl($episodeActionEntity->getGuid(), $userId)->getId();
+        $collidingEpisodeActionId = $this->episodeActionRepository->findByEpisodeUrl($episodeActionEntity->getEpisode(), $userId)->getId();
         if ($collidingEpisodeActionId !== $episodeActionEntity->getId()) {
-            $this->episodeActionRepository->deleteEpisodeActionByEpisodeUrl($episodeActionEntity->getGuid(), $userId);
+            $this->episodeActionRepository->deleteEpisodeActionByEpisodeUrl($episodeActionEntity->getEpisode(), $userId);
         }
     }
 }
