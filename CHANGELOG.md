@@ -1,4 +1,7 @@
 # Changelog
+## 3.8.3 - 2024-01-12
+### Fixed
+- identify and delete conflicting episode by guid and not by episode url (thanks @LinAGKar)
 
 ## 3.8.2 - 2023-12-02
 ### Changed
