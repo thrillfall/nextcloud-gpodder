@@ -17,8 +17,8 @@
         <developer>https://github.com/thrillfall/nextcloud-gpodder/blob/main/README.md#api</developer>
     </documentation>
     <dependencies>
-        <php min-version="8.0"/>
-        <nextcloud min-version="26" max-version="28"/>
+        <php min-version="8.1"/>
+        <nextcloud min-version="27" max-version="29"/>
     </dependencies>
     <repair-steps>
         <post-migration>
