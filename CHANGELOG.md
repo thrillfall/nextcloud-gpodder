@@ -1,4 +1,10 @@
 # Changelog
+## 3.9.0 - 2024-05-21
+### Changed
+- Add support for Nextcloud 29
+- Drop support for Nextcloud 26
+- Drop support for php8.0
+
 ## 3.8.3 - 2024-01-12
 ### Fixed
 - identify and delete conflicting episode by guid and not by episode url (thanks @LinAGKar)
