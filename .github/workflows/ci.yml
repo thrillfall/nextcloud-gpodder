@@ -47,7 +47,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          tools: phpunit:8.5.14
           extensions: mbstring, iconv, fileinfo, intl, sqlite, pdo_sqlite, gd, zip
           coverage: none
 
@@ -67,7 +66,7 @@ jobs:
 
       - name: PHPUnit
         working-directory: apps/${{ env.APP_NAME }}
-        run: phpunit -c tests/phpunit.xml
+        run: ./vendor/bin/phpunit -c tests/phpunit.xml
 
   mysql:
     runs-on: ubuntu-latest
@@ -114,7 +113,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          tools: phpunit:8.5.14
           extensions: mbstring, iconv, fileinfo, intl, mysql, pdo_mysql, gd, zip
           coverage: none
 
@@ -134,7 +132,7 @@ jobs:
 
       - name: PHPUnit
         working-directory: apps/${{ env.APP_NAME }}
-        run: phpunit -c tests/phpunit.xml
+        run: ./vendor/bin/phpunit -c tests/phpunit.xml
 
   pgsql:
     runs-on: ubuntu-latest
@@ -183,7 +181,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          tools: phpunit:8.5.14
           extensions: mbstring, iconv, fileinfo, intl, pgsql, pdo_pgsql, gd, zip
           coverage: none
 
@@ -203,4 +200,4 @@ jobs:
 
       - name: PHPUnit
         working-directory: apps/${{ env.APP_NAME }}
-        run: phpunit -c tests/phpunit.xml
+        run: ./vendor/bin/phpunit -c tests/phpunit.xml
