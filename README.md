@@ -8,6 +8,7 @@ Nextcloud app that replicates basic gpodder.net api to sync podcast consumer app
 | [KDE Kasts](https://apps.kde.org/de/kasts/) | Supported since version 21.12 |
 | [Podcast Merlin](https://github.com/yoyoooooooooo/Podcast-Merlin--Nextcloud-Gpodder-Client-For-Windows) | Full sync support podcast client for Windows |
 | [RePod](https://apps.nextcloud.com/apps/repod) | Nextcloud app for playing and managing podcasts with sync support |
+| [Cardo](https://n0vella.github.io/#/cardo) | Podcast client with sync support, for Windows, Mac and Linux  |
 | ~~[Garmin Podcasts](https://lucasasselli.github.io/garmin-podcasts/)~~ | Repository archived, app is [no longer available](https://apps.garmin.com/en-US/apps/b5b85600-0625-43b6-89e9-1245bd44532c) |
 ### Installation
 Either from the official Nextcloud app store ([link to app page](https://apps.nextcloud.com/apps/gpoddersync)) or by downloading the [latest release](https://github.com/thrillfall/nextcloud-gpodder/releases/latest) and extracting it into your Nextcloud apps/ directory.
