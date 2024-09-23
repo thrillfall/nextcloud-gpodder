@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - 'ci-*'
+      - "ci-*"
 
 env:
   APP_NAME: gpoddersync
@@ -18,9 +18,9 @@ jobs:
       # do not stop on another job's failure
       fail-fast: false
       matrix:
-        php-versions: ['8.1', '8.2']
-        databases: ['sqlite']
-        server-versions: ['stable27', 'stable28', 'stable29']
+        php-versions: ["8.1", "8.2"]
+        databases: ["sqlite"]
+        server-versions: ["stable27", "stable28", "stable29", "stable30"]
 
     name: php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
 
@@ -75,9 +75,9 @@ jobs:
       # do not stop on another job's failure
       fail-fast: false
       matrix:
-        php-versions: ['8.1', '8.2']
-        databases: ['mysql']
-        server-versions: ['stable27', 'stable28', 'stable29']
+        php-versions: ["8.1", "8.2"]
+        databases: ["mysql"]
+        server-versions: ["stable27", "stable28", "stable29", "stable30"]
 
     name: php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
 
@@ -141,9 +141,9 @@ jobs:
       # do not stop on another job's failure
       fail-fast: false
       matrix:
-        php-versions: ['8.1', '8.2']
-        databases: ['pgsql']
-        server-versions: ['stable27', 'stable28', 'stable29']
+        php-versions: ["8.1", "8.2"]
+        databases: ["pgsql"]
+        server-versions: ["stable27", "stable28", "stable29", "stable30"]
 
     name: php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
 
