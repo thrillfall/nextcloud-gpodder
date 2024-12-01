@@ -28,7 +28,7 @@ class EpisodeActionRepositoryTest extends \Test\TestCase
 
         $episodeUrl = uniqid("test_https://dts.podtrac.com/");
 
-        $timestampHumanReadable = "2021-08-22T23:58:56";
+        $timestampHumanReadable = "2021-08-22T23:58:56+00:00";
         $guid = uniqid("test_gid://art19-episode-locator/V0/Ktd");
 
         $savedEpisodeActionEntity = $episodeActionSaver->saveEpisodeActions(
@@ -58,7 +58,7 @@ class EpisodeActionRepositoryTest extends \Test\TestCase
             (string) $savedEpisodeActionEntity->getTimestampEpoch()
         )
             ->setTimezone(new \DateTimeZone("UTC"))
-            ->format("Y-m-d\TH:i:s");
+            ->format("c");
         self::assertSame($timestampHumanReadable, $timestampOutputFormatted);
 
         /** @var $episodeActionRepository EpisodeActionRepository */
@@ -71,7 +71,7 @@ class EpisodeActionRepositoryTest extends \Test\TestCase
             self::USER_ID_0
         );
         self::assertSame(
-            "2021-08-22T23:58:56",
+            "2021-08-22T23:58:56+00:00",
             $retrievedEpisodeActionEntity->getTimestamp()
         );
     }
