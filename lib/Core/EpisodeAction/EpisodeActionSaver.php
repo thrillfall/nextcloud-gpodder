@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace OCA\GPodderSync\Core\EpisodeAction;
 
 use DateTime;
+use DateTimeZone;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionEntity;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionRepository;
 use OCA\GPodderSync\Db\EpisodeAction\EpisodeActionWriter;
@@ -62,7 +63,10 @@ class EpisodeActionSaver
 
     private function convertTimestampToUnixEpoch(string $timestamp): string
     {
-        $dateTime = new DateTime($timestamp);
+        $dateTime = new DateTime(
+            datetime: $timestamp,
+            timezone: new DateTimeZone("UTC")
+        );
         return $dateTime->format("U");
     }
 
