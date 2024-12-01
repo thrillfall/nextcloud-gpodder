@@ -11,38 +11,49 @@ use OCP\DB\Exception;
 
 class EpisodeActionSaver
 {
-
     private EpisodeActionRepository $episodeActionRepository;
     private EpisodeActionWriter $episodeActionWriter;
     private EpisodeActionReader $episodeActionReader;
 
-    private const DATETIME_FORMAT = 'Y-m-d\TH:i:s';
-
     public function __construct(
         EpisodeActionRepository $episodeActionRepository,
-        EpisodeActionWriter     $episodeActionWriter,
-        EpisodeActionReader     $episodeActionReader
-    )
-    {
+        EpisodeActionWriter $episodeActionWriter,
+        EpisodeActionReader $episodeActionReader
+    ) {
         $this->episodeActionRepository = $episodeActionRepository;
         $this->episodeActionWriter = $episodeActionWriter;
         $this->episodeActionReader = $episodeActionReader;
     }
 
-    public function saveEpisodeActions(array $episodeActionsArray, string $userId): array
-    {
-        $episodeActions = $this->episodeActionReader->fromArray($episodeActionsArray);
+    public function saveEpisodeActions(
+        array $episodeActionsArray,
+        string $userId
+    ): array {
+        $episodeActions = $this->episodeActionReader->fromArray(
+            $episodeActionsArray
+        );
 
         $episodeActionEntities = [];
 
         foreach ($episodeActions as $episodeAction) {
-            $episodeActionEntity = $this->hydrateEpisodeActionEntity($episodeAction, $userId);
+            $episodeActionEntity = $this->hydrateEpisodeActionEntity(
+                $episodeAction,
+                $userId
+            );
 
             try {
-                $episodeActionEntities[] = $this->episodeActionWriter->save($episodeActionEntity);
+                $episodeActionEntities[] = $this->episodeActionWriter->save(
+                    $episodeActionEntity
+                );
             } catch (Exception $exception) {
-                if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-                    $episodeActionEntities[] = $this->updateEpisodeAction($episodeActionEntity, $userId);
+                if (
+                    $exception->getReason() ===
+                    Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION
+                ) {
+                    $episodeActionEntities[] = $this->updateEpisodeAction(
+                        $episodeActionEntity,
+                        $userId
+                    );
                 }
             }
         }
@@ -51,42 +62,59 @@ class EpisodeActionSaver
 
     private function convertTimestampToUnixEpoch(string $timestamp): string
     {
-        return DateTime::createFromFormat(self::DATETIME_FORMAT, $timestamp)
-            ->format("U");
+        $dateTime = new DateTime($timestamp);
+        return $dateTime->format("U");
     }
 
     private function updateEpisodeAction(
         EpisodeActionEntity $episodeActionEntity,
-        string              $userId
-    ): EpisodeActionEntity
-    {
-        $episodeActionToUpdate = $this->findEpisodeActionToUpdate($episodeActionEntity, $userId);
+        string $userId
+    ): EpisodeActionEntity {
+        $episodeActionToUpdate = $this->findEpisodeActionToUpdate(
+            $episodeActionEntity,
+            $userId
+        );
 
         $episodeActionEntity->setId($episodeActionToUpdate->getId());
 
-        $this->ensureGuidDoesNotGetNulledWithOldData($episodeActionToUpdate, $episodeActionEntity);
+        $this->ensureGuidDoesNotGetNulledWithOldData(
+            $episodeActionToUpdate,
+            $episodeActionEntity
+        );
 
         try {
             return $this->episodeActionWriter->update($episodeActionEntity);
         } catch (Exception $exception) {
-            if ($exception->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-                $this->deleteConflictingEpisodeAction($episodeActionEntity, $userId);
+            if (
+                $exception->getReason() ===
+                Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION
+            ) {
+                $this->deleteConflictingEpisodeAction(
+                    $episodeActionEntity,
+                    $userId
+                );
             }
         }
         return $this->episodeActionWriter->update($episodeActionEntity);
-
     }
 
-    private function ensureGuidDoesNotGetNulledWithOldData(EpisodeAction $episodeActionToUpdate, EpisodeActionEntity $episodeActionEntity): void
-    {
+    private function ensureGuidDoesNotGetNulledWithOldData(
+        EpisodeAction $episodeActionToUpdate,
+        EpisodeActionEntity $episodeActionEntity
+    ): void {
         $existingGuid = $episodeActionToUpdate->getGuid();
-        if ($existingGuid !== null && $episodeActionEntity->getGuid() === null) {
+        if (
+            $existingGuid !== null &&
+            $episodeActionEntity->getGuid() === null
+        ) {
             $episodeActionEntity->setGuid($existingGuid);
         }
     }
 
-    private function hydrateEpisodeActionEntity(EpisodeAction $episodeAction, string $userId): EpisodeActionEntity
-    {
+    private function hydrateEpisodeActionEntity(
+        EpisodeAction $episodeAction,
+        string $userId
+    ): EpisodeActionEntity {
         $episodeActionEntity = new EpisodeActionEntity();
         $episodeActionEntity->setPodcast($episodeAction->getPodcast());
         $episodeActionEntity->setEpisode($episodeAction->getEpisode());
@@ -95,14 +123,18 @@ class EpisodeActionSaver
         $episodeActionEntity->setPosition($episodeAction->getPosition());
         $episodeActionEntity->setStarted($episodeAction->getStarted());
         $episodeActionEntity->setTotal($episodeAction->getTotal());
-        $episodeActionEntity->setTimestampEpoch($this->convertTimestampToUnixEpoch($episodeAction->getTimestamp()));
+        $episodeActionEntity->setTimestampEpoch(
+            $this->convertTimestampToUnixEpoch($episodeAction->getTimestamp())
+        );
         $episodeActionEntity->setUserId($userId);
 
         return $episodeActionEntity;
     }
 
-    private function findEpisodeActionToUpdate(EpisodeActionEntity $episodeActionEntity, string $userId): ?EpisodeAction
-    {
+    private function findEpisodeActionToUpdate(
+        EpisodeActionEntity $episodeActionEntity,
+        string $userId
+    ): ?EpisodeAction {
         $episodeAction = null;
         if ($episodeActionEntity->getGuid() !== null) {
             $episodeAction = $this->episodeActionRepository->findByGuid(
@@ -126,11 +158,18 @@ class EpisodeActionSaver
      * @param string $userId
      * @return void
      */
-    private function deleteConflictingEpisodeAction(EpisodeActionEntity $episodeActionEntity, string $userId): void
-    {
-        $collidingEpisodeActionId = $this->episodeActionRepository->findByEpisodeUrl($episodeActionEntity->getEpisode(), $userId)->getId();
+    private function deleteConflictingEpisodeAction(
+        EpisodeActionEntity $episodeActionEntity,
+        string $userId
+    ): void {
+        $collidingEpisodeActionId = $this->episodeActionRepository
+            ->findByEpisodeUrl($episodeActionEntity->getEpisode(), $userId)
+            ->getId();
         if ($collidingEpisodeActionId !== $episodeActionEntity->getId()) {
-            $this->episodeActionRepository->deleteEpisodeActionByEpisodeUrl($episodeActionEntity->getEpisode(), $userId);
+            $this->episodeActionRepository->deleteEpisodeActionByEpisodeUrl(
+                $episodeActionEntity->getEpisode(),
+                $userId
+            );
         }
     }
 }
