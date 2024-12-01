@@ -4,7 +4,7 @@
 ### Changed
 - Always respond with timezone in timestamps
 ### Fixed
-- Don't crash when receiving ISO8601 timestamps with timezone
+- Don't crash when receiving ISO8601 timestamps containing a timezone
 
 ## 3.10.0 - 2024-09-23
 ### Changed
