@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.12.0 - 2025-02-16
+### Changed
+- Add support for Nextcloud 31
+
 ## 3.11.0 - 2024-12-01
 ### Changed
 - Always respond with timezone in timestamps
