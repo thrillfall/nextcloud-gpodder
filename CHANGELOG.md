@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.13.1 - 2025-10-11
+### Fixed
+- Fix version number in info.xml
+
+## 3.13.0 - 2025-10-10
+### Changed
+- Add support for Nextcloud 32
+
 ## 3.12.0 - 2025-02-16
 ### Changed
 - Add support for Nextcloud 31
