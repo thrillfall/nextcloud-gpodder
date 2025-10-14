@@ -75,10 +75,14 @@ class PodcastDataReader {
 	}
 
 	private function fetchUrl(string $url): IResponse {
-		$resp = $this->httpClient->get($url);
+		$resp = $this->httpClient->get($url, ['headers' => ['User-Agent' => 'nextcloud-gpodder (+https://nextcloud.com; like iTMS)']]);
 		$statusCode = $resp->getStatusCode();
 		if ($statusCode < 200 || $statusCode >= 300) {
-			throw new \ErrorException("Web request returned non-2xx status code: $statusCode");
+			$resp = $this->httpClient->get($url, ['headers' => ['User-Agent' => 'nextcloud-gpodder (+https://nextcloud.com)']]);
+			$statusCode = $resp->getStatusCode();
+			if ($statusCode < 200 || $statusCode >= 300) {
+				throw new \ErrorException("Web request returned non-2xx status code: $statusCode");
+			}
 		}
 		return $resp;
 	}
