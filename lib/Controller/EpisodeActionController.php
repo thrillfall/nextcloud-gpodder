@@ -68,19 +68,11 @@ class EpisodeActionController extends Controller {
 		]);
 	}
 
-	/**
-	 * @param array $data
-	 * @return array $episodeActionsArray
-	 */
-	public function filterEpisodesFromRequestParams(array $data): array {
-		return array_filter($data, "is_numeric", ARRAY_FILTER_USE_KEY);
+	public function filterEpisodesFromRequestParams(array $episodesFromRequestParams): array {
+		return array_filter($episodesFromRequestParams, "is_numeric", ARRAY_FILTER_USE_KEY);
 	}
 
-	/**
-	 * @param array $data
-	 * @return array $episodeActionsArray
-	 */
-	public function filterOnlyPlays(array $data): array {
-		return array_filter($data, fn($ep) => isset($ep['action']) && strtolower($ep['action']) === 'play');
+	public function filterOnlyPlays(array $episodesFromRequestParams): array {
+		return array_filter($episodesFromRequestParams, fn($ep) => isset($ep['action']) && strtolower($ep['action']) === 'play');
 	}
 }
