@@ -151,6 +151,16 @@ class EpisodeActionControllerTest extends TestCase
    "started": 15,
    "position": 120,
    "total":  500
+  },
+  {
+   "podcast": "https://example.com/feed.rss",
+   "episode": "https://example.com/files/s01e21.mp3",
+   "guid": "s01e21-example-org",
+   "action": "DELETE",
+   "timestamp": "2009-12-12T09:00:00",
+   "started": -1,
+   "position": -1,
+   "total":  -1
   }
 ]',
             true,
@@ -181,6 +191,7 @@ class EpisodeActionControllerTest extends TestCase
         $episodeActionEntities = $mapper->findAll(0, $userId);
         /** @var EpisodeActionEntity $firstEntity */
         $firstEntity = $episodeActionEntities[0];
+        $this->assertCount(1, $episodeActionEntities);
         $this->assertSame(
             "https://example.com/feed.rss",
             $firstEntity->getPodcast()
