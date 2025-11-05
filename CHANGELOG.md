@@ -1,4 +1,7 @@
 # Changelog
+## 3.13.3 - 2025-11-05
+### Changed
+- #168 ignore actions DELETE and DOWNLOAD
 
 ## 3.13.1 - 2025-10-11
 ### Fixed
