@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout server
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: nextcloud/server
           ref: ${{ matrix.server-versions }}
@@ -40,7 +40,7 @@ jobs:
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
 
       - name: Checkout app
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: apps/${{ env.APP_NAME }}
 
@@ -93,7 +93,7 @@ jobs:
 
     steps:
       - name: Checkout server
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: nextcloud/server
           ref: ${{ matrix.server-versions }}
@@ -106,7 +106,7 @@ jobs:
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
 
       - name: Checkout app
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: apps/${{ env.APP_NAME }}
 
@@ -161,7 +161,7 @@ jobs:
 
     steps:
       - name: Checkout server
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: nextcloud/server
           ref: ${{ matrix.server-versions }}
@@ -174,7 +174,7 @@ jobs:
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
 
       - name: Checkout app
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: apps/${{ env.APP_NAME }}
 
