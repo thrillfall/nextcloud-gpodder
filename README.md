@@ -12,6 +12,7 @@ Nextcloud app that replicates basic gpodder.net api to sync podcast consumer app
 | [FocusPodcast](https://github.com/allentown521/FocusPodcast) | Fork of AntennaPod, with a focus on UI and customization |
 | [Podcini.X](https://github.com/XilinJia/Podcini.X) | Fork of AntennaPod, with a focus on many features. Synchronization is not yet stable. | 
 | [GNOME Podcasts](https://apps.gnome.org/Podcasts/) | Supported in Nightly. |
+| [YourPods](https://asecretcompany.com/yourpods/) | Podcast client focused on iOS + ecosystem (AirPlay, CarPlay, WatchOS). The source (dart) can be complied for other platforms [YourPods-source](https://github.com/asecretcompany/yourpods-source) |
 | ~~[Garmin Podcasts](https://lucasasselli.github.io/garmin-podcasts/)~~ | Repository archived, app is [no longer available](https://apps.garmin.com/en-US/apps/b5b85600-0625-43b6-89e9-1245bd44532c) |
 ### Installation
 Either from the official Nextcloud app store ([link to app page](https://apps.nextcloud.com/apps/gpoddersync)) or by downloading the [latest release](https://github.com/thrillfall/nextcloud-gpodder/releases/latest) and extracting it into your Nextcloud apps/ directory.
