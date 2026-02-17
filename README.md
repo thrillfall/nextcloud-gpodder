@@ -130,3 +130,7 @@ POST /index.php/apps/gpoddersync/episode_action/create
 - mount project into apps-extra of nextcloud environment (https://github.com/juliushaertl/nextcloud-docker-dev) 
 - `docker-compose exec nextcloud occ app:enable gpoddersync` enable app so we have database tables
 - `docker-compose exec nextcloud phpunit9 -c apps-extra/nextcloud-gpodder/tests/phpunit.xml`
+
+### Releasing
+- push a semver tag (e.g. `git push origin v3.15.0`)
+- GitHub Actions will automatically create a GitHub Release for the tag, generate release notes, and the existing `build_release` workflow will attach the packaged app + upload to the Nextcloud app store
