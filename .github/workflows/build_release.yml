@@ -1,9 +1,9 @@
 name: Build and publish app release
 
 on:
-  release:
-    types: [published]
-
+  push:
+    tags:
+      - '*'
 env:
   APP_NAME: gpoddersync
 
