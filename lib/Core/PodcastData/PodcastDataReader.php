@@ -11,13 +11,13 @@ use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use OCP\ICache;
 use OCP\ICacheFactory;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class PodcastDataReader {
 	private ?ICache $cache = null;
 	private IClient $httpClient;
 	private SubscriptionChangeRepository $subscriptionChangeRepository;
-	private ILogger $logger;
+	private LoggerInterface $logger;
 
 	private const ARD_AUDIOTHEK_HOST = 'api.ardaudiothek.de';
 	private const ARD_PROGRAMSET_REGEX = '#https?://api\.ardaudiothek\.de/programsets/(?P<id>[^/?]+)#i';
@@ -26,7 +26,7 @@ class PodcastDataReader {
 		ICacheFactory $cacheFactory,
 		IClientService $httpClientService,
 		SubscriptionChangeRepository $subscriptionChangeRepository,
-		ILogger $logger
+		LoggerInterface $logger
 	) {
 		if ($cacheFactory->isLocalCacheAvailable()) {
 			$this->cache = $cacheFactory->createLocal('GPodderSync-Podcasts');

@@ -1,7 +1,7 @@
 # nextcloud-gpodder
 Nextcloud app that replicates basic gpodder.net api to sync podcast consumer apps (podcatchers) like AntennaPod.
 
-The personal settings page lists all synchronized subscriptions and now offers a remove button per feed, which issues the appropriate `subscription_change` call so deletions sync to every connected client.
+The personal settings page lists all synchronized subscriptions, offers a remove button per feed (propagating deletions through `subscription_change`), and its backend now relies on the standard PSR logger interface to avoid DI/runtime issues on page load.
 
 ### Clients supporting sync
 | client | support status |

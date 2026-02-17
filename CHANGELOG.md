@@ -1,4 +1,8 @@
 # Changelog
+## 3.15.1 - 2026-02-17
+### Fixed
+- Personal settings view no longer crashes on load – `PodcastDataReader` now requests the PSR logger (resolving the `OCP\ILogger` DI error)
+
 ## 3.15.0 - 2026-02-17
 ### Added
 - Allow removing subscriptions directly from the personal settings UI (propagates to other clients)
