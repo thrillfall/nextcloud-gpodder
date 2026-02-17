@@ -1,4 +1,8 @@
 # Changelog
+## 3.15.2 - 2026-02-17
+### Fixed
+- Personal settings now shows proper titles/descriptions for ARD Audiothek subscriptions by resolving both API and website URLs to metadata.
+
 ## 3.15.1 - 2026-02-17
 ### Fixed
 - Personal settings view no longer crashes on load – `PodcastDataReader` now requests the PSR logger (resolving the `OCP\ILogger` DI error)

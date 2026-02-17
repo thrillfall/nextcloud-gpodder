@@ -12,6 +12,7 @@ use OCP\Http\Client\IResponse;
 use OCP\ICache;
 use OCP\ICacheFactory;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class PodcastDataReader {
 	private ?ICache $cache = null;
@@ -67,22 +68,22 @@ class PodcastDataReader {
 	}
 
 	private function fetchPodcastDataForUrl(string $url): PodcastData {
-		if ($this->isArdAudiothekUrl($url)) {
-			return $this->fetchArdAudiothekData($url);
+		$ardProgramId = $this->extractArdProgramId($url);
+		if ($ardProgramId !== null) {
+			try {
+				return $this->fetchArdAudiothekData($ardProgramId, $url);
+			} catch (Throwable $e) {
+				$this->logger->warning('Failed to resolve ARD Audiothek metadata, falling back to RSS parsing.', [
+					'url' => $url,
+					'exception' => $e,
+				]);
+			}
 		}
 		$resp = $this->fetchUrl($url);
 		return PodcastData::parseRssXml($resp->getBody());
 	}
 
-	private function isArdAudiothekUrl(string $url): bool {
-		return (bool)preg_match(self::ARD_PROGRAMSET_REGEX, $url);
-	}
-
-	private function fetchArdAudiothekData(string $url): PodcastData {
-		$programId = $this->extractArdProgramId($url);
-		if ($programId === null) {
-			throw new \InvalidArgumentException('Could not extract ARD Audiothek program id from URL');
-		}
+	private function fetchArdAudiothekData(string $programId, string $originalUrl): PodcastData {
 		$resp = $this->fetchUrl("https://" . self::ARD_AUDIOTHEK_HOST . "/programsets/$programId");
 		$body = $resp->getBody();
 		$decoded = json_decode($body, true);
@@ -98,7 +99,7 @@ class PodcastDataReader {
 		return new PodcastData(
 			$programSet['title'] ?? null,
 			$programSet['publicationService']['title'] ?? null,
-			$programSet['sharingUrl'] ?? $url,
+			$programSet['sharingUrl'] ?? $originalUrl,
 			$programSet['synopsis'] ?? ($programSet['description'] ?? null),
 			$this->resolveArdImageUrl($programSet['image'] ?? null),
 			(new DateTime())->getTimestamp()
@@ -116,7 +117,32 @@ class PodcastDataReader {
 		if (preg_match(self::ARD_PROGRAMSET_REGEX, $url, $matches)) {
 			return $matches['id'];
 		}
-		return null;
+		return $this->extractArdProgramIdFromWebsite($url);
+	}
+
+	private function extractArdProgramIdFromWebsite(string $url): ?string {
+		$parts = parse_url($url);
+		if ($parts === false) {
+			return null;
+		}
+		$host = strtolower($parts['host'] ?? '');
+		if (!in_array($host, ['ardaudiothek.de', 'www.ardaudiothek.de'], true)) {
+			return null;
+		}
+		$path = $parts['path'] ?? '';
+		if ($path === '') {
+			return null;
+		}
+		$segments = array_values(array_filter(explode('/', $path), 'strlen'));
+		if (count($segments) < 3) {
+			return null;
+		}
+		$section = strtolower($segments[0]);
+		if (!in_array($section, ['sendung', 'podcast'], true)) {
+			return null;
+		}
+		$possibleId = $segments[count($segments) - 1];
+		return ctype_digit($possibleId) ? $possibleId : null;
 	}
 
 	private function tryFetchImageBlob(PodcastData $data): ?string {
