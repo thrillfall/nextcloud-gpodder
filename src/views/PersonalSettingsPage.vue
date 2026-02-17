@@ -16,7 +16,8 @@
 				<ul>
 					<SubscriptionListItem v-for="sub in subscriptions"
 						:key="sub.url"
-						:sub="sub" />
+						:sub="sub"
+						@removed="handleSubscriptionRemoved" />
 				</ul>
 			</div>
 			<div v-if="subscriptions.length === 0 && !isLoading">
@@ -88,6 +89,9 @@ export default {
 	methods: {
 		updateSorting(sorting) {
 			this.subscriptions.sort(sorting.compare)
+		},
+		handleSubscriptionRemoved(url) {
+			this.subscriptions = this.subscriptions.filter((sub) => sub.url !== url)
 		},
 	},
 }

@@ -1,4 +1,8 @@
 # Changelog
+## 3.15.0 - 2026-02-17
+### Added
+- Allow removing subscriptions directly from the personal settings UI (propagates to other clients)
+
 ## 3.14.0 - 2026-02-17
 ### Added
 - Resolve title, description, and imagery for subscriptions pointing to api.ardaudiothek.de programsets

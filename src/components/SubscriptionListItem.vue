@@ -23,12 +23,19 @@
 				</template>
 				RSS feed
 			</ActionLink>
+			<ActionButton
+				:disabled="isRemoving"
+				icon="icon-delete"
+				@click="removeSubscription">
+				Remove
+			</ActionButton>
 		</template>
 	</ListItem>
 </template>
 
 <script>
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 
@@ -36,11 +43,13 @@ import Rss from 'vue-material-design-icons/Rss.vue'
 
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 
 export default {
 	name: 'SubscriptionListItem',
 	components: {
 		ActionLink,
+		ActionButton,
 		Avatar,
 		ListItem,
 		Rss,
@@ -55,6 +64,7 @@ export default {
 		return {
 			podcastData: null,
 			isLoading: true,
+			isRemoving: false,
 		}
 	},
 	async mounted() {
@@ -70,6 +80,28 @@ export default {
 		}
 	},
 	methods: {
+		async removeSubscription() {
+			if (this.isRemoving) {
+				return
+			}
+			if (!window.confirm(t('gpoddersync', 'Remove this subscription from your account?'))) {
+				return
+			}
+			this.isRemoving = true
+			try {
+				await axios.post(generateUrl('/apps/gpoddersync/subscription_change/create'), {
+					add: [],
+					remove: [this.sub.url],
+				})
+				showSuccess(t('gpoddersync', 'Subscription removed'))
+				this.$emit('removed', this.sub.url)
+			} catch (e) {
+				console.error(e)
+				showError(t('gpoddersync', 'Could not remove subscription'))
+			} finally {
+				this.isRemoving = false
+			}
+		},
 		getTitle() {
 			return this.podcastData?.title ?? this.sub.url ?? ''
 		},
