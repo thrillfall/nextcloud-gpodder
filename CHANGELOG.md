@@ -1,4 +1,8 @@
 # Changelog
+## 3.14.0 - 2026-02-17
+### Added
+- Resolve title, description, and imagery for subscriptions pointing to api.ardaudiothek.de programsets
+
 ## 3.13.3 - 2025-11-05
 ### Changed
 - #168 ignore actions DELETE and DOWNLOAD

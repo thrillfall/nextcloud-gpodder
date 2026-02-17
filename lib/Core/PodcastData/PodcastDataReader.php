@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace OCA\GPodderSync\Core\PodcastData;
 
+use DateTime;
 use Exception;
 use OCA\GPodderSync\Db\SubscriptionChange\SubscriptionChangeRepository;
 use OCP\Http\Client\IClient;
@@ -10,22 +11,29 @@ use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use OCP\ICache;
 use OCP\ICacheFactory;
+use OCP\ILogger;
 
 class PodcastDataReader {
 	private ?ICache $cache = null;
 	private IClient $httpClient;
 	private SubscriptionChangeRepository $subscriptionChangeRepository;
+	private ILogger $logger;
+
+	private const ARD_AUDIOTHEK_HOST = 'api.ardaudiothek.de';
+	private const ARD_PROGRAMSET_REGEX = '#https?://api\.ardaudiothek\.de/programsets/(?P<id>[^/?]+)#i';
 
 	public function __construct(
 		ICacheFactory $cacheFactory,
 		IClientService $httpClientService,
-		SubscriptionChangeRepository $subscriptionChangeRepository
+		SubscriptionChangeRepository $subscriptionChangeRepository,
+		ILogger $logger
 	) {
 		if ($cacheFactory->isLocalCacheAvailable()) {
 			$this->cache = $cacheFactory->createLocal('GPodderSync-Podcasts');
 		}
 		$this->httpClient = $httpClientService->newClient();
 		$this->subscriptionChangeRepository = $subscriptionChangeRepository;
+		$this->logger = $logger;
 	}
 
 	public function getCachedOrFetchPodcastData(string $url, string $userId): ?PodcastData {
@@ -50,13 +58,65 @@ class PodcastDataReader {
 		if (!$this->userHasPodcast($url, $userId)) {
 			return null;
 		}
-		$resp = $this->fetchUrl($url);
-		$data = PodcastData::parseRssXml($resp->getBody());
+		$data = $this->fetchPodcastDataForUrl($url);
 		$blob = $this->tryFetchImageBlob($data);
 		if ($blob) {
 			$data->setImageBlob($blob);
 		}
 		return $data;
+	}
+
+	private function fetchPodcastDataForUrl(string $url): PodcastData {
+		if ($this->isArdAudiothekUrl($url)) {
+			return $this->fetchArdAudiothekData($url);
+		}
+		$resp = $this->fetchUrl($url);
+		return PodcastData::parseRssXml($resp->getBody());
+	}
+
+	private function isArdAudiothekUrl(string $url): bool {
+		return (bool)preg_match(self::ARD_PROGRAMSET_REGEX, $url);
+	}
+
+	private function fetchArdAudiothekData(string $url): PodcastData {
+		$programId = $this->extractArdProgramId($url);
+		if ($programId === null) {
+			throw new \InvalidArgumentException('Could not extract ARD Audiothek program id from URL');
+		}
+		$resp = $this->fetchUrl("https://" . self::ARD_AUDIOTHEK_HOST . "/programsets/$programId");
+		$body = $resp->getBody();
+		$decoded = json_decode($body, true);
+		if (!is_array($decoded)) {
+			$this->logger->warning('Invalid JSON returned from ARD Audiothek.', ['responseBody' => $body]);
+			throw new \RuntimeException('Invalid JSON returned from ARD Audiothek');
+		}
+		$programSet = $decoded['data']['programSet'] ?? null;
+		if (!is_array($programSet)) {
+			$this->logger->warning('programSet missing in ARD Audiothek response.', ['responseBody' => $body]);
+			throw new \RuntimeException('programSet missing in ARD Audiothek response');
+		}
+		return new PodcastData(
+			$programSet['title'] ?? null,
+			$programSet['publicationService']['title'] ?? null,
+			$programSet['sharingUrl'] ?? $url,
+			$programSet['synopsis'] ?? ($programSet['description'] ?? null),
+			$this->resolveArdImageUrl($programSet['image'] ?? null),
+			(new DateTime())->getTimestamp()
+		);
+	}
+
+	private function resolveArdImageUrl($image): ?string {
+		if (!is_array($image)) {
+			return null;
+		}
+		return $image['url'] ?? ($image['url1X1'] ?? null);
+	}
+
+	private function extractArdProgramId(string $url): ?string {
+		if (preg_match(self::ARD_PROGRAMSET_REGEX, $url, $matches)) {
+			return $matches['id'];
+		}
+		return null;
 	}
 
 	private function tryFetchImageBlob(PodcastData $data): ?string {
