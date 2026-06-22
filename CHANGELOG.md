@@ -1,4 +1,9 @@
 # Changelog
+
+## 3.17.0 - 2026-06-22
+### Changed
+- Add support for Nextcloud 34
+
 ## 3.15.2 - 2026-02-17
 ### Fixed
 - Personal settings now shows proper titles/descriptions for ARD Audiothek subscriptions by resolving both API and website URLs to metadata.
