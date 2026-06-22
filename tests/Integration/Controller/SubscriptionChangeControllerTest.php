@@ -33,7 +33,7 @@ class SubscriptionChangeControllerTest extends TestCase
 		parent::setUp();
 		$app = new App('gpoddersync');
 		$this->container = $app->getContainer();
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = \OC::$server->get(\OCP\IDBConnection::class);
 	}
 
 	/**
@@ -145,7 +145,7 @@ class SubscriptionChangeControllerTest extends TestCase
 		$expectedAdd2 = "https://example.org/feed.xml";
 		$expectedRemove1 = "https://www.example.com/feed.rss";
 		$expectedRemove2 = "https://www.example.com/feed.xml";
-		
+
 		$response = $subscriptionChangeController->create(
 			[$expectedAdd1, $expectedAdd2],
 			[$expectedRemove1,$expectedRemove2]

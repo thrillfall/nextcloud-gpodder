@@ -33,7 +33,7 @@ class SubscriptionMigrationTest extends TestCase
         parent::setUp();
         $app = new App('gpoddersync');
         $this->container = $app->getContainer();
-        $this->db = \OC::$server->getDatabaseConnection();
+        $this->db = \OC::$server->get(\OCP\IDBConnection::class);
     }
 
     /**
