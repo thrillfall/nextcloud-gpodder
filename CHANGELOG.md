@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.18.0 - 2026-09-18
+### Changed
+- Add support for Nextcloud 35
+- Drop support for Nextcloud 30 and 31 (both EOL)
+
 ## 3.17.0 - 2026-06-22
 ### Changed
 - Add support for Nextcloud 34
