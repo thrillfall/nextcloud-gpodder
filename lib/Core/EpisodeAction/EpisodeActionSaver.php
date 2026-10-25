@@ -143,14 +143,16 @@ class EpisodeActionSaver
         if ($episodeActionEntity->getGuid() !== null) {
             $episodeAction = $this->episodeActionRepository->findByGuid(
                 $episodeActionEntity->getGuid(),
-                $userId
+                $userId,
+                $episodeActionEntity->getAction()
             );
         }
 
         if ($episodeAction === null) {
             $episodeAction = $this->episodeActionRepository->findByEpisodeUrl(
                 $episodeActionEntity->getEpisode(),
-                $userId
+                $userId,
+                $episodeActionEntity->getAction()
             );
         }
 
@@ -167,12 +169,13 @@ class EpisodeActionSaver
         string $userId
     ): void {
         $collidingEpisodeActionId = $this->episodeActionRepository
-            ->findByEpisodeUrl($episodeActionEntity->getEpisode(), $userId)
+            ->findByEpisodeUrl($episodeActionEntity->getEpisode(), $userId, $episodeActionEntity->getAction())
             ->getId();
         if ($collidingEpisodeActionId !== $episodeActionEntity->getId()) {
             $this->episodeActionRepository->deleteEpisodeActionByEpisodeUrl(
                 $episodeActionEntity->getEpisode(),
-                $userId
+                $userId,
+                $episodeActionEntity->getAction()
             );
         }
     }

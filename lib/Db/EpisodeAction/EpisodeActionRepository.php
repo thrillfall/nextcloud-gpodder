@@ -35,11 +35,13 @@ class EpisodeActionRepository
 
     public function findByEpisodeUrl(
         string $episodeUrl,
-        string $userId
+        string $userId,
+        string $action = 'PLAY'
     ): ?EpisodeAction {
         $episodeActionEntity = $this->episodeActionMapper->findByEpisodeUrl(
             $episodeUrl,
-            $userId
+            $userId,
+            $action
         );
 
         if ($episodeActionEntity === null) {
@@ -49,11 +51,12 @@ class EpisodeActionRepository
         return $this->mapEntityToEpisodeAction($episodeActionEntity);
     }
 
-    public function findByGuid(string $guid, string $userId): ?EpisodeAction
+    public function findByGuid(string $guid, string $userId, string $action = 'PLAY'): ?EpisodeAction
     {
         $episodeActionEntity = $this->episodeActionMapper->findByGuid(
             $guid,
-            $userId
+            $userId,
+            $action
         );
 
         if ($episodeActionEntity === null) {
@@ -65,11 +68,13 @@ class EpisodeActionRepository
 
     public function deleteEpisodeActionByEpisodeUrl(
         string $episodeUrl,
-        string $userId
+        string $userId,
+        string $action = 'PLAY'
     ): void {
         $episodeAction = $this->episodeActionMapper->findByEpisodeUrl(
             $episodeUrl,
-            $userId
+            $userId,
+            $action
         );
         $this->episodeActionMapper->delete($episodeAction);
     }

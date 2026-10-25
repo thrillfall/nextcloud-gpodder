@@ -41,7 +41,6 @@ class EpisodeActionController extends Controller {
 	public function create(): JSONResponse {
 
 		$episodeActionsArray = $this->filterEpisodesFromRequestParams($this->request->getParams());
-		$episodeActionsArray = $this->filterOnlyPlays($episodeActionsArray);
 		$this->episodeActionSaver->saveEpisodeActions($episodeActionsArray, $this->userId);
 
 		return new JSONResponse(["timestamp" => time()]);
@@ -70,9 +69,5 @@ class EpisodeActionController extends Controller {
 
 	public function filterEpisodesFromRequestParams(array $episodesFromRequestParams): array {
 		return array_filter($episodesFromRequestParams, "is_numeric", ARRAY_FILTER_USE_KEY);
-	}
-
-	public function filterOnlyPlays(array $episodesFromRequestParams): array {
-		return array_filter($episodesFromRequestParams, fn($ep) => isset($ep['action']) && strtolower($ep['action']) === 'play');
 	}
 }

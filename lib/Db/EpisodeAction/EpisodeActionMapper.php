@@ -41,9 +41,10 @@ class EpisodeActionMapper extends QBMapper
 	/**
 	 * @param string $episodeIdentifier
 	 * @param string $userId
+	 * @param string $action
 	 * @return EpisodeActionEntity|null
 	 */
-	public function findByEpisodeUrl(string $episodeIdentifier, string $userId) : ?EpisodeActionEntity
+	public function findByEpisodeUrl(string $episodeIdentifier, string $userId, string $action = 'PLAY') : ?EpisodeActionEntity
 	{
 		$qb = $this->db->getQueryBuilder();
 
@@ -54,6 +55,9 @@ class EpisodeActionMapper extends QBMapper
             )
 			->andWhere(
                 $qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
+            )
+			->andWhere(
+                $qb->expr()->eq('action', $qb->createNamedParameter($action))
             );
 
 		try {
@@ -64,7 +68,7 @@ class EpisodeActionMapper extends QBMapper
 		}
 	}
 
-    public function findByGuid(string $guid, string $userId) : ?EpisodeActionEntity
+    public function findByGuid(string $guid, string $userId, string $action = 'PLAY') : ?EpisodeActionEntity
     {
         $qb = $this->db->getQueryBuilder();
 
@@ -75,6 +79,9 @@ class EpisodeActionMapper extends QBMapper
             )
             ->andWhere(
                 $qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
+            )
+            ->andWhere(
+                $qb->expr()->eq('action', $qb->createNamedParameter($action))
             );
 
         try {

@@ -189,9 +189,17 @@ class EpisodeActionControllerTest extends TestCase
         /** @var EpisodeActionMapper $mapper */
         $mapper = $this->container->query(EpisodeActionMapper::class);
         $episodeActionEntities = $mapper->findAll(0, $userId);
+        $this->assertCount(2, $episodeActionEntities);
+        $entitiesByAction = [];
+        foreach ($episodeActionEntities as $entity) {
+            $entitiesByAction[$entity->getAction()] = $entity;
+        }
         /** @var EpisodeActionEntity $firstEntity */
-        $firstEntity = $episodeActionEntities[0];
-        $this->assertCount(1, $episodeActionEntities);
+        $firstEntity = $entitiesByAction["PLAY"];
+        $this->assertSame(
+            "https://example.com/files/s01e21.mp3",
+            $entitiesByAction["DELETE"]->getEpisode()
+        );
         $this->assertSame(
             "https://example.com/feed.rss",
             $firstEntity->getPodcast()
