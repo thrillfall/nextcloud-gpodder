@@ -60,6 +60,7 @@ POST /index.php/apps/gpoddersync/subscription_change/create
 ### episode action
 * **get episode actions**: `GET /index.php/apps/gpoddersync/episode_action`
 	* *(optional)* GET parameter `since` (UNIX time)
+	* *(optional)* GET parameter `allActions` (`true` or `false`, default `false`): also return *download*, *delete* and *new* actions, otherwise only *play* actions are returned
 	* fields: *podcast*, *episode*, *guid*, *action*, *timestamp*, *position*, *started*, *total*
 * **create episode actions**: `POST /index.php/apps/gpoddersync/episode_action/create`
   * fields: *podcast*, *episode*, *guid*, *action*, *timestamp*, *position*, *started*, *total*
@@ -72,7 +73,7 @@ The API replicates this: https://gpoddernet.readthedocs.io/en/latest/api/referen
 
 #### Example requests:
 ```json
-GET /index.php/apps/gpoddersync/episode_action?since=1633240761
+GET /index.php/apps/gpoddersync/episode_action?since=1633240761&allActions=true
 
 {
     "actions": [
