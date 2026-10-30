@@ -51,14 +51,17 @@ class EpisodeActionController extends Controller {
 	 * @NoCSRFRequired
 	 *
 	 * @param int $since
+	 * @param bool $allActions also return download, delete and new actions, not only play actions
 	 * @return JSONResponse
 	 */
-	public function list(int $since = 0): JSONResponse {
+	public function list(int $since = 0, bool $allActions = false): JSONResponse {
 		$episodeActions = $this->episodeActionRepository->findAll($since, $this->userId);
 		$untypedEpisodeActionData = [];
 
 		foreach ($episodeActions as $episodeAction) {
-			$untypedEpisodeActionData[] = $episodeAction->toArray();
+			if ($allActions || strtolower($episodeAction->getAction()) === 'play') {
+				$untypedEpisodeActionData[] = $episodeAction->toArray();
+			}
 		}
 
 		return new JSONResponse([

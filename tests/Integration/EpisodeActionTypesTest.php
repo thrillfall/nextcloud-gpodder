@@ -85,6 +85,28 @@ class EpisodeActionTypesTest extends TestCase
         self::assertSame(-1, $actions["DOWNLOAD"]["position"]);
     }
 
+    public function testListReturnsOtherActionsOnlyWhenAskedFor(): void
+    {
+        $userId = uniqid("test_user", true);
+        $episode = [
+            "podcast" => "https://example.com/feed.rss",
+            "episode" => "https://example.com/files/s01e23.mp3",
+            "guid" => "s01e23-example-org",
+        ];
+        $this->createEpisodeActions($userId, [
+            ["action" => "PLAY", "timestamp" => "2009-12-12T09:00:00", "started" => 0, "position" => 60, "total" => 500] + $episode,
+            ["action" => "DOWNLOAD", "timestamp" => "2009-12-12T09:05:00"] + $episode,
+            ["action" => "DELETE", "timestamp" => "2009-12-12T09:10:00"] + $episode,
+            ["action" => "NEW", "timestamp" => "2009-12-12T09:15:00"] + $episode,
+        ]);
+
+        self::assertSame(["PLAY"], array_keys($this->listEpisodeActionsByAction($userId, false)));
+
+        $allActions = array_keys($this->listEpisodeActionsByAction($userId));
+        sort($allActions);
+        self::assertSame(["DELETE", "DOWNLOAD", "NEW", "PLAY"], $allActions);
+    }
+
     private function createEpisodeActions(string $userId, array $episodeActions): void
     {
         $request = $this->createMock(IRequest::class);
@@ -99,7 +121,7 @@ class EpisodeActionTypesTest extends TestCase
         $episodeActionController->create();
     }
 
-    private function listEpisodeActionsByAction(string $userId): array
+    private function listEpisodeActionsByAction(string $userId, bool $allActions = true): array
     {
         $episodeActionController = new EpisodeActionController(
             "gpoddersync",
@@ -109,7 +131,7 @@ class EpisodeActionTypesTest extends TestCase
             $this->container->get(EpisodeActionSaver::class)
         );
         $actionsByType = [];
-        foreach ($episodeActionController->list()->getData()["actions"] as $episodeAction) {
+        foreach ($episodeActionController->list(0, $allActions)->getData()["actions"] as $episodeAction) {
             $actionsByType[$episodeAction["action"]] = $episodeAction;
         }
         return $actionsByType;
